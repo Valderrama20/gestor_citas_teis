@@ -1,17 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout';
+import Booking from './pages/Booking';
+import Home from './pages/Home';
 
-function App() {
-  const [count, setCount] = useState(0)
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: "/reservar", element: <Booking /> },
+    ],
+  },
+  {
+    path: "*", // Ruta para manejar errores 404
+    element: <h1>404 - Página no encontrada</h1>,
+  }
+]);
 
-  return (
-    <>
-      <h1>Hello World</h1>
-    </>
-  )
+export default function App() {
+  return <RouterProvider router={router} />;
 }
-
-export default App
