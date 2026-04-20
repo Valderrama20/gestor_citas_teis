@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@RestController
 public class AdministradorController {
 
     @Autowired
@@ -16,12 +16,18 @@ public class AdministradorController {
     public List<Administrador> getAdministrador() { return administradorService.findAll();}
 
     @GetMapping("/administradores/{id}")
-    public Administrador getOpinionesById(PathVariable Long id_admin){ return administradorService.findById(id_admin);
+    public Administrador getAdministradoresById(@PathVariable Long id){ return administradorService.findById(id);
     }
 
     @PostMapping("/administrador")
     public void saveAdministrador(@RequestBody Administrador administrador) {administradorService.save(administrador);}
 
     @DeleteMapping("/administradores/{id}")
-    public void deleteAdministradores(@PathVariable Long id_admin )
-}
+    public void deleteAdministradores(@PathVariable Long id_admin) { administradorService.deleteById(id_admin);}
+
+    @PutMapping ("administradores/{id}")
+    public void updateAdministradores(@RequestBody Administrador administrador){ administradorService.save(administrador);}
+
+    }
+
+
