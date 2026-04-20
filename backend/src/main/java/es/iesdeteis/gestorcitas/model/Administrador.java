@@ -6,22 +6,25 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 
 @Entity
-@Table(name ="administrators")
+@Table(name ="administradores")
 public class Administrador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_admin;
+    private Long idAdmin;
     private String nombre;
     private String email;
     private String password;
-    private ArrayList<Cursos> cursos;
+    // UN administrador gestiona MUCHOS cursos
+    // "mappedBy" indica el nombre de la variable en la clase Curso
+    @OneToMany(mappedBy = "administradores", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ArrayList<Curso> cursos;
 
     public Administrador() {
     }
 
     public Administrador(Long id_admin, String nombre, String email, String password, ArrayList Cursos) {
-        this.id_admin = id_admin;
+        this.idAdmin = idAdmin;
         this.nombre = nombre;
         this.email = email;
         this.password = password;
@@ -35,12 +38,12 @@ public class Administrador {
         this.cursos = new ArrayList<>();
     }
 
-    public Long getId_admin() {
-        return id_admin;
+    public Long getIdAdmin() {
+        return idAdmin;
     }
 
-    public void setId_admin(Long id_admin) {
-        this.id_admin = id_admin;
+    public void setIdAdmin(Long idAdmin) {
+        this.idAdmin = idAdmin;
     }
 
     public String getNombre() {
@@ -67,18 +70,18 @@ public class Administrador {
         this.password = password;
     }
 
-    public ArrayList<Cursos> getCursos() {
+    public ArrayList<Curso> getCursos() {
         return cursos;
     }
 
-    public void setCursos(ArrayList<Cursos> cursos) {
+    public void setCursos(ArrayList<Curso> cursos) {
         this.cursos = cursos;
     }
 
     @Override
     public String toString() {
-        return "Administrador{" +
-                "id_admin=" + id_admin +
+        return "Administradores{" +
+                "id_admin=" + idAdmin +
                 ", nombre='" + nombre + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +

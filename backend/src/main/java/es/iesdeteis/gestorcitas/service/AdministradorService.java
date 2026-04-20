@@ -17,7 +17,7 @@ public class AdministradorService implements IAdministradorService {
     public List<Administrador> findAll() { return (List<Administrador>) administradorRepository.findAll();}
 
     @Override
-    public Administrador findById(Long id_admin) {return administradorRepository.findById(id_admin).orElse(null);
+    public Administrador findById(Long idAdmin) {return administradorRepository.findById(idAdmin).orElse(null);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class AdministradorService implements IAdministradorService {
     }
 
     @Override
-    public void deleteById(Long id_admin) {
-        administradorRepository.deleteById(id_admin);
+    public void deleteById(Long idAdmin) {
+        administradorRepository.deleteById(idAdmin);
     }
 }

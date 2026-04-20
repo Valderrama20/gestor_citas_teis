@@ -23,7 +23,7 @@ public class AdministradorController {
     public void saveAdministrador(@RequestBody Administrador administrador) {administradorService.save(administrador);}
 
     @DeleteMapping("/administradores/{id}")
-    public void deleteAdministradores(@PathVariable Long id_admin) { administradorService.deleteById(id_admin);}
+    public void deleteAdministradores(@PathVariable Long id) { administradorService.deleteById(id);}
 
     @PutMapping ("administradores/{id}")
     public void updateAdministradores(@RequestBody Administrador administrador){ administradorService.save(administrador);}
