@@ -1,29 +1,33 @@
-.wrapper {
+.container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  background: var(--gradient-page), var(--color-background);
+  color: var(--color-text);
 }
 
-.header {
-  background-color: var(--dark-bg);
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 2px solid var(--primary-gold);
+.blobTop,
+.blobBottom {
+  position: absolute;
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  filter: blur(6px);
 }
 
-.nav a {
-  color: var(--white);
-  margin-left: 1.5rem;
-  text-decoration: none;
-  font-weight: 500;
+.blobTop {
+  top: -14rem;
+  left: -10rem;
+  width: 34rem;
+  height: 34rem;
+  background: var(--gradient-blob-top);
 }
 
-.nav a:hover {
-  color: var(--primary-gold);
-}
-
-.content {
-  flex: 1;
-  padding: 2rem;
+.blobBottom {
+  right: -12rem;
+  bottom: -18rem;
+  width: 40rem;
+  height: 40rem;
+  background: var(--gradient-blob-bottom);
 }

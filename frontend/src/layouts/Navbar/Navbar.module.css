@@ -1,0 +1,126 @@
+.nav {
+  width: 100%;
+  padding: var(--layout-nav-mobile);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .nav {
+    padding: var(--layout-nav-desktop);
+  }
+}
+
+.logoGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+}
+
+.logoIconBox {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+  display: grid;
+  place-items: center;
+  background: var(--color-surface-strong);
+  box-shadow: var(--shadow-soft-sm);
+  transition: box-shadow var(--transition-fast);
+}
+
+.logoGroup:hover .logoIconBox {
+  box-shadow: var(--shadow-soft-hover);
+}
+
+.logoIcon {
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--color-accent);
+}
+
+.logoText {
+  font-family: var(--font-display);
+  font-size: var(--size-logo);
+  font-weight: 800;
+  letter-spacing: var(--tracking-title);
+  color: var(--color-text);
+}
+
+.logoHighlight {
+  font-weight: 500;
+  color: var(--color-accent);
+}
+
+.menuDesktop {
+  display: none;
+  align-items: center;
+  padding: var(--space-1);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-muted);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft-md);
+}
+
+@media (min-width: 768px) {
+  .menuDesktop {
+    display: flex;
+  }
+}
+
+.btnReserve,
+.btnLink,
+.btnIcon {
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btnReserve {
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius-full);
+  background: var(--color-white);
+  color: var(--color-text);
+  font-weight: 600;
+  box-shadow: var(--shadow-button);
+}
+
+.btnLink {
+  padding: 0.7rem 1.2rem;
+  font-weight: 500;
+}
+
+.active {
+  color: var(--color-text);
+}
+
+.activeLink,
+.btnLink:hover,
+.btnIcon:hover {
+  color: var(--color-text);
+}
+
+.divider {
+  width: 1px;
+  height: 1rem;
+  background: var(--color-divider);
+  margin: 0 0.35rem;
+}
+
+.btnIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+}
+
+.menuIcon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
