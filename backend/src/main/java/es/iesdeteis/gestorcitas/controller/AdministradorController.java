@@ -19,7 +19,7 @@ public class AdministradorController {
     public Administrador getAdministradoresById(@PathVariable Long id){ return administradorService.findById(id);
     }
 
-    @PostMapping("/administrador")
+    @PostMapping("/administradores")
     public void saveAdministrador(@RequestBody Administrador administrador) {administradorService.save(administrador);}
 
     @DeleteMapping("/administradores/{id}")
