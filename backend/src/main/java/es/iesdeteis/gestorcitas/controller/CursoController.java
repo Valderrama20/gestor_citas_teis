@@ -25,7 +25,7 @@ public class CursoController {
     public void saveCursos(@RequestBody Curso curso) {cursosService.save(curso);}
 
     @DeleteMapping("/cursos/{id}")
-    public void deleteCursos(@PathVariable Long idCurso) { cursosService.deleteById(idCurso);}
+    public void deleteCursos(@PathVariable("id") Long idCurso) { cursosService.deleteById(idCurso);}
 
     @PutMapping ("cursos/{id}")
     public void updateCursos(@RequestBody Curso curso){ cursosService.save(curso);}
