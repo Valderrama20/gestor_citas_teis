@@ -1,0 +1,22 @@
+.container {
+  width: 100%;
+  text-align: center;
+  padding: var(--space-7) var(--space-4) var(--space-8);
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+}
+
+.divider {
+  width: 4rem;
+  height: 1px;
+  margin: 0 auto var(--space-5);
+  background: var(--color-divider-accent);
+}
+
+.text {
+  color: var(--color-text-faint);
+  font-size: 0.82rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}

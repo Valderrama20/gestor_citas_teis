@@ -1,49 +1,60 @@
+import { Flower2, Hand, Scissors, Sparkles } from "lucide-react";
 import styles from "./Home.module.css";
-import FeatureCard from "../../components/FeatureCard";
+import ServiceCard from "../../components/ServiceCard";
 
-const data = [
-    {
-        id: 1,
-        icon: "✂️",
-        title: "Corte Clásico",
-        description:
-            "Estilos atemporales y modernos adaptados a tus gustos y tipo de cabello.",
-    },
-    {
-        id: 2,
-        icon: "🧔",
-        title: "Arreglo de Barba",
-        description:
-            "Perfilado, rebajado y tratamiento con toalla caliente para una barba impecable.",
-    },
-    {
-        id: 3,
-        icon: "🎨",
-        title: "Coloración",
-        description:
-            "Tintes, mechas y reflejos de primera calidad que respetan tu salud capilar.",
-    },
+const specialties = [
+  {
+    id: 1,
+    title: "Peluqueria",
+    description: "Corte, colorimetria y tratamientos capilares.",
+    Icon: Scissors,
+  },
+  {
+    id: 2,
+    title: "Cuidado Facial",
+    description: "Higiene, hidratacion y maquillaje profesional.",
+    Icon: Sparkles,
+  },
+  {
+    id: 3,
+    title: "Tratamiento Corporal",
+    description: "Masajes, exfoliaciones y depilacion.",
+    Icon: Flower2,
+  },
+  {
+    id: 4,
+    title: "Manicura",
+    description: "Cuidado de unas, esmaltado y pedicura.",
+    Icon: Hand,
+  },
 ];
 
 export default function Home() {
-    return (
-        <div className={styles.homeContainer}>
-            <h1 className={styles.title}>Bienvenido a la Peluquería</h1>
-            <p className={styles.subtitle}>
-                Los mejores cortes y arreglos de la ciudad.
-            </p>
+  return (
+    <section className={styles.main}>
+      <div className={styles.header}>
+        <span className={styles.tagline}>Ciclo Formativo de Grado Medio y Superior</span>
+        <h1 className={styles.title}>
+          Realza tu <span className={styles.titleHighlight}>belleza natural</span>
+          <span className={styles.breakDesktop}> con el talento de nuestros alumnos</span>
+        </h1>
+        <p className={styles.subtitle}>
+          Tratamientos profesionales de peluqueria y estetica a precios de
+          taller educativo. Elige tu especialidad.
+        </p>
+      </div>
 
-            <div className={styles.featuresGrid}>
-                {data.map((carta) => {
-                    return (
-                        <FeatureCard
-                            icon={carta.icon}
-                            title={carta.title}
-                            description={carta.description}
-                        />
-                    );
-                })}
-            </div>
-        </div>
-    );
+      <div className={styles.grid}>
+        {specialties.map((specialty) => (
+          <ServiceCard
+            key={specialty.id}
+            title={specialty.title}
+            description={specialty.description}
+            Icon={specialty.Icon}
+            to={`/curso/${specialty.id}/talleres`}
+          />
+        ))}
+      </div>
+    </section>
+  );
 }

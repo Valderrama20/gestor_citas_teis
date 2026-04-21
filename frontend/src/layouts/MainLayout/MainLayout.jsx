@@ -1,20 +1,16 @@
-import { Outlet, Link } from 'react-router-dom';
-import styles from './MainLayout.module.css'; // Importación del módulo
+import { Outlet } from "react-router-dom";
+import Footer from "../Footer";
+import Navbar from "../Navbar";
+import styles from "./MainLayout.module.css";
 
 export default function MainLayout() {
   return (
-    <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <div className={styles.logo}>PELUQUERÍA PRO</div>
-        <nav className={styles.nav}>
-          <Link to="/">Inicio</Link>
-          <Link to="/reservar">Reservar</Link>
-        </nav>
-      </header>
-      
-      <main className={styles.content}>
-        <Outlet />
-      </main>
+    <div className={styles.container}>
+      <div className={styles.blobTop} />
+      <div className={styles.blobBottom} />
+      <Navbar />
+      <Outlet />
+      <Footer />
     </div>
   );
 }
