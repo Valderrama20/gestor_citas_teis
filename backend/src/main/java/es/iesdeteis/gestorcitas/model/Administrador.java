@@ -3,10 +3,8 @@ package es.iesdeteis.gestorcitas.model;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-
 @Entity
-@Table(name ="administradores")
+@Table(name = "administrador")
 public class Administrador {
 
     @Id
@@ -18,8 +16,8 @@ public class Administrador {
     private String password;
     // UN administrador gestiona MUCHOS cursos
     // "mappedBy" indica el nombre de la variable en la clase Curso
-    @OneToMany(mappedBy = "administradores", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ArrayList<Curso> cursos;
+//    @OneToMany(mappedBy = "administrador", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private ArrayList<Curso> cursos;
 
     public Administrador() {
     }
@@ -29,14 +27,14 @@ public class Administrador {
         this.nombre = nombre;
         this.email = email;
         this.password = password;
-        this.cursos = new ArrayList<>();
+//        this.cursos = new ArrayList<>();
     }
 
     public Administrador(String nombre, String email, String password) {
         this.nombre = nombre;
         this.email = email;
         this.password = password;
-        this.cursos = new ArrayList<>();
+//        this.cursos = new ArrayList<>();
     }
 
     public Long getIdAdmin() {
@@ -71,13 +69,13 @@ public class Administrador {
         this.password = password;
     }
 
-    public ArrayList<Curso> getCursos() {
-        return cursos;
-    }
-
-    public void setCursos(ArrayList<Curso> cursos) {
-        this.cursos = cursos;
-    }
+//    public ArrayList<Curso> getCursos() {
+//        return cursos;
+//    }
+//
+//    public void setCursos(ArrayList<Curso> cursos) {
+//        this.cursos = cursos;
+//    }
 
     @Override
     public String toString() {
@@ -86,7 +84,7 @@ public class Administrador {
                 ", nombre='" + nombre + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", cursos=" + cursos +
+//                ", cursos=" + cursos +
                 '}';
     }
 }
