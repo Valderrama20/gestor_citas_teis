@@ -2,6 +2,8 @@ package es.iesdeteis.gestorcitas.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "talleres")
 
@@ -9,76 +11,97 @@ public class Taller {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_taller;
+    @Column(name = "id_taller")
+    private Long idTaller;
 
-    private String nombre_taller;
-    private int duracion_minutos;
-    private String tipo_taller;
-    private int capacidad_maxima;
+    @Column(name = "nombre_taller")
+    private String nombreTaller;
 
-    @ManyToOne
-    @JoinColumn(name = "id_curso")
-    private Curso curso;
+    @Column(name = "duracion_minutos")
+    private int duracionMinutos;
 
-    public Taller(int id_taller, String nombre_taller, int duracion_minutos, String tipo_taller, int capacidad_maxima, Curso curso) {
-        this.id_taller = id_taller;
-        this.nombre_taller = nombre_taller;
-        this.duracion_minutos = duracion_minutos;
-        this.tipo_taller = tipo_taller;
-        this.capacidad_maxima = capacidad_maxima;
-        this.curso = curso;
+    @Column(name = "tipo_taller")
+    private String tipoTaller;
+
+    @Column(name = "capacidad_maxima")
+    private int capacidadMaxima;
+
+    @Column(name = "id_curso")
+    private Long idCurso;
+
+    @OneToMany(mappedBy = "taller", cascade = CascadeType.ALL)
+    private List<HorarioTaller> horarios;
+
+    public Taller(Long idTaller, String nombreTaller, int duracionMinutos, String tipoTaller, int capacidadMaxima, Long idCurso) {
+        this.idTaller = idTaller;
+        this.nombreTaller = nombreTaller;
+        this.duracionMinutos = duracionMinutos;
+        this.tipoTaller = tipoTaller;
+        this.capacidadMaxima = capacidadMaxima;
+        this.idCurso = idCurso;
     }
 
-    public int getId_taller() {
-        return id_taller;
+    public Taller() {
     }
 
-    public void setId_taller(int id_taller) {
-        this.id_taller = id_taller;
+    public Long getIdTaller() {
+        return idTaller;
     }
 
-    public String getNombre_taller() {
-        return nombre_taller;
+    public void setIdTaller(Long idTaller) {
+        this.idTaller = idTaller;
     }
 
-    public void setNombre_taller(String nombre_taller) {
-        this.nombre_taller = nombre_taller;
+    public String getNombreTaller() {
+        return nombreTaller;
     }
 
-    public int getDuracion_minutos() {
-        return duracion_minutos;
+    public void setNombreTaller(String nombreTaller) {
+        this.nombreTaller = nombreTaller;
     }
 
-    public void setDuracion_minutos(int duracion_minutos) {
-        this.duracion_minutos = duracion_minutos;
+    public int getDuracionMinutos() {
+        return duracionMinutos;
     }
 
-    public String getTipo_taller() {
-        return tipo_taller;
+    public void setDuracionMinutos(int duracionMinutos) {
+        this.duracionMinutos = duracionMinutos;
     }
 
-    public void setTipo_taller(String tipo_taller) {
-        this.tipo_taller = tipo_taller;
+    public String getTipoTaller() {
+        return tipoTaller;
     }
 
-    public int getCapacidad_maxima() {
-        return capacidad_maxima;
+    public void setTipoTaller(String tipoTaller) {
+        this.tipoTaller = tipoTaller;
     }
 
-    public void setCapacidad_maxima(int capacidad_maxima) {
-        this.capacidad_maxima = capacidad_maxima;
+    public int getCapacidadMaxima() {
+        return capacidadMaxima;
     }
 
-    public Curso getCurso() {
-        return curso;
+    public void setCapacidadMaxima(int capacidadMaxima) {
+        this.capacidadMaxima = capacidadMaxima;
     }
 
-    public void setCurso(Curso curso) {
-        this.curso = curso;
+    public Long getIdCurso() {
+        return idCurso;
+    }
+
+    public void setIdCurso(Long idCurso) {
+        this.idCurso = idCurso;
+    }
+
+    public List<HorarioTaller> getHorarios() {
+        return horarios;
+    }
+
+    public void setHorarios(List<HorarioTaller> horarios) {
+        this.horarios = horarios;
     }
 
     @Override
     public String toString() {
-        return "Taller id=" + id_taller + ", Nombre='" + nombre_taller + ", Tipo='" + tipo_taller;
+        return "Taller id=" + idTaller + ", Nombre='" + nombreTaller + ", Tipo='" + tipoTaller;
     }
 }

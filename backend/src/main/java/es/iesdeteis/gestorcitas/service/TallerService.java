@@ -19,7 +19,7 @@ public class TallerService implements ITallerService {
     }
 
     @Override
-    public Taller findById(int id) {
+    public Taller findById(Long id) {
         return tallerRepository.findById(id).orElse(null);
     }
 
@@ -29,7 +29,7 @@ public class TallerService implements ITallerService {
     }
 
     @Override
-    public void deleteByiId(int id) {
+    public void deleteByiId(Long id) {
         tallerRepository.deleteById(id);
     }
 }

@@ -11,54 +11,63 @@ public class HorarioTaller {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_horario;
+    @Column(name = "id_horario")
+    private Long idHorario;
 
-    private String dia_semana;
-    private Time hora_apertura;
-    private Time hora_cierre;
+    @Column(name = "dia_semana")
+    private String diaSemana;
+
+    @Column(name = "hora_apertura")
+    private Time horaApertura;
+
+    @Column(name = "hora_cierre")
+    private Time horaCierre;
 
     @ManyToOne
     @JoinColumn(name = "id_taller")
     private Taller taller;
 
-    public HorarioTaller(int id_horario, String dia_semana, Time hora_apertura, Time hora_cierre, Taller taller) {
-        this.id_horario = id_horario;
-        this.dia_semana = dia_semana;
-        this.hora_apertura = hora_apertura;
-        this.hora_cierre = hora_cierre;
+    public HorarioTaller(Long idHorario, String diaSemana, Time horaApertura, Time horaCierre, Taller taller) {
+        this.idHorario = idHorario;
+        this.diaSemana = diaSemana;
+        this.horaApertura = horaApertura;
+        this.horaCierre = horaCierre;
         this.taller = taller;
     }
 
-    public int getId_horario() {
-        return id_horario;
+    public HorarioTaller() {
     }
 
-    public void setId_horario(int id_horario) {
-        this.id_horario = id_horario;
+    public Long getIdHorario() {
+        return idHorario;
     }
 
-    public String getDia_semana() {
-        return dia_semana;
+    public void setIdHorario(Long idHorario) {
+        this.idHorario = idHorario;
     }
 
-    public void setDia_semana(String dia_semana) {
-        this.dia_semana = dia_semana;
+    public String getDiaSemana() {
+        return diaSemana;
     }
 
-    public Time getHora_apertura() {
-        return hora_apertura;
+    public void setDiaSemana(String diaSemana) {
+        this.diaSemana = diaSemana;
     }
 
-    public void setHora_apertura(Time hora_apertura) {
-        this.hora_apertura = hora_apertura;
+    public Time getHoraApertura() {
+        return horaApertura;
     }
 
-    public Time getHora_cierre() {
-        return hora_cierre;
+    public void setHoraApertura(Time horaApertura) {
+        this.horaApertura = horaApertura;
     }
 
-    public void setHora_cierre(Time hora_cierre) {
-        this.hora_cierre = hora_cierre;
+    public Time getHoraCierre() {
+        return horaCierre;
+    }
+
+    public void setHoraCierre(Time horaCierre) {
+        this.horaCierre = horaCierre;
     }
 
     public Taller getTaller() {
@@ -72,11 +81,10 @@ public class HorarioTaller {
     @Override
     public String toString() {
         return "HorarioTaller{" +
-                "id_horario=" + id_horario +
-                ", dia_semana='" + dia_semana + '\'' +
-                ", hora_apertura=" + hora_apertura +
-                ", hora_cierre=" + hora_cierre +
-                ", taller=" + taller +
+                "idHorario=" + idHorario +
+                ", dia_semana='" + diaSemana + '\'' +
+                ", horaApertura=" + horaApertura +
+                ", horaCierre=" + horaCierre +
                 '}';
     }
 }

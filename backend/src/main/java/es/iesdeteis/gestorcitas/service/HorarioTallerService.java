@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class HorarioTallerService {
+public class HorarioTallerService implements IHorarioTallerService {
 
     @Autowired
     private HorarioTallerRepository horarioTallerRepository;
@@ -19,7 +19,7 @@ public class HorarioTallerService {
     }
 
     @Override
-    public HorarioTaller findById(int id) {
+    public HorarioTaller findById(Long id) {
         return horarioTallerRepository.findById(id).orElse(null);
     }
 
@@ -29,7 +29,7 @@ public class HorarioTallerService {
     }
 
     @Override
-    public void deleteByiId(int id) {
+    public void deleteById(Long id) {
         horarioTallerRepository.deleteById(id);
     }
 }

@@ -7,9 +7,9 @@ import java.util.List;
 public interface ITallerService {
     public List<Taller> findAll();
 
-    public Taller findById(int id);
+    public Taller findById(Long id);
 
     public void save(Taller taller);
 
-    public void deleteByiId(int id);
+    public void deleteByiId(Long id);
 }

@@ -19,7 +19,7 @@ public class HorarioTallerController {
     }
 
     @GetMapping("horariostalleres/{id}")
-    public HorarioTaller getHorarioTallerById(@PathVariable Integer id) {
+    public HorarioTaller getHorarioTallerById(@PathVariable Long id) {
         return horarioTallerService.findById(id);
     }
 
@@ -29,8 +29,8 @@ public class HorarioTallerController {
     }
 
     @DeleteMapping("/horariostalleres/{id}")
-    public void deleteHorarioTaller(@PathVariable Integer id) {
-        horarioTallerService.deleteByiId(id);
+    public void deleteHorarioTaller(@PathVariable Long id) {
+        horarioTallerService.deleteById(id);
     }
 
     @PutMapping("/horariostalleres/")

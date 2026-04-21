@@ -19,7 +19,7 @@ public class TallerController {
     }
 
     @GetMapping("talleres/{id}")
-    public Taller getTallerById(@PathVariable Integer id) {
+    public Taller getTallerById(@PathVariable Long id) {
         return tallerService.findById(id);
     }
 
@@ -29,7 +29,7 @@ public class TallerController {
     }
 
     @DeleteMapping("/talleres/{id}")
-    public void deleteTaller(@PathVariable Integer id) {
+    public void deleteTaller(@PathVariable Long id) {
         tallerService.deleteByiId(id);
     }
 
