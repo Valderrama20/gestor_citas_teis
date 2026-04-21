@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.sql.Time;
 
 @Entity
-@Table(name = "horarios_talleres")
+@Table(name = "horario_taller")
 
 public class HorarioTaller {
 
