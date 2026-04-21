@@ -11,6 +11,7 @@ public class Administrador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_admin")
     private Long idAdmin;
     private String nombre;
     private String email;

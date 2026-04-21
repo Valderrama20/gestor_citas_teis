@@ -7,8 +7,11 @@ import jakarta.persistence.*;
 public class Curso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_curso")
     private Long idCurso;
+    @Column(name = "nombre_curso")
     private String nombreCurso;
+    @Column(name = "curso_academico")
     private String cursoAcademico;
     // MUCHOS cursos pertenecen a UN administrador
     //@ManyToOne
