@@ -3,7 +3,7 @@ package es.iesdeteis.gestorcitas.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cursos")
+@Table(name = "curso")
 public class Curso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

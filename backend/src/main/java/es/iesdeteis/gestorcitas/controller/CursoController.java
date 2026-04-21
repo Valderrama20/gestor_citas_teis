@@ -14,20 +14,20 @@ public class CursoController {
     @Autowired
     private ICursoService cursosService;
 
-    @GetMapping("cursos")
+    @GetMapping("curso")
     public List<Curso> getCursos() { return cursosService.findAll();}
 
-    @GetMapping("/cursos/{id}")
+    @GetMapping("/curso/{id}")
     public Curso getCursosById(@PathVariable Long id){ return cursosService.findById(id);
     }
 
-    @PostMapping("/cursos")
+    @PostMapping("/curso")
     public void saveCursos(@RequestBody Curso curso) {cursosService.save(curso);}
 
-    @DeleteMapping("/cursos/{id}")
-    public void deleteCursos(@PathVariable("id") Long idCurso) { cursosService.deleteById(idCurso);}
+    @DeleteMapping("/curso/{id}")
+    public void deleteCursos(@PathVariable("id") Long id) { cursosService.deleteById(id);}
 
-    @PutMapping ("cursos/{id}")
+    @PutMapping ("/curso/")
     public void updateCursos(@RequestBody Curso curso){ cursosService.save(curso);}
 
 }
