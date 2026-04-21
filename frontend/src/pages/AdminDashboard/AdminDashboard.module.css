@@ -1,0 +1,166 @@
+.page {
+  min-height: 100vh;
+  background: var(--gradient-page), var(--color-background);
+}
+
+.container {
+  width: 100%;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-9);
+}
+
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: var(--tracking-title);
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 1.02rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.brandIcon,
+.textButtonIcon,
+.secondaryIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.brandIcon {
+  color: var(--color-accent);
+}
+
+.textButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.textButton:hover {
+  color: var(--color-text);
+}
+
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--color-border-field);
+  border-radius: 0.8rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-white);
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondaryButton:hover {
+  border-color: var(--color-accent);
+}
+
+.modalBody {
+  text-align: left;
+}
+
+.modalCopy {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.modalLabel {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.modalSelect {
+  width: 100%;
+  margin-bottom: var(--space-5);
+  border: 1px solid var(--color-border-field);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  color: var(--color-text);
+  padding: 0.95rem 1rem;
+  outline: none;
+}
+
+.modalSelect:focus {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+.primaryButton {
+  width: 100%;
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 0.95rem 1.2rem;
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  background: var(--color-accent-strong);
+}
+
+.primaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.emptyState {
+  width: min(100%, 36rem);
+  margin: var(--space-9) auto;
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-strong);
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+}
+
+.backButton {
+  display: inline-flex;
+  margin-top: var(--space-5);
+  border-radius: var(--radius-full);
+  padding: 0.85rem 1.35rem;
+  background: var(--color-accent);
+  color: var(--color-white);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.backButton:hover {
+  background: var(--color-accent-strong);
+}
+
+@media (max-width: 767px) {
+  .headerRow {
+    flex-direction: column;
+  }
+}

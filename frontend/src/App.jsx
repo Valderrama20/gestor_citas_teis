@@ -1,5 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
+import AdminCourses from "./pages/AdminCourses";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminLogin from "./pages/AdminLogin";
 import Booking from "./pages/Booking";
 import Home from "./pages/Home";
 import Talleres from "./pages/Talleres";
@@ -13,6 +16,22 @@ const router = createBrowserRouter([
       { path: "reservar", element: <Booking /> },
       { path: "curso/:courseId/talleres", element: <Talleres /> },
     ],
+  },
+  {
+    path: "/admin",
+    element: <Navigate to="/admin/login" replace />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin/cursos",
+    element: <AdminCourses />,
+  },
+  {
+    path: "/admin/cursos/:courseId",
+    element: <AdminDashboard />,
   },
   {
     path: "*",
