@@ -11,9 +11,9 @@ public class Curso {
     private String nombreCurso;
     private String cursoAcademico;
     // MUCHOS cursos pertenecen a UN administrador
-    @ManyToOne
-    @JoinColumn(name = "idAdmin")
-    private Administrador administrador;
+    //@ManyToOne
+    //@JoinColumn(name = "idAdmin")
+    //private Administrador administrador;
 
     public Curso() {
     }
@@ -21,14 +21,14 @@ public class Curso {
     public Curso(String nombreCurso, String cursoAcademico, Administrador administrador) {
         this.nombreCurso = nombreCurso;
         this.cursoAcademico = cursoAcademico;
-        this.administrador = administrador;
+        //this.administrador = administrador;
     }
 
     public Curso(Long idCurso, String nombreCurso, String cursoAcademico, Administrador administrador) {
         this.idCurso = idCurso;
         this.nombreCurso = nombreCurso;
         this.cursoAcademico = cursoAcademico;
-        this.administrador = administrador;
+        //this.administrador = administrador;
     }
 
     public Long getIdCurso() {
@@ -55,13 +55,15 @@ public class Curso {
         this.cursoAcademico = cursoAcademico;
     }
 
-    public Administrador getAdministrador() {
+    /*public Administrador getAdministrador() {
         return administrador;
     }
+    */
 
-    public void setAdministrador(Administrador administrador) {
+    /*public void setAdministrador(Administrador administrador) {
         this.administrador = administrador;
     }
+    */
 
     @Override
     public String toString() {
@@ -69,7 +71,7 @@ public class Curso {
                 "idCurso=" + idCurso +
                 ", nombreCurso='" + nombreCurso + '\'' +
                 ", cursoAcademico='" + cursoAcademico + '\'' +
-                ", administrador=" + administrador +
+                //", administrador=" + administrador +
                 '}';
     }
 }

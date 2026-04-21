@@ -23,7 +23,7 @@ public class Administrador {
     public Administrador() {
     }
 
-    public Administrador(Long id_admin, String nombre, String email, String password, ArrayList Cursos) {
+    public Administrador(Long idAdmin, String nombre, String email, String password) {
         this.idAdmin = idAdmin;
         this.nombre = nombre;
         this.email = email;
@@ -31,7 +31,7 @@ public class Administrador {
         this.cursos = new ArrayList<>();
     }
 
-    public Administrador(String nombre, String email, String password, ArrayList Cursos) {
+    public Administrador(String nombre, String email, String password) {
         this.nombre = nombre;
         this.email = email;
         this.password = password;
