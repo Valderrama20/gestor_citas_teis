@@ -10,15 +10,17 @@ import java.util.List;
 @RestController
 public class HorarioTallerController {
 
+    // --- ATRIBUTOS ---
     @Autowired
     private IHorarioTallerService horarioTallerService;
 
+    // --- MÉTODOS PROPIOS ---
     @GetMapping("/horariostalleres")
     public List<HorarioTaller> getTalleres() {
         return horarioTallerService.findAll();
     }
 
-    @GetMapping("horariostalleres/{id}")
+    @GetMapping("/horariostalleres/{id}")
     public HorarioTaller getHorarioTallerById(@PathVariable Long id) {
         return horarioTallerService.findById(id);
     }

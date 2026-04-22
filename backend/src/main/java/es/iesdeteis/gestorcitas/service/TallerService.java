@@ -10,9 +10,11 @@ import java.util.List;
 @Service
 public class TallerService implements ITallerService {
 
+    // --- ATRIBUTOS ---
     @Autowired
     private TallerRepository tallerRepository;
 
+    // --- MÉTODOS HEREDADOS ---
     @Override
     public List<Taller> findAll() {
         return (List<Taller>) tallerRepository.findAll();
@@ -29,7 +31,7 @@ public class TallerService implements ITallerService {
     }
 
     @Override
-    public void deleteByiId(Long id) {
+    public void deleteById(Long id) {
         tallerRepository.deleteById(id);
     }
 }
