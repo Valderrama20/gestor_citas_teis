@@ -14,7 +14,8 @@ public class AdministradorService implements IAdministradorService {
     private AdministradorRepository administradorRepository;
 
     @Autowired
-    public List<Administrador> findAll() { return (List<Administrador>) administradorRepository.findAll();}
+    public List<Administrador> findAll() {
+        return (List<Administrador>) administradorRepository.findAll();}
 
     @Override
     public Administrador findById(Long idAdmin) {return administradorRepository.findById(idAdmin).orElse(null);
