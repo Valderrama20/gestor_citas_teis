@@ -43,6 +43,34 @@
   height: 1rem;
 }
 
+.topbarActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 0;
+  border-radius: var(--radius-full);
+  padding: 0.85rem 1.2rem;
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  background: var(--color-accent-strong);
+}
+
+.primaryButtonIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
 .header {
   margin-bottom: var(--space-7);
 }
@@ -64,4 +92,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
   gap: var(--space-5);
+}
+
+@media (max-width: 767px) {
+  .topbarActions {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
 }

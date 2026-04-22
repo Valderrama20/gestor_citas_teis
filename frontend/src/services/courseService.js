@@ -1,4 +1,4 @@
-const coursesTable = [
+let coursesTable = [
   {
     id: "1",
     name: "Peluqueria",
@@ -49,6 +49,15 @@ function cloneData(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function getNextCourseId() {
+  return String(
+    coursesTable.reduce(
+      (maxId, course) => Math.max(maxId, Number.parseInt(course.id, 10) || 0),
+      0,
+    ) + 1,
+  );
+}
+
 const courseService = {
   getAllCourses: async () => cloneData(coursesTable),
 
@@ -75,6 +84,23 @@ const courseService = {
 
   getCourseById: async (courseId) =>
     cloneData(coursesTable.find((course) => course.id === String(courseId)) ?? null),
+
+  createCourse: async (courseData) => {
+    const newCourse = {
+      id: getNextCourseId(),
+      name: courseData.name.trim(),
+      level: courseData.level,
+      period: courseData.period.trim(),
+      studentCount: Number(courseData.studentCount) || 0,
+      iconKey: courseData.iconKey,
+      specialtyDescription: courseData.specialtyDescription.trim(),
+      workshopPageDescription: courseData.workshopPageDescription.trim(),
+    };
+
+    coursesTable = [...coursesTable, newCourse];
+
+    return cloneData(newCourse);
+  },
 };
 
 export default courseService;

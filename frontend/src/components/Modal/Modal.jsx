@@ -7,6 +7,9 @@ export default function Modal({
   title,
   children,
   actionLabel = "Cerrar",
+  showAction = true,
+  modalClassName = "",
+  contentClassName = "",
 }) {
   if (!isOpen) {
     return null;
@@ -15,7 +18,7 @@ export default function Modal({
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div
-        className={styles.modal}
+        className={[styles.modal, modalClassName].filter(Boolean).join(" ")}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
@@ -25,10 +28,16 @@ export default function Modal({
         <h3 id="modal-title" className={styles.title}>
           {title}
         </h3>
-        <div className={styles.content}>{children}</div>
-        <button type="button" className={styles.button} onClick={onClose}>
-          {actionLabel}
-        </button>
+        <div
+          className={[styles.content, contentClassName].filter(Boolean).join(" ")}
+        >
+          {children}
+        </div>
+        {showAction && (
+          <button type="button" className={styles.button} onClick={onClose}>
+            {actionLabel}
+          </button>
+        )}
       </div>
     </div>
   );
