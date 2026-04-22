@@ -26,8 +26,8 @@ public class ClienteService implements IClienteService {
 
     @Override
     public void save(Cliente cliente) {
+        System.out.println(cliente);
         clienteRepository.save(cliente);
-
     }
 
     @Override

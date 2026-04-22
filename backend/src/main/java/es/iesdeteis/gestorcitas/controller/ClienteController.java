@@ -1,7 +1,6 @@
 package es.iesdeteis.gestorcitas.controller;
 
 import es.iesdeteis.gestorcitas.model.Cliente;
-import es.iesdeteis.gestorcitas.service.ClienteService;
 import es.iesdeteis.gestorcitas.service.IClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +20,15 @@ public class ClienteController {
     public Cliente getClienteById(@PathVariable Long id) {
         return clienteService.findById(id);
     }
+
+
         @PostMapping("/cliente")
-        public void saveAdministrador(Cliente cliente) {clienteService.save(cliente);}
+        public void saveCliente(@RequestBody Cliente cliente) {clienteService.save(cliente);}
 
         @DeleteMapping("/cliente/{id}")
-        public void deleteAdministradores(@PathVariable Long id) { clienteService.deleteById(id);}
+        public void deleteCliente(@PathVariable("id") Long id) { clienteService.deleteById(id);}
 
-        @PutMapping ("/cliente")
-        public void updateAdministradores(@RequestBody Cliente cliente){ clienteService.save(cliente);}
+        @PutMapping ("/cliente/")
+        public void updateCliente(@RequestBody Cliente cliente){ clienteService.save(cliente);}
 
     }

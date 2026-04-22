@@ -1,6 +1,5 @@
 package es.iesdeteis.gestorcitas.controller;
 
-import es.iesdeteis.gestorcitas.model.Administrador;
 import es.iesdeteis.gestorcitas.model.Curso;
 import es.iesdeteis.gestorcitas.service.ICursoService;
 import org.springframework.beans.factory.annotation.Autowired;
