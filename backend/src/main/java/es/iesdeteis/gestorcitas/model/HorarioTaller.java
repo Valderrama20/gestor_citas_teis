@@ -28,8 +28,10 @@ public class HorarioTaller {
     private Taller taller;
 
     // --- CONSTRUCTORES ---
-    public HorarioTaller(Long idHorario, String diaSemana, Time horaApertura, Time horaCierre, Taller taller) {
-        this.idHorario = idHorario;
+    public HorarioTaller() {
+    }
+
+    public HorarioTaller(String diaSemana, Time horaApertura, Time horaCierre, Taller taller) {
         this.diaSemana = diaSemana;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
@@ -37,9 +39,6 @@ public class HorarioTaller {
     }
 
     // --- GETTERS Y SETTERS ---
-    public HorarioTaller() {
-    }
-
     public Long getIdHorario() {
         return idHorario;
     }

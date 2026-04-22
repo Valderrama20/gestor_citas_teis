@@ -33,16 +33,15 @@ public class Taller {
     private List<HorarioTaller> horarios;
 
     // --- CONSTRUCTORES ---
-    public Taller(Long idTaller, String nombreTaller, int duracionMinutos, String tipoTaller, int capacidadMaxima, Long idCurso) {
-        this.idTaller = idTaller;
+    public Taller() {
+    }
+
+    public Taller(String nombreTaller, int duracionMinutos, String tipoTaller, int capacidadMaxima, Long idCurso) {
         this.nombreTaller = nombreTaller;
         this.duracionMinutos = duracionMinutos;
         this.tipoTaller = tipoTaller;
         this.capacidadMaxima = capacidadMaxima;
         this.idCurso = idCurso;
-    }
-
-    public Taller() {
     }
 
     // --- GETTERS Y SETTERS ---
