@@ -10,9 +10,11 @@ import java.util.List;
 @RestController
 public class TallerController {
 
+    // --- ATRIBUTOS ---
     @Autowired
     private ITallerService tallerService;
 
+    // --- MÉTODOS PROPIOS ---
     @GetMapping("/talleres")
     public List<Taller> getTalleres() {
         return tallerService.findAll();
@@ -30,7 +32,7 @@ public class TallerController {
 
     @DeleteMapping("/talleres/{id}")
     public void deleteTaller(@PathVariable Long id) {
-        tallerService.deleteByiId(id);
+        tallerService.deleteById(id);
     }
 
     @PutMapping("/talleres/")

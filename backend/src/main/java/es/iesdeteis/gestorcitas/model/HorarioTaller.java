@@ -6,9 +6,9 @@ import java.sql.Time;
 
 @Entity
 @Table(name = "horario_taller")
-
 public class HorarioTaller {
 
+    // --- ATRIBUTOS ---
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_horario")
@@ -27,6 +27,7 @@ public class HorarioTaller {
     @JoinColumn(name = "id_taller")
     private Taller taller;
 
+    // --- CONSTRUCTORES ---
     public HorarioTaller(Long idHorario, String diaSemana, Time horaApertura, Time horaCierre, Taller taller) {
         this.idHorario = idHorario;
         this.diaSemana = diaSemana;
@@ -35,6 +36,7 @@ public class HorarioTaller {
         this.taller = taller;
     }
 
+    // --- GETTERS Y SETTERS ---
     public HorarioTaller() {
     }
 
@@ -78,6 +80,7 @@ public class HorarioTaller {
         this.taller = taller;
     }
 
+    // --- OVERRIDES DE OBJECT ---
     @Override
     public String toString() {
         return "HorarioTaller{" +

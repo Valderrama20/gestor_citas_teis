@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface IHorarioTallerService {
 
+    // --- MÉTODOS PROPIOS ---
     public List<HorarioTaller> findAll();
 
     public HorarioTaller findById(Long id);

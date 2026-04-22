@@ -10,9 +10,11 @@ import java.util.List;
 @Service
 public class HorarioTallerService implements IHorarioTallerService {
 
+    // --- ATRIBUTOS ---
     @Autowired
     private HorarioTallerRepository horarioTallerRepository;
 
+    // --- MÉTODOS HEREDADOS ---
     @Override
     public List<HorarioTaller> findAll() {
         return (List<HorarioTaller>) horarioTallerRepository.findAll();

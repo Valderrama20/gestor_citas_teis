@@ -6,9 +6,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "taller")
-
 public class Taller {
 
+    // --- ATRIBUTOS ---
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_taller")
@@ -32,6 +32,7 @@ public class Taller {
     @OneToMany(mappedBy = "taller", cascade = CascadeType.ALL)
     private List<HorarioTaller> horarios;
 
+    // --- CONSTRUCTORES ---
     public Taller(Long idTaller, String nombreTaller, int duracionMinutos, String tipoTaller, int capacidadMaxima, Long idCurso) {
         this.idTaller = idTaller;
         this.nombreTaller = nombreTaller;
@@ -44,6 +45,7 @@ public class Taller {
     public Taller() {
     }
 
+    // --- GETTERS Y SETTERS ---
     public Long getIdTaller() {
         return idTaller;
     }
@@ -100,6 +102,7 @@ public class Taller {
         this.horarios = horarios;
     }
 
+    // --- OVERRIDES DE OBJECT ---
     @Override
     public String toString() {
         return "Taller id=" + idTaller + ", Nombre='" + nombreTaller + ", Tipo='" + tipoTaller;
