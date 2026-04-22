@@ -42,12 +42,15 @@
 
 .brandIcon,
 .textButtonIcon,
-.secondaryIcon {
+.secondaryIcon,
+.filterTitleIcon,
+.clearIcon {
   width: 1rem;
   height: 1rem;
 }
 
-.brandIcon {
+.brandIcon,
+.filterTitleIcon {
   color: var(--color-accent);
 }
 
@@ -64,7 +67,8 @@
   color: var(--color-text);
 }
 
-.secondaryButton {
+.secondaryButton,
+.clearButton {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
@@ -77,61 +81,86 @@
   cursor: pointer;
 }
 
-.secondaryButton:hover {
+.secondaryButton:hover,
+.clearButton:hover {
   border-color: var(--color-accent);
 }
 
-.modalBody {
-  text-align: left;
+.filterCard {
+  margin-bottom: var(--space-5);
+  padding: var(--space-5);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-strong);
+  box-shadow: var(--shadow-soft-sm);
 }
 
-.modalCopy {
-  margin: 0 0 var(--space-4);
+.filterHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.filterTitleGroup {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.filterTitle {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--color-text);
+}
+
+.filterSubtitle {
+  margin: 0;
   color: var(--color-text-muted);
-  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
-.modalLabel {
-  display: block;
-  margin-bottom: 0.6rem;
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.filterField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.filterLabel {
   color: var(--color-text);
   font-weight: 600;
 }
 
-.modalSelect {
+.filterInput {
   width: 100%;
-  margin-bottom: var(--space-5);
   border: 1px solid var(--color-border-field);
   border-radius: var(--radius-md);
   background: var(--color-white);
   color: var(--color-text);
   padding: 0.95rem 1rem;
   outline: none;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
-.modalSelect:focus {
+.filterInput:focus {
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
 }
 
-.primaryButton {
-  width: 100%;
-  border: 0;
-  border-radius: var(--radius-md);
-  padding: 0.95rem 1.2rem;
-  background: var(--color-accent);
-  color: var(--color-white);
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.primaryButton:hover {
-  background: var(--color-accent-strong);
-}
-
-.primaryButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
+.filterResult {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-muted);
+  font-weight: 600;
 }
 
 .emptyState {
@@ -160,7 +189,12 @@
 }
 
 @media (max-width: 767px) {
-  .headerRow {
+  .headerRow,
+  .filterHeader {
     flex-direction: column;
+  }
+
+  .filterGrid {
+    grid-template-columns: 1fr;
   }
 }

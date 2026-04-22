@@ -66,14 +66,25 @@
   color: #b7791f;
 }
 
-.assigned {
+.confirmed {
   background: #e6fffa;
   color: #2c7a7b;
 }
 
-.muted {
-  color: var(--color-text-muted);
-  font-style: italic;
+.completed {
+  background: #eef2ff;
+  color: #4c51bf;
+}
+
+.cancelled {
+  background: #fdecec;
+  color: #b83232;
+}
+
+.actionGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
 }
 
 .actionButton {
@@ -83,17 +94,49 @@
   border: 0;
   border-radius: 0.7rem;
   padding: 0.55rem 0.8rem;
-  background: var(--color-accent);
   color: var(--color-white);
   font-weight: 700;
   cursor: pointer;
 }
 
-.actionButton:hover {
+.confirmButton {
+  background: var(--color-accent);
+}
+
+.confirmButton:hover {
   background: var(--color-accent-strong);
 }
 
+.completeButton {
+  background: #3f8f6b;
+}
+
+.completeButton:hover {
+  background: #337758;
+}
+
+.cancelButton {
+  background: var(--color-text);
+}
+
+.cancelButton:hover {
+  background: #54464b;
+}
+
 .actionIcon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.completedText {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.completedIcon {
   width: 0.9rem;
   height: 0.9rem;
 }

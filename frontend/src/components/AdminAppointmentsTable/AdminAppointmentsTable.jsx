@@ -1,7 +1,19 @@
-import { Calendar, Clock3, UserCheck } from "lucide-react";
+import {
+  Calendar,
+  CheckCheck,
+  CircleCheckBig,
+  Clock3,
+  RotateCcw,
+  XCircle,
+} from "lucide-react";
 import styles from "./AdminAppointmentsTable.module.css";
 
-export default function AdminAppointmentsTable({ appointments, onAssign }) {
+export default function AdminAppointmentsTable({
+  appointments,
+  onConfirm,
+  onComplete,
+  onCancel,
+}) {
   return (
     <div className={styles.wrapper}>
       <table className={styles.table}>
@@ -11,7 +23,6 @@ export default function AdminAppointmentsTable({ appointments, onAssign }) {
             <th>Taller</th>
             <th>Fecha / Hora</th>
             <th>Estado</th>
-            <th>Asignacion</th>
             <th>Accion</th>
           </tr>
         </thead>
@@ -36,32 +47,68 @@ export default function AdminAppointmentsTable({ appointments, onAssign }) {
               </td>
               <td>
                 <span
-                  className={
+                  className={[
+                    styles.badge,
                     appointment.status === "Pendiente"
-                      ? `${styles.badge} ${styles.pending}`
-                      : `${styles.badge} ${styles.assigned}`
-                  }
+                      ? styles.pending
+                      : appointment.status === "Confirmada"
+                        ? styles.confirmed
+                        : appointment.status === "Completada"
+                          ? styles.completed
+                          : styles.cancelled,
+                  ].join(" ")}
                 >
                   {appointment.status}
                 </span>
               </td>
               <td>
-                {appointment.studentName ? (
-                  appointment.studentName
-                ) : (
-                  <span className={styles.muted}>Sin alumno</span>
-                )}
-              </td>
-              <td>
                 {appointment.status === "Pendiente" && (
                   <button
                     type="button"
-                    className={styles.actionButton}
-                    onClick={() => onAssign(appointment)}
+                    className={`${styles.actionButton} ${styles.confirmButton}`}
+                    onClick={() => onConfirm(appointment)}
                   >
-                    <UserCheck className={styles.actionIcon} strokeWidth={1.8} />
-                    Asignar
+                    <CheckCheck className={styles.actionIcon} strokeWidth={1.8} />
+                    Confirmar cita
                   </button>
+                )}
+
+                {appointment.status === "Confirmada" && (
+                  <div className={styles.actionGroup}>
+                    <button
+                      type="button"
+                      className={`${styles.actionButton} ${styles.completeButton}`}
+                      onClick={() => onComplete(appointment)}
+                    >
+                      <CircleCheckBig
+                        className={styles.actionIcon}
+                        strokeWidth={1.8}
+                      />
+                      Finalizar cita
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.actionButton} ${styles.cancelButton}`}
+                      onClick={() => onCancel(appointment)}
+                    >
+                      <XCircle className={styles.actionIcon} strokeWidth={1.8} />
+                      Cancelar cita
+                    </button>
+                  </div>
+                )}
+
+                {appointment.status === "Completada" && (
+                  <span className={styles.completedText}>
+                    <RotateCcw className={styles.completedIcon} strokeWidth={1.8} />
+                    Sin acciones
+                  </span>
+                )}
+
+                {appointment.status === "Cancelada" && (
+                  <span className={styles.completedText}>
+                    <RotateCcw className={styles.completedIcon} strokeWidth={1.8} />
+                    Sin acciones
+                  </span>
                 )}
               </td>
             </tr>

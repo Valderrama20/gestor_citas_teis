@@ -1,5 +1,4 @@
 import api from "../config/api";
-import studentService from "./studentService";
 import workshopService from "./workshopService";
 
 let appointmentsTable = [
@@ -20,7 +19,7 @@ let appointmentsTable = [
     workshopId: "color",
     date: "2026-04-22",
     time: "11:00",
-    status: "Asignada",
+    status: "Confirmada",
     studentId: "student-3",
   },
   {
@@ -40,7 +39,7 @@ let appointmentsTable = [
     workshopId: "maquillaje-social",
     date: "2026-04-23",
     time: "12:30",
-    status: "Asignada",
+    status: "Completada",
     studentId: "student-4",
   },
   {
@@ -60,7 +59,7 @@ let appointmentsTable = [
     workshopId: "exfoliacion-corporal",
     date: "2026-04-24",
     time: "13:00",
-    status: "Asignada",
+    status: "Confirmada",
     studentId: "student-7",
   },
 ];
@@ -70,21 +69,16 @@ function cloneData(value) {
 }
 
 async function enrichAppointments(appointments) {
-  const [allWorkshops, allStudents] = await Promise.all([
-    workshopService.getAllWorkshops(),
-    studentService.getAllStudents(),
-  ]);
+  const allWorkshops = await workshopService.getAllWorkshops();
 
   return appointments.map((appointment) => {
     const workshop = allWorkshops.find(
       (item) => item.id === appointment.workshopId,
     );
-    const student = allStudents.find((item) => item.id === appointment.studentId);
 
     return {
       ...cloneData(appointment),
       workshopTitle: workshop?.title ?? "Taller no encontrado",
-      studentName: student?.name ?? "",
     };
   });
 }
@@ -97,13 +91,12 @@ const appointmentService = {
       ),
     ),
 
-  assignAppointmentStudent: async ({ courseId, appointmentId, studentId }) => {
+  updateAppointmentStatus: async ({ courseId, appointmentId, status }) => {
     appointmentsTable = appointmentsTable.map((appointment) =>
       appointment.id === appointmentId
         ? {
             ...appointment,
-            studentId,
-            status: "Asignada",
+            status,
           }
         : appointment,
     );

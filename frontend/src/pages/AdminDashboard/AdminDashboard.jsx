@@ -1,30 +1,32 @@
-import { ChevronLeft, Filter, Settings } from "lucide-react";
+import { ChevronLeft, Filter, Settings, SlidersHorizontal, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import AdminAppointmentsTable from "../../components/AdminAppointmentsTable";
 import AdminTopbar from "../../components/AdminTopbar";
-import Modal from "../../components/Modal";
 import appointmentService from "../../services/appointmentService";
 import courseService from "../../services/courseService";
-import studentService from "../../services/studentService";
+import workshopService from "../../services/workshopService";
 import styles from "./AdminDashboard.module.css";
 
 export default function AdminDashboard() {
   const { courseId } = useParams();
   const [course, setCourse] = useState(undefined);
   const [appointments, setAppointments] = useState([]);
-  const [students, setStudents] = useState([]);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [selectedStudentId, setSelectedStudentId] = useState("");
+  const [workshops, setWorkshops] = useState([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    date: "",
+    workshopId: "",
+  });
 
   useEffect(() => {
     let isMounted = true;
 
     async function loadDashboardData() {
-      const [nextCourse, nextAppointments, nextStudents] = await Promise.all([
+      const [nextCourse, nextAppointments, nextWorkshops] = await Promise.all([
         courseService.getCourseById(courseId),
         appointmentService.getAppointmentsByCourseId(courseId),
-        studentService.getStudentsByCourseId(courseId),
+        workshopService.getWorkshopsByCourseId(courseId),
       ]);
 
       if (!isMounted) {
@@ -33,9 +35,12 @@ export default function AdminDashboard() {
 
       setCourse(nextCourse);
       setAppointments(nextAppointments);
-      setStudents(nextStudents);
-      setSelectedAppointment(null);
-      setSelectedStudentId("");
+      setWorkshops(nextWorkshops);
+      setFilters({
+        date: "",
+        workshopId: "",
+      });
+      setIsFilterOpen(false);
     }
 
     loadDashboardData();
@@ -45,26 +50,60 @@ export default function AdminDashboard() {
     };
   }, [courseId]);
 
-  function handleOpenAssign(appointment) {
-    setSelectedAppointment(appointment);
-    setSelectedStudentId(appointment.studentId || students[0]?.id || "");
-  }
-
-  async function handleConfirmAssign() {
-    if (!selectedAppointment || !selectedStudentId) {
-      return;
-    }
-
-    const updatedAppointments = await appointmentService.assignAppointmentStudent({
+  async function handleConfirmAppointment(appointment) {
+    const updatedAppointments = await appointmentService.updateAppointmentStatus({
       courseId,
-      appointmentId: selectedAppointment.id,
-      studentId: selectedStudentId,
+      appointmentId: appointment.id,
+      status: "Confirmada",
     });
 
     setAppointments(updatedAppointments);
-    setSelectedAppointment(null);
-    setSelectedStudentId("");
   }
+
+  async function handleCompleteAppointment(appointment) {
+    const updatedAppointments = await appointmentService.updateAppointmentStatus({
+      courseId,
+      appointmentId: appointment.id,
+      status: "Completada",
+    });
+
+    setAppointments(updatedAppointments);
+  }
+
+  async function handleCancelAppointment(appointment) {
+    const updatedAppointments = await appointmentService.updateAppointmentStatus({
+      courseId,
+      appointmentId: appointment.id,
+      status: "Cancelada",
+    });
+
+    setAppointments(updatedAppointments);
+  }
+
+  function handleFilterChange(event) {
+    const { name, value } = event.target;
+    setFilters((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  }
+
+  function handleClearFilters() {
+    setFilters({
+      date: "",
+      workshopId: "",
+    });
+  }
+
+  const filteredAppointments = appointments.filter((appointment) => {
+    const matchesDate = !filters.date || appointment.date === filters.date;
+    const matchesWorkshop =
+      !filters.workshopId || appointment.workshopId === filters.workshopId;
+
+    return matchesDate && matchesWorkshop;
+  });
+
+  const hasActiveFilters = Boolean(filters.date || filters.workshopId);
 
   if (course === undefined) {
     return (
@@ -97,86 +136,122 @@ export default function AdminDashboard() {
   }
 
   return (
-    <>
-      <main className={styles.page}>
-        <AdminTopbar
-          startContent={
-            <Link to="/admin/cursos" className={styles.textButton}>
-              <ChevronLeft className={styles.textButtonIcon} strokeWidth={1.8} />
-              Volver a cursos
-            </Link>
-          }
-          endContent={
-            <div className={styles.brand}>
-              <Settings className={styles.brandIcon} strokeWidth={1.8} />
-              <span>IES TEIS | {course.name}</span>
-            </div>
-          }
-        />
-
-        <section className={styles.container}>
-          <header className={styles.headerRow}>
-            <div>
-              <h1 className={styles.title}>Citas de {course.name}</h1>
-              <p className={styles.subtitle}>
-                Gestiona las solicitudes recibidas por el alumnado del curso.
-              </p>
-            </div>
-
-            <button type="button" className={styles.secondaryButton}>
-              <Filter className={styles.secondaryIcon} strokeWidth={1.8} />
-              Filtrar
-            </button>
-          </header>
-
-          <AdminAppointmentsTable
-            appointments={appointments}
-            onAssign={handleOpenAssign}
-          />
-        </section>
-      </main>
-
-      <Modal
-        isOpen={Boolean(selectedAppointment)}
-        onClose={() => setSelectedAppointment(null)}
-        eyebrow="Asignacion"
-        title="Asignar alumno"
-        actionLabel="Cancelar"
-      >
-        {selectedAppointment && (
-          <div className={styles.modalBody}>
-            <p className={styles.modalCopy}>
-              Cita: <strong>{selectedAppointment.client}</strong> |{" "}
-              <strong>{selectedAppointment.workshopTitle}</strong>
-            </p>
-
-            <label className={styles.modalLabel} htmlFor="student">
-              Selecciona el alumno encargado
-            </label>
-            <select
-              id="student"
-              className={styles.modalSelect}
-              value={selectedStudentId}
-              onChange={(event) => setSelectedStudentId(event.target.value)}
-            >
-              {students.map((student) => (
-                <option key={student.id} value={student.id}>
-                  {student.name}
-                </option>
-              ))}
-            </select>
-
-            <button
-              type="button"
-              className={styles.primaryButton}
-              onClick={handleConfirmAssign}
-              disabled={!selectedStudentId}
-            >
-              Confirmar
-            </button>
+    <main className={styles.page}>
+      <AdminTopbar
+        startContent={
+          <Link to="/admin/cursos" className={styles.textButton}>
+            <ChevronLeft className={styles.textButtonIcon} strokeWidth={1.8} />
+            Volver a cursos
+          </Link>
+        }
+        endContent={
+          <div className={styles.brand}>
+            <Settings className={styles.brandIcon} strokeWidth={1.8} />
+            <span>IES TEIS | {course.name}</span>
           </div>
+        }
+      />
+
+      <section className={styles.container}>
+        <header className={styles.headerRow}>
+          <div>
+            <h1 className={styles.title}>Citas de {course.name}</h1>
+            <p className={styles.subtitle}>
+              Gestiona el estado de cada cita: pendiente, confirmada, completada o cancelada.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className={styles.secondaryButton}
+            onClick={() => setIsFilterOpen((current) => !current)}
+          >
+            <Filter className={styles.secondaryIcon} strokeWidth={1.8} />
+            {isFilterOpen ? "Ocultar filtros" : "Filtrar"}
+          </button>
+        </header>
+
+        {isFilterOpen && (
+          <section className={styles.filterCard}>
+            <div className={styles.filterHeader}>
+              <div className={styles.filterTitleGroup}>
+                <SlidersHorizontal
+                  className={styles.filterTitleIcon}
+                  strokeWidth={1.8}
+                />
+                <div>
+                  <h2 className={styles.filterTitle}>Filtros de citas</h2>
+                  <p className={styles.filterSubtitle}>
+                    Filtra por fecha concreta y por taller del curso.
+                  </p>
+                </div>
+              </div>
+
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  className={styles.clearButton}
+                  onClick={handleClearFilters}
+                >
+                  <X className={styles.clearIcon} strokeWidth={1.8} />
+                  Limpiar
+                </button>
+              )}
+            </div>
+
+            <div className={styles.filterGrid}>
+              <div className={styles.filterField}>
+                <label className={styles.filterLabel} htmlFor="date">
+                  Fecha
+                </label>
+                <input
+                  id="date"
+                  name="date"
+                  type="date"
+                  className={styles.filterInput}
+                  value={filters.date}
+                  onChange={handleFilterChange}
+                />
+              </div>
+
+              <div className={styles.filterField}>
+                <label className={styles.filterLabel} htmlFor="workshopId">
+                  Taller
+                </label>
+                <select
+                  id="workshopId"
+                  name="workshopId"
+                  className={styles.filterInput}
+                  value={filters.workshopId}
+                  onChange={handleFilterChange}
+                >
+                  <option value="">Todos los talleres</option>
+                  {workshops.map((workshop) => (
+                    <option key={workshop.id} value={workshop.id}>
+                      {workshop.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </section>
         )}
-      </Modal>
-    </>
+
+        {hasActiveFilters && (
+          <p className={styles.filterResult}>
+            Mostrando {filteredAppointments.length} cita
+            {filteredAppointments.length === 1 ? "" : "s"} con los filtros
+            aplicados.
+          </p>
+        )}
+
+        <AdminAppointmentsTable
+          appointments={filteredAppointments}
+          onConfirm={handleConfirmAppointment}
+          onComplete={handleCompleteAppointment}
+          onCancel={handleCancelAppointment}
+        />
+      </section>
+    </main>
   );
 }
