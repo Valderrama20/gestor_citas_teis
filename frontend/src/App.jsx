@@ -5,6 +5,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import Booking from "./pages/Booking";
 import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
 import Talleres from "./pages/Talleres";
 
 const router = createBrowserRouter([
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <h1>404 - Pagina no encontrada</h1>,
+    element: <NotFound />,
   },
 ]);
 
