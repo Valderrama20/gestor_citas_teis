@@ -142,7 +142,7 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor="specialtyDescription">
-            Descripcion para Home
+            Descripcion
           </label>
           <textarea
             id="specialtyDescription"
@@ -152,22 +152,6 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
             value={formData.specialtyDescription}
             onChange={handleChange}
             placeholder="Texto corto para mostrar la especialidad en la home."
-            required
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="workshopPageDescription">
-            Descripcion para Talleres
-          </label>
-          <textarea
-            id="workshopPageDescription"
-            name="workshopPageDescription"
-            className={styles.textarea}
-            rows="4"
-            value={formData.workshopPageDescription}
-            onChange={handleChange}
-            placeholder="Texto introductorio de la pagina de talleres."
             required
           />
         </div>
