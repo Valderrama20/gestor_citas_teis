@@ -1,8 +1,16 @@
-import { ChevronLeft, Filter, Settings, SlidersHorizontal, X } from "lucide-react";
+import {
+  ChevronLeft,
+  Filter,
+  Plus,
+  Settings,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import AdminAppointmentsTable from "../../components/AdminAppointmentsTable";
 import AdminTopbar from "../../components/AdminTopbar";
+import CreateWorkshopModal from "../../components/CreateWorkshopModal";
 import appointmentService from "../../services/appointmentService";
 import courseService from "../../services/courseService";
 import workshopService from "../../services/workshopService";
@@ -14,6 +22,7 @@ export default function AdminDashboard() {
   const [appointments, setAppointments] = useState([]);
   const [workshops, setWorkshops] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isCreateWorkshopModalOpen, setIsCreateWorkshopModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     date: "",
     workshopId: "",
@@ -58,6 +67,17 @@ export default function AdminDashboard() {
     });
 
     setAppointments(updatedAppointments);
+  }
+
+  async function handleCreateWorkshop(workshopData) {
+    await workshopService.createWorkshop({
+      ...workshopData,
+      courseId,
+    });
+
+    const nextWorkshops = await workshopService.getWorkshopsByCourseId(courseId);
+    setWorkshops(nextWorkshops);
+    setIsCreateWorkshopModalOpen(false);
   }
 
   async function handleCompleteAppointment(appointment) {
@@ -161,14 +181,24 @@ export default function AdminDashboard() {
             </p>
           </div>
 
-          <button
-            type="button"
-            className={styles.secondaryButton}
-            onClick={() => setIsFilterOpen((current) => !current)}
-          >
-            <Filter className={styles.secondaryIcon} strokeWidth={1.8} />
-            {isFilterOpen ? "Ocultar filtros" : "Filtrar"}
-          </button>
+          <div className={styles.headerActions}>
+            <button
+              type="button"
+              className={styles.primaryButton}
+              onClick={() => setIsCreateWorkshopModalOpen(true)}
+            >
+              <Plus className={styles.secondaryIcon} strokeWidth={1.8} />
+              Crear taller
+            </button>
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={() => setIsFilterOpen((current) => !current)}
+            >
+              <Filter className={styles.secondaryIcon} strokeWidth={1.8} />
+              {isFilterOpen ? "Ocultar filtros" : "Filtrar"}
+            </button>
+          </div>
         </header>
 
         {isFilterOpen && (
@@ -252,6 +282,13 @@ export default function AdminDashboard() {
           onCancel={handleCancelAppointment}
         />
       </section>
+
+      <CreateWorkshopModal
+        isOpen={isCreateWorkshopModalOpen}
+        onClose={() => setIsCreateWorkshopModalOpen(false)}
+        onSubmit={handleCreateWorkshop}
+        courseName={course.name}
+      />
     </main>
   );
 }

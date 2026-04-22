@@ -1,4 +1,4 @@
-const workshopsTable = [
+let workshopsTable = [
   {
     id: "corte",
     courseId: "1",
@@ -117,6 +117,34 @@ function cloneData(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function slugifyWorkshopTitle(title) {
+  return title
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function getNextWorkshopId(title) {
+  const baseId = slugifyWorkshopTitle(title) || "nuevo-taller";
+
+  if (!workshopsTable.some((workshop) => workshop.id === baseId)) {
+    return baseId;
+  }
+
+  let suffix = 2;
+  let nextId = `${baseId}-${suffix}`;
+
+  while (workshopsTable.some((workshop) => workshop.id === nextId)) {
+    suffix += 1;
+    nextId = `${baseId}-${suffix}`;
+  }
+
+  return nextId;
+}
+
 const workshopService = {
   getAllWorkshops: async () => cloneData(workshopsTable),
 
@@ -127,6 +155,20 @@ const workshopService = {
 
   getWorkshopById: async (workshopId) =>
     cloneData(workshopsTable.find((workshop) => workshop.id === workshopId) ?? null),
+
+  createWorkshop: async (workshopData) => {
+    const newWorkshop = {
+      id: getNextWorkshopId(workshopData.title),
+      courseId: String(workshopData.courseId),
+      title: workshopData.title.trim(),
+      description: workshopData.description.trim(),
+      iconKey: workshopData.iconKey,
+    };
+
+    workshopsTable = [...workshopsTable, newWorkshop];
+
+    return cloneData(newWorkshop);
+  },
 };
 
 export default workshopService;
