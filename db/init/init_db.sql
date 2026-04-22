@@ -65,7 +65,7 @@ CREATE TABLE citas (
     id_cita INT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
-    estado VARCHAR(50) NOT NULL, -- Ej: 'Pendiente', 'Confirmada', 'Completada'
+    estado ENUM('pendiente', 'confirmada', 'completada') NOT NULL,
     id_cliente INT,
     id_taller INT,
     id_alumno INT NULL, -- Nulo en MVP, se asignará en el futuro
