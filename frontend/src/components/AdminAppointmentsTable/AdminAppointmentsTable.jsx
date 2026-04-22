@@ -21,7 +21,7 @@ export default function AdminAppointmentsTable({ appointments, onAssign }) {
               <td>
                 <strong>{appointment.client}</strong>
               </td>
-              <td>{appointment.workshop}</td>
+              <td>{appointment.workshopTitle}</td>
               <td>
                 <div className={styles.dateTime}>
                   <span>
@@ -46,8 +46,8 @@ export default function AdminAppointmentsTable({ appointments, onAssign }) {
                 </span>
               </td>
               <td>
-                {appointment.student ? (
-                  appointment.student
+                {appointment.studentName ? (
+                  appointment.studentName
                 ) : (
                   <span className={styles.muted}>Sin alumno</span>
                 )}

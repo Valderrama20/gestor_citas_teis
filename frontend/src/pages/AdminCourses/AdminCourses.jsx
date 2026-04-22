@@ -1,11 +1,32 @@
 import { LogOut, Settings } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AdminCourseCard from "../../components/AdminCourseCard";
 import AdminTopbar from "../../components/AdminTopbar";
-import { adminCourses } from "../../data/adminData";
+import courseService from "../../services/courseService";
 import styles from "./AdminCourses.module.css";
 
 export default function AdminCourses() {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadCourses() {
+      const nextCourses = await courseService.getAdminCourses();
+
+      if (isMounted) {
+        setCourses(nextCourses);
+      }
+    }
+
+    loadCourses();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <main className={styles.page}>
       <AdminTopbar
@@ -32,7 +53,7 @@ export default function AdminCourses() {
         </header>
 
         <div className={styles.grid}>
-          {adminCourses.map((course) => (
+          {courses.map((course) => (
             <AdminCourseCard key={course.id} course={course} />
           ))}
         </div>

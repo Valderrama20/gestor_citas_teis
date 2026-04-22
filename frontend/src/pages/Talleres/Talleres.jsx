@@ -1,146 +1,80 @@
 import {
   Brush,
   Droplets,
- Flower2,
+  Flower2,
   Hand,
   Scissors,
   Sparkles,
   Waves,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ServiceCard from "../../components/ServiceCard";
+import courseService from "../../services/courseService";
+import workshopService from "../../services/workshopService";
 import styles from "./Talleres.module.css";
 
-const courseContent = {
-  "1": {
-    name: "Peluqueria",
-    description:
-      "Selecciona un taller de ejemplo para ver como podriamos organizar los servicios disponibles.",
-    workshops: [
-      {
-        id: "corte",
-        title: "Corte y peinado",
-        description: "Cortes clasicos, brushing y acabados para el dia a dia.",
-        Icon: Scissors,
-      },
-      {
-        id: "color",
-        title: "Coloracion",
-        description: "Tintes, matices y retoque de raiz con asesoria previa.",
-        Icon: Sparkles,
-      },
-      {
-        id: "tratamiento",
-        title: "Tratamiento capilar",
-        description: "Hidratacion profunda, mascarillas y cuidado del cuero cabelludo.",
-        Icon: Droplets,
-      },
-      {
-        id: "recogidos",
-        title: "Recogidos",
-        description: "Peinados para eventos, ondas y recogidos de practica.",
-        Icon: Waves,
-      },
-    ],
-  },
-  "2": {
-    name: "Cuidado Facial",
-    description:
-      "Estos bloques sirven como placeholder para futuras fichas de tratamientos faciales.",
-    workshops: [
-      {
-        id: "limpieza",
-        title: "Limpieza facial",
-        description: "Rutina completa con exfoliacion, vapor y extraccion suave.",
-        Icon: Sparkles,
-      },
-      {
-        id: "maquillaje",
-        title: "Maquillaje social",
-        description: "Pruebas de maquillaje de dia, tarde y eventos sencillos.",
-        Icon: Brush,
-      },
-      {
-        id: "hidratacion",
-        title: "Hidratacion intensiva",
-        description: "Mascarillas y activos adaptados a cada tipo de piel.",
-        Icon: Droplets,
-      },
-      {
-        id: "cejas",
-        title: "Diseno de cejas",
-        description: "Perfilado basico y armonizacion del rostro.",
-        Icon: Flower2,
-      },
-    ],
-  },
-  "3": {
-    name: "Tratamiento Corporal",
-    description:
-      "Aqui puedes mostrar mas adelante cada servicio corporal con sus horarios y plazas.",
-    workshops: [
-      {
-        id: "masaje",
-        title: "Masaje relajante",
-        description: "Sesiones enfocadas en bienestar, descarga y relajacion.",
-        Icon: Flower2,
-      },
-      {
-        id: "exfoliacion",
-        title: "Exfoliacion corporal",
-        description: "Preparacion de la piel con productos y maniobras suaves.",
-        Icon: Droplets,
-      },
-      {
-        id: "depilacion",
-        title: "Depilacion basica",
-        description: "Practicas guiadas por zonas con protocolo higienico.",
-        Icon: Sparkles,
-      },
-      {
-        id: "ritual",
-        title: "Ritual spa",
-        description: "Experiencia combinada con envoltura y masaje final.",
-        Icon: Waves,
-      },
-    ],
-  },
-  "4": {
-    name: "Manicura",
-    description:
-      "Estos ejemplos mantienen la misma presentacion del inicio y ayudan a visualizar el flujo.",
-    workshops: [
-      {
-        id: "manicura-basica",
-        title: "Manicura basica",
-        description: "Limpieza, limado, cuticulas y esmaltado tradicional.",
-        Icon: Hand,
-      },
-      {
-        id: "pedicura",
-        title: "Pedicura",
-        description: "Cuidado integral del pie con acabado estetico.",
-        Icon: Flower2,
-      },
-      {
-        id: "semipermanente",
-        title: "Semipermanente",
-        description: "Aplicacion de color de larga duracion y retirada segura.",
-        Icon: Sparkles,
-      },
-      {
-        id: "nail-art",
-        title: "Nail art",
-        description: "Disenos sencillos para practicas creativas del alumnado.",
-        Icon: Brush,
-      },
-    ],
-  },
+const workshopIconMap = {
+  brush: Brush,
+  droplets: Droplets,
+  flower: Flower2,
+  hand: Hand,
+  scissors: Scissors,
+  sparkles: Sparkles,
+  waves: Waves,
 };
 
 export default function Talleres() {
   const { courseId } = useParams();
-  const currentCourse = courseContent[courseId] ?? courseContent["1"];
+  const [course, setCourse] = useState(undefined);
+  const [workshops, setWorkshops] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadContent() {
+      const [nextCourse, nextWorkshops] = await Promise.all([
+        courseService.getCourseById(courseId),
+        workshopService.getWorkshopsByCourseId(courseId),
+      ]);
+
+      if (!isMounted) {
+        return;
+      }
+
+      setCourse(nextCourse);
+      setWorkshops(nextWorkshops);
+    }
+
+    loadContent();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [courseId]);
+
+  if (course === undefined) {
+    return (
+      <section className={styles.main}>
+        <div className={styles.hero}>
+          <h2 className={styles.title}>Cargando talleres...</h2>
+        </div>
+      </section>
+    );
+  }
+
+  if (!course) {
+    return (
+      <section className={styles.main}>
+        <div className={styles.hero}>
+          <h2 className={styles.title}>Especialidad no encontrada</h2>
+          <Link to="/" className={styles.backBtn}>
+            Volver a especialidades
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={styles.main}>
@@ -152,21 +86,21 @@ export default function Talleres() {
 
       <div className={styles.hero}>
         <span className={styles.eyebrow}>Taller educativo</span>
-        <h2 className={styles.title}>Talleres de {currentCourse.name}</h2>
-        <p className={styles.description}>{currentCourse.description}</p>
+        <h2 className={styles.title}>Talleres de {course.name}</h2>
+        <p className={styles.description}>{course.workshopPageDescription}</p>
       </div>
 
       <div className={styles.grid}>
-        {currentCourse.workshops.map((workshop) => (
+        {workshops.map((workshop) => (
           <ServiceCard
             key={workshop.id}
             title={workshop.title}
             description={workshop.description}
-            Icon={workshop.Icon}
+            Icon={workshopIconMap[workshop.iconKey] ?? Sparkles}
             to="/reservar"
             state={{
-              selectedWorkshop: workshop.title,
-              selectedCourse: currentCourse.name,
+              selectedWorkshopId: workshop.id,
+              selectedCourseId: course.id,
             }}
           />
         ))}

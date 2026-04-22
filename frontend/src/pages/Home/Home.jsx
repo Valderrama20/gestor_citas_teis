@@ -1,35 +1,37 @@
 import { Flower2, Hand, Scissors, Sparkles } from "lucide-react";
-import styles from "./Home.module.css";
+import { useEffect, useState } from "react";
 import ServiceCard from "../../components/ServiceCard";
+import courseService from "../../services/courseService";
+import styles from "./Home.module.css";
 
-const specialties = [
-  {
-    id: 1,
-    title: "Peluqueria",
-    description: "Corte, colorimetria y tratamientos capilares.",
-    Icon: Scissors,
-  },
-  {
-    id: 2,
-    title: "Cuidado Facial",
-    description: "Higiene, hidratacion y maquillaje profesional.",
-    Icon: Sparkles,
-  },
-  {
-    id: 3,
-    title: "Tratamiento Corporal",
-    description: "Masajes, exfoliaciones y depilacion.",
-    Icon: Flower2,
-  },
-  {
-    id: 4,
-    title: "Manicura",
-    description: "Cuidado de unas, esmaltado y pedicura.",
-    Icon: Hand,
-  },
-];
+const courseIconMap = {
+  scissors: Scissors,
+  sparkles: Sparkles,
+  flower: Flower2,
+  hand: Hand,
+};
 
 export default function Home() {
+  const [specialties, setSpecialties] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadCourses() {
+      const courses = await courseService.getPublicCourses();
+
+      if (isMounted) {
+        setSpecialties(courses);
+      }
+    }
+
+    loadCourses();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <section className={styles.main}>
       <div className={styles.header}>
@@ -50,7 +52,7 @@ export default function Home() {
             key={specialty.id}
             title={specialty.title}
             description={specialty.description}
-            Icon={specialty.Icon}
+            Icon={courseIconMap[specialty.iconKey] ?? Sparkles}
             to={`/curso/${specialty.id}/talleres`}
           />
         ))}

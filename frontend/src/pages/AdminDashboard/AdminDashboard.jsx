@@ -4,53 +4,78 @@ import { Link, useParams } from "react-router-dom";
 import AdminAppointmentsTable from "../../components/AdminAppointmentsTable";
 import AdminTopbar from "../../components/AdminTopbar";
 import Modal from "../../components/Modal";
-import {
-  appointmentsByCourse,
-  getCourseById,
-  studentsByCourse,
-} from "../../data/adminData";
+import appointmentService from "../../services/appointmentService";
+import courseService from "../../services/courseService";
+import studentService from "../../services/studentService";
 import styles from "./AdminDashboard.module.css";
 
 export default function AdminDashboard() {
   const { courseId } = useParams();
-  const course = getCourseById(courseId);
-  const initialAppointments = appointmentsByCourse[courseId] ?? [];
-  const [appointments, setAppointments] = useState(initialAppointments);
+  const [course, setCourse] = useState(undefined);
+  const [appointments, setAppointments] = useState([]);
+  const [students, setStudents] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [selectedStudent, setSelectedStudent] = useState("");
-
-  const studentOptions = studentsByCourse[courseId] ?? [];
+  const [selectedStudentId, setSelectedStudentId] = useState("");
 
   useEffect(() => {
-    setAppointments(appointmentsByCourse[courseId] ?? []);
-    setSelectedAppointment(null);
-    setSelectedStudent("");
+    let isMounted = true;
+
+    async function loadDashboardData() {
+      const [nextCourse, nextAppointments, nextStudents] = await Promise.all([
+        courseService.getCourseById(courseId),
+        appointmentService.getAppointmentsByCourseId(courseId),
+        studentService.getStudentsByCourseId(courseId),
+      ]);
+
+      if (!isMounted) {
+        return;
+      }
+
+      setCourse(nextCourse);
+      setAppointments(nextAppointments);
+      setStudents(nextStudents);
+      setSelectedAppointment(null);
+      setSelectedStudentId("");
+    }
+
+    loadDashboardData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [courseId]);
 
   function handleOpenAssign(appointment) {
     setSelectedAppointment(appointment);
-    setSelectedStudent(appointment.student || studentOptions[0] || "");
+    setSelectedStudentId(appointment.studentId || students[0]?.id || "");
   }
 
-  function handleConfirmAssign() {
-    if (!selectedAppointment || !selectedStudent) {
+  async function handleConfirmAssign() {
+    if (!selectedAppointment || !selectedStudentId) {
       return;
     }
 
-    setAppointments((current) =>
-      current.map((appointment) =>
-        appointment.id === selectedAppointment.id
-          ? {
-              ...appointment,
-              student: selectedStudent,
-              status: "Asignada",
-            }
-          : appointment,
-      ),
-    );
+    const updatedAppointments = await appointmentService.assignAppointmentStudent({
+      courseId,
+      appointmentId: selectedAppointment.id,
+      studentId: selectedStudentId,
+    });
 
+    setAppointments(updatedAppointments);
     setSelectedAppointment(null);
-    setSelectedStudent("");
+    setSelectedStudentId("");
+  }
+
+  if (course === undefined) {
+    return (
+      <main className={styles.page}>
+        <section className={styles.container}>
+          <div className={styles.emptyState}>
+            <h1 className={styles.title}>Cargando panel...</h1>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   if (!course) {
@@ -122,7 +147,7 @@ export default function AdminDashboard() {
           <div className={styles.modalBody}>
             <p className={styles.modalCopy}>
               Cita: <strong>{selectedAppointment.client}</strong> |{" "}
-              <strong>{selectedAppointment.workshop}</strong>
+              <strong>{selectedAppointment.workshopTitle}</strong>
             </p>
 
             <label className={styles.modalLabel} htmlFor="student">
@@ -131,12 +156,12 @@ export default function AdminDashboard() {
             <select
               id="student"
               className={styles.modalSelect}
-              value={selectedStudent}
-              onChange={(event) => setSelectedStudent(event.target.value)}
+              value={selectedStudentId}
+              onChange={(event) => setSelectedStudentId(event.target.value)}
             >
-              {studentOptions.map((student) => (
-                <option key={student} value={student}>
-                  {student}
+              {students.map((student) => (
+                <option key={student.id} value={student.id}>
+                  {student.name}
                 </option>
               ))}
             </select>
@@ -145,7 +170,7 @@ export default function AdminDashboard() {
               type="button"
               className={styles.primaryButton}
               onClick={handleConfirmAssign}
-              disabled={!selectedStudent}
+              disabled={!selectedStudentId}
             >
               Confirmar
             </button>

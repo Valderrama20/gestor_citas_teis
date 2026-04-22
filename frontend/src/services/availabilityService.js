@@ -1,0 +1,135 @@
+const availabilityTable = [
+  { id: "slot-1", workshopId: "corte", label: "Martes 22 de abril - 10:00" },
+  { id: "slot-2", workshopId: "corte", label: "Jueves 24 de abril - 12:30" },
+  { id: "slot-3", workshopId: "color", label: "Lunes 21 de abril - 09:30" },
+  { id: "slot-4", workshopId: "color", label: "Viernes 25 de abril - 11:00" },
+  {
+    id: "slot-5",
+    workshopId: "tratamiento-capilar",
+    label: "Miercoles 23 de abril - 16:00",
+  },
+  {
+    id: "slot-6",
+    workshopId: "tratamiento-capilar",
+    label: "Viernes 25 de abril - 10:30",
+  },
+  { id: "slot-7", workshopId: "recogidos", label: "Jueves 24 de abril - 17:00" },
+  { id: "slot-8", workshopId: "recogidos", label: "Viernes 25 de abril - 18:00" },
+  {
+    id: "slot-9",
+    workshopId: "limpieza-facial",
+    label: "Lunes 21 de abril - 10:00",
+  },
+  {
+    id: "slot-10",
+    workshopId: "limpieza-facial",
+    label: "Miercoles 23 de abril - 12:00",
+  },
+  {
+    id: "slot-11",
+    workshopId: "maquillaje-social",
+    label: "Martes 22 de abril - 16:30",
+  },
+  {
+    id: "slot-12",
+    workshopId: "maquillaje-social",
+    label: "Jueves 24 de abril - 18:00",
+  },
+  {
+    id: "slot-13",
+    workshopId: "hidratacion-intensiva",
+    label: "Miercoles 23 de abril - 09:30",
+  },
+  {
+    id: "slot-14",
+    workshopId: "hidratacion-intensiva",
+    label: "Viernes 25 de abril - 12:00",
+  },
+  {
+    id: "slot-15",
+    workshopId: "diseno-cejas",
+    label: "Lunes 21 de abril - 17:30",
+  },
+  {
+    id: "slot-16",
+    workshopId: "diseno-cejas",
+    label: "Jueves 24 de abril - 11:30",
+  },
+  {
+    id: "slot-17",
+    workshopId: "masaje-relajante",
+    label: "Martes 22 de abril - 10:30",
+  },
+  {
+    id: "slot-18",
+    workshopId: "masaje-relajante",
+    label: "Jueves 24 de abril - 16:00",
+  },
+  {
+    id: "slot-19",
+    workshopId: "exfoliacion-corporal",
+    label: "Miercoles 23 de abril - 11:00",
+  },
+  {
+    id: "slot-20",
+    workshopId: "exfoliacion-corporal",
+    label: "Viernes 25 de abril - 17:00",
+  },
+  {
+    id: "slot-21",
+    workshopId: "depilacion-basica",
+    label: "Lunes 21 de abril - 15:30",
+  },
+  {
+    id: "slot-22",
+    workshopId: "depilacion-basica",
+    label: "Jueves 24 de abril - 10:00",
+  },
+  {
+    id: "slot-23",
+    workshopId: "ritual-spa",
+    label: "Martes 22 de abril - 18:00",
+  },
+  {
+    id: "slot-24",
+    workshopId: "ritual-spa",
+    label: "Viernes 25 de abril - 16:30",
+  },
+  {
+    id: "slot-25",
+    workshopId: "manicura-basica",
+    label: "Lunes 21 de abril - 09:00",
+  },
+  {
+    id: "slot-26",
+    workshopId: "manicura-basica",
+    label: "Miercoles 23 de abril - 16:30",
+  },
+  { id: "slot-27", workshopId: "pedicura", label: "Martes 22 de abril - 12:00" },
+  { id: "slot-28", workshopId: "pedicura", label: "Viernes 25 de abril - 09:30" },
+  {
+    id: "slot-29",
+    workshopId: "semipermanente",
+    label: "Jueves 24 de abril - 10:30",
+  },
+  {
+    id: "slot-30",
+    workshopId: "semipermanente",
+    label: "Viernes 25 de abril - 13:00",
+  },
+  { id: "slot-31", workshopId: "nail-art", label: "Miercoles 23 de abril - 18:00" },
+  { id: "slot-32", workshopId: "nail-art", label: "Jueves 24 de abril - 17:30" },
+];
+
+function cloneData(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+const availabilityService = {
+  getSlotsByWorkshopId: async (workshopId) =>
+    cloneData(
+      availabilityTable.filter((slot) => slot.workshopId === String(workshopId)),
+    ),
+};
+
+export default availabilityService;

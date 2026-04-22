@@ -1,132 +1,104 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Modal from "../../components/Modal";
+import availabilityService from "../../services/availabilityService";
+import workshopService from "../../services/workshopService";
 import styles from "./Booking.module.css";
-
-const workshopOptions = [
-  "Corte y peinado",
-  "Coloracion",
-  "Tratamiento capilar",
-  "Recogidos",
-  "Limpieza facial",
-  "Maquillaje social",
-  "Hidratacion intensiva",
-  "Diseno de cejas",
-  "Masaje relajante",
-  "Exfoliacion corporal",
-  "Depilacion basica",
-  "Ritual spa",
-  "Manicura basica",
-  "Pedicura",
-  "Semipermanente",
-  "Nail art",
-];
-
-const availableSlots = {
-  "Corte y peinado": [
-    "Martes 22 de abril - 10:00",
-    "Jueves 24 de abril - 12:30",
-  ],
-  Coloracion: [
-    "Lunes 21 de abril - 09:30",
-    "Viernes 25 de abril - 11:00",
-  ],
-  "Tratamiento capilar": [
-    "Miercoles 23 de abril - 16:00",
-    "Viernes 25 de abril - 10:30",
-  ],
-  Recogidos: [
-    "Jueves 24 de abril - 17:00",
-    "Viernes 25 de abril - 18:00",
-  ],
-  "Limpieza facial": [
-    "Lunes 21 de abril - 10:00",
-    "Miercoles 23 de abril - 12:00",
-  ],
-  "Maquillaje social": [
-    "Martes 22 de abril - 16:30",
-    "Jueves 24 de abril - 18:00",
-  ],
-  "Hidratacion intensiva": [
-    "Miercoles 23 de abril - 09:30",
-    "Viernes 25 de abril - 12:00",
-  ],
-  "Diseno de cejas": [
-    "Lunes 21 de abril - 17:30",
-    "Jueves 24 de abril - 11:30",
-  ],
-  "Masaje relajante": [
-    "Martes 22 de abril - 10:30",
-    "Jueves 24 de abril - 16:00",
-  ],
-  "Exfoliacion corporal": [
-    "Miercoles 23 de abril - 11:00",
-    "Viernes 25 de abril - 17:00",
-  ],
-  "Depilacion basica": [
-    "Lunes 21 de abril - 15:30",
-    "Jueves 24 de abril - 10:00",
-  ],
-  "Ritual spa": [
-    "Martes 22 de abril - 18:00",
-    "Viernes 25 de abril - 16:30",
-  ],
-  "Manicura basica": [
-    "Lunes 21 de abril - 09:00",
-    "Miercoles 23 de abril - 16:30",
-  ],
-  Pedicura: [
-    "Martes 22 de abril - 12:00",
-    "Viernes 25 de abril - 09:30",
-  ],
-  Semipermanente: [
-    "Jueves 24 de abril - 10:30",
-    "Viernes 25 de abril - 13:00",
-  ],
-  "Nail art": [
-    "Miercoles 23 de abril - 18:00",
-    "Jueves 24 de abril - 17:30",
-  ],
-};
 
 export default function Booking() {
   const location = useLocation();
-  const initialWorkshop = location.state?.selectedWorkshop ?? workshopOptions[0];
-  const initialSlots = availableSlots[initialWorkshop] ?? [];
+  const initialWorkshopId = location.state?.selectedWorkshopId ?? "";
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-
+  const [workshops, setWorkshops] = useState([]);
+  const [slots, setSlots] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    workshop: initialWorkshop,
-    slot: initialSlots[0] ?? "",
+    workshopId: initialWorkshopId,
+    slotId: "",
     allergies: "",
   });
 
-  const slotsForWorkshop = availableSlots[formData.workshop] ?? [];
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadWorkshops() {
+      const nextWorkshops = await workshopService.getAllWorkshops();
+
+      if (!isMounted) {
+        return;
+      }
+
+      setWorkshops(nextWorkshops);
+      setFormData((current) => ({
+        ...current,
+        workshopId: current.workshopId || nextWorkshops[0]?.id || "",
+      }));
+    }
+
+    loadWorkshops();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
-    const nextWorkshop = location.state?.selectedWorkshop;
+    const nextWorkshopId = location.state?.selectedWorkshopId;
 
-    if (!nextWorkshop || nextWorkshop === formData.workshop) {
+    if (!nextWorkshopId || nextWorkshopId === formData.workshopId) {
       return;
     }
 
     setFormData((current) => ({
       ...current,
-      workshop: nextWorkshop,
-      slot: availableSlots[nextWorkshop]?.[0] ?? "",
+      workshopId: nextWorkshopId,
+      slotId: "",
     }));
-  }, [location.state, formData.workshop]);
+  }, [location.state, formData.workshopId]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadSlots() {
+      if (!formData.workshopId) {
+        setSlots([]);
+        return;
+      }
+
+      const nextSlots = await availabilityService.getSlotsByWorkshopId(
+        formData.workshopId,
+      );
+
+      if (!isMounted) {
+        return;
+      }
+
+      setSlots(nextSlots);
+      setFormData((current) => ({
+        ...current,
+        slotId:
+          nextSlots.find((slot) => slot.id === current.slotId)?.id ??
+          nextSlots[0]?.id ??
+          "",
+      }));
+    }
+
+    loadSlots();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [formData.workshopId]);
 
   function handleChange(event) {
     const { name, value } = event.target;
 
-    if (name === "workshop") {
+    if (name === "workshopId") {
       setFormData((current) => ({
         ...current,
-        workshop: value,
-        slot: availableSlots[value]?.[0] ?? "",
+        workshopId: value,
+        slotId: "",
       }));
       return;
     }
@@ -141,6 +113,11 @@ export default function Booking() {
     event.preventDefault();
     setShowSuccessModal(true);
   }
+
+  const selectedWorkshop = workshops.find(
+    (workshop) => workshop.id === formData.workshopId,
+  );
+  const selectedSlot = slots.find((slot) => slot.id === formData.slotId);
 
   return (
     <>
@@ -187,40 +164,40 @@ export default function Booking() {
             </div>
 
             <div className={styles.fieldGroup}>
-              <label className={styles.label} htmlFor="workshop">
+              <label className={styles.label} htmlFor="workshopId">
                 Taller
               </label>
               <select
-                id="workshop"
-                name="workshop"
+                id="workshopId"
+                name="workshopId"
                 className={styles.select}
-                value={formData.workshop}
+                value={formData.workshopId}
                 onChange={handleChange}
                 required
               >
-                {workshopOptions.map((workshop) => (
-                  <option key={workshop} value={workshop}>
-                    {workshop}
+                {workshops.map((workshop) => (
+                  <option key={workshop.id} value={workshop.id}>
+                    {workshop.title}
                   </option>
                 ))}
               </select>
             </div>
 
             <div className={styles.fieldGroup}>
-              <label className={styles.label} htmlFor="slot">
+              <label className={styles.label} htmlFor="slotId">
                 Dia y horario disponible
               </label>
               <select
-                id="slot"
-                name="slot"
+                id="slotId"
+                name="slotId"
                 className={styles.select}
-                value={formData.slot}
+                value={formData.slotId}
                 onChange={handleChange}
                 required
               >
-                {slotsForWorkshop.map((slot) => (
-                  <option key={slot} value={slot}>
-                    {slot}
+                {slots.map((slot) => (
+                  <option key={slot.id} value={slot.id}>
+                    {slot.label}
                   </option>
                 ))}
               </select>
@@ -244,10 +221,10 @@ export default function Booking() {
             <div className={styles.summary}>
               <p className={styles.summaryTitle}>Resumen de la reserva</p>
               <p className={styles.summaryText}>
-                Taller: <strong>{formData.workshop}</strong>
+                Taller: <strong>{selectedWorkshop?.title || "Sin seleccionar"}</strong>
               </p>
               <p className={styles.summaryText}>
-                Horario: <strong>{formData.slot || "Sin disponibilidad"}</strong>
+                Horario: <strong>{selectedSlot?.label || "Sin disponibilidad"}</strong>
               </p>
             </div>
 
@@ -265,8 +242,9 @@ export default function Booking() {
         title="Tu cita se ha solicitado correctamente"
       >
         <p>
-          Hemos registrado la solicitud para <strong>{formData.workshop}</strong>
-          {" "}el <strong>{formData.slot}</strong>.
+          Hemos registrado la solicitud para{" "}
+          <strong>{selectedWorkshop?.title || "tu taller"}</strong> el{" "}
+          <strong>{selectedSlot?.label || "horario elegido"}</strong>.
         </p>
         <p>
           Te contactaremos en <strong>{formData.email}</strong> para confirmar
