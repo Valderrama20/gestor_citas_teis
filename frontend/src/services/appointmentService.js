@@ -68,6 +68,15 @@ function cloneData(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function getNextAppointmentId() {
+  return (
+    appointmentsTable.reduce(
+      (maxId, appointment) => Math.max(maxId, appointment.id),
+      0,
+    ) + 1
+  );
+}
+
 async function enrichAppointments(appointments) {
   const allWorkshops = await workshopService.getAllWorkshops();
 
@@ -112,8 +121,23 @@ const appointmentService = {
   },
 
   createAppointment: async (appointmentData) => {
-    const response = await api.post("/appointments", appointmentData);
-    return response.data;
+    const newAppointment = {
+      id: getNextAppointmentId(),
+      courseId: String(appointmentData.courseId),
+      client: appointmentData.client.trim(),
+      email: appointmentData.email?.trim() ?? "",
+      workshopId: appointmentData.workshopId,
+      date: appointmentData.date,
+      time: appointmentData.time,
+      status: appointmentData.status ?? "Pendiente",
+      studentId: appointmentData.studentId ?? null,
+      allergies: appointmentData.allergies?.trim() ?? "",
+    };
+
+    appointmentsTable = [...appointmentsTable, newAppointment];
+
+    const [enrichedAppointment] = await enrichAppointments([newAppointment]);
+    return enrichedAppointment;
   },
 
   cancelAppointment: async (id) => {

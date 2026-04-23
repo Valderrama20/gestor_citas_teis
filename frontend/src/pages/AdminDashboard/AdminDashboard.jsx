@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import AdminAppointmentsTable from "../../components/AdminAppointmentsTable";
 import AdminTopbar from "../../components/AdminTopbar";
+import CreateAppointmentModal from "../../components/CreateAppointmentModal";
 import CreateWorkshopModal from "../../components/CreateWorkshopModal";
 import appointmentService from "../../services/appointmentService";
 import courseService from "../../services/courseService";
@@ -22,6 +23,7 @@ export default function AdminDashboard() {
   const [appointments, setAppointments] = useState([]);
   const [workshops, setWorkshops] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isCreateAppointmentModalOpen, setIsCreateAppointmentModalOpen] = useState(false);
   const [isCreateWorkshopModalOpen, setIsCreateWorkshopModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     date: "",
@@ -67,6 +69,17 @@ export default function AdminDashboard() {
     });
 
     setAppointments(updatedAppointments);
+  }
+
+  async function handleCreateAppointment(appointmentData) {
+    await appointmentService.createAppointment({
+      ...appointmentData,
+      courseId,
+    });
+
+    const nextAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
+    setAppointments(nextAppointments);
+    setIsCreateAppointmentModalOpen(false);
   }
 
   async function handleCreateWorkshop(workshopData) {
@@ -185,6 +198,14 @@ export default function AdminDashboard() {
             <button
               type="button"
               className={styles.primaryButton}
+              onClick={() => setIsCreateAppointmentModalOpen(true)}
+            >
+              <Plus className={styles.secondaryIcon} strokeWidth={1.8} />
+              Nueva cita
+            </button>
+            <button
+              type="button"
+              className={styles.primaryButton}
               onClick={() => setIsCreateWorkshopModalOpen(true)}
             >
               <Plus className={styles.secondaryIcon} strokeWidth={1.8} />
@@ -288,6 +309,13 @@ export default function AdminDashboard() {
         onClose={() => setIsCreateWorkshopModalOpen(false)}
         onSubmit={handleCreateWorkshop}
         courseName={course.name}
+      />
+      <CreateAppointmentModal
+        isOpen={isCreateAppointmentModalOpen}
+        onClose={() => setIsCreateAppointmentModalOpen(false)}
+        onSubmit={handleCreateAppointment}
+        courseName={course.name}
+        workshops={workshops}
       />
     </main>
   );
