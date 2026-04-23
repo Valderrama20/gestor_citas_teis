@@ -16,7 +16,7 @@ public class AdministradorController {
     @GetMapping
     public List<Administrador> getAdministrador() { return administradorService.findAll();}
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Administrador getAdministradoresById(@PathVariable Long id){ return administradorService.findById(id);
     }
 

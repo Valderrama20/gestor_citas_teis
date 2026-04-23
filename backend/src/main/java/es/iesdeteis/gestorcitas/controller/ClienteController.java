@@ -17,7 +17,7 @@ public class ClienteController {
     @GetMapping
     public List<Cliente> getCliente() { return clienteService.findAll();}
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Cliente getClienteById(@PathVariable Long id) {
         return clienteService.findById(id);
     }
@@ -25,7 +25,7 @@ public class ClienteController {
     @PostMapping
     public void saveCliente(@RequestBody Cliente cliente) {clienteService.save(cliente);}
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public void deleteCliente(@PathVariable("id") Long id) { clienteService.deleteById(id);}
 
     @PutMapping
