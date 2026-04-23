@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/talleres")
 public class TallerController {
 
     // --- ATRIBUTOS ---
@@ -15,27 +16,27 @@ public class TallerController {
     private ITallerService tallerService;
 
     // --- MÉTODOS PROPIOS ---
-    @GetMapping("/talleres")
+    @GetMapping
     public List<Taller> getTalleres() {
         return tallerService.findAll();
     }
 
-    @GetMapping("talleres/{id}")
+    @GetMapping("/{id}")
     public Taller getTallerById(@PathVariable Long id) {
         return tallerService.findById(id);
     }
 
-    @PostMapping("/talleres/")
+    @PostMapping
     public void saveTaller(@RequestBody Taller taller) {
         tallerService.save(taller);
     }
 
-    @DeleteMapping("/talleres/{id}")
+    @DeleteMapping("/{id}")
     public void deleteTaller(@PathVariable Long id) {
         tallerService.deleteById(id);
     }
 
-    @PutMapping("/talleres/")
+    @PutMapping
     public void updateTaller(@RequestBody Taller taller) {
         tallerService.save(taller);
     }

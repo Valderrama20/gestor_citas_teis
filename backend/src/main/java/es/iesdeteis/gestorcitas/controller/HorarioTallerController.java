@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/horarios-talleres")
 public class HorarioTallerController {
 
     // --- ATRIBUTOS ---
@@ -15,27 +16,27 @@ public class HorarioTallerController {
     private IHorarioTallerService horarioTallerService;
 
     // --- MÉTODOS PROPIOS ---
-    @GetMapping("/horariostalleres")
+    @GetMapping
     public List<HorarioTaller> getTalleres() {
         return horarioTallerService.findAll();
     }
 
-    @GetMapping("/horariostalleres/{id}")
+    @GetMapping("/{id}")
     public HorarioTaller getHorarioTallerById(@PathVariable Long id) {
         return horarioTallerService.findById(id);
     }
 
-    @PostMapping("/horariostalleres/")
+    @PostMapping
     public void saveHorarioTaller(@RequestBody HorarioTaller horarioTaller) {
         horarioTallerService.save(horarioTaller);
     }
 
-    @DeleteMapping("/horariostalleres/{id}")
+    @DeleteMapping("/{id}")
     public void deleteHorarioTaller(@PathVariable Long id) {
         horarioTallerService.deleteById(id);
     }
 
-    @PutMapping("/horariostalleres/")
+    @PutMapping
     public void updateHorarioTaller(@RequestBody HorarioTaller horarioTaller) {
         horarioTallerService.save(horarioTaller);
     }

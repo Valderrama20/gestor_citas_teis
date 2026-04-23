@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/citas")
 public class CitaController {
 
     // --- ATRIBUTOS ---
@@ -15,27 +16,27 @@ public class CitaController {
     private ICitaService citaService;
 
     // --- MÉTODOS PROPIOS ---
-    @GetMapping("/citas")
+    @GetMapping
     public List<Cita> getCitas() {
         return citaService.findAll();
     }
 
-    @GetMapping("/citas/{id}")
+    @GetMapping("/{id}")
     public Cita getCitaById(@PathVariable Long id) {
         return citaService.findById(id);
     }
 
-    @PostMapping("/citas/")
+    @PostMapping
     public void saveCita(@RequestBody Cita cita) {
         citaService.save(cita);
     }
 
-    @DeleteMapping("/citas/{id}")
+    @DeleteMapping("/{id}")
     public void deleteCita(@PathVariable Long id) {
         citaService.deleteById(id);
     }
 
-    @PutMapping("/citas/")
+    @PutMapping
     public void updateCita(@RequestBody Cita cita) {
         citaService.save(cita);
     }
