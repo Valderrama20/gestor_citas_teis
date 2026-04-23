@@ -234,6 +234,14 @@ const availabilityService = {
     cloneData(
       availabilityTable.filter((slot) => slot.workshopId === String(workshopId)),
     ),
+
+  getSlotsByDate: async (date) =>
+    cloneData(
+      availabilityTable.filter((slot) => slot.date === String(date)),
+    ),
+
+  getSlotById: async (slotId) =>
+    cloneData(availabilityTable.find((slot) => slot.id === String(slotId)) ?? null),
 };
 
 export default availabilityService;

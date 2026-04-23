@@ -413,7 +413,51 @@ GET /admin/courses
 
 ---
 
-### 3.3 Obtener citas de un curso
+### 3.3 Crear curso
+
+Usado en:
+- `src/components/CreateCourseModal/CreateCourseModal.jsx`
+
+#### Endpoint
+
+```http
+POST /admin/courses
+```
+
+#### Qué envía el frontend
+
+```json
+{
+  "name": "Peluqueria avanzada",
+  "level": "Grado Medio",
+  "period": "2025/2026",
+  "studentCount": 15,
+  "iconKey": "scissors",
+  "specialtyDescription": "Corte, colorimetria y tratamientos capilares.",
+  "workshopPageDescription": "Selecciona un taller de ejemplo para ver como podriamos organizar los servicios disponibles."
+}
+```
+
+> `workshopPageDescription` puede venir como string vacio si el formulario no lo solicita aun.
+
+#### Respuesta esperada
+
+```json
+{
+  "id": "1",
+  "name": "Peluqueria avanzada",
+  "level": "Grado Medio",
+  "period": "2025/2026",
+  "studentCount": 15,
+  "iconKey": "scissors",
+  "specialtyDescription": "Corte, colorimetria y tratamientos capilares.",
+  "workshopPageDescription": "Selecciona un taller de ejemplo para ver como podriamos organizar los servicios disponibles."
+}
+```
+
+---
+
+### 3.4 Obtener citas de un curso
 
 Usado en:
 - `src/pages/AdminDashboard/AdminDashboard.jsx`
@@ -481,7 +525,7 @@ Ambos query params son opcionales.
 
 ---
 
-### 3.4 Actualizar estado de una cita
+### 3.5 Actualizar estado de una cita
 
 Usado en:
 - `src/pages/AdminDashboard/AdminDashboard.jsx`
@@ -546,6 +590,86 @@ Opción también válida:
 
 ---
 
+### 3.6 Crear taller en un curso
+
+Usado en:
+- `src/components/CreateWorkshopModal/CreateWorkshopModal.jsx`
+
+#### Endpoint
+
+```http
+POST /admin/courses/:courseId/workshops
+```
+
+#### Qué envía el frontend
+
+```json
+{
+  "title": "Ritual detox facial",
+  "description": "Tratamiento express con limpieza y mascarilla.",
+  "iconKey": "sparkles"
+}
+```
+
+#### Respuesta esperada
+
+```json
+{
+  "id": "ritual-detox-facial",
+  "courseId": "1",
+  "title": "Ritual detox facial",
+  "description": "Tratamiento express con limpieza y mascarilla.",
+  "iconKey": "sparkles"
+}
+```
+
+---
+
+### 3.7 Crear cita manual (admin)
+
+Usado en:
+- `src/components/CreateAppointmentModal/CreateAppointmentModal.jsx`
+
+#### Endpoint
+
+```http
+POST /admin/courses/:courseId/appointments
+```
+
+#### Qué envía el frontend
+
+```json
+{
+  "client": "Maria Alonso",
+  "email": "maria@correo.com",
+  "workshopId": "corte",
+  "slotId": "slot-1",
+  "allergies": "Piel sensible"
+}
+```
+
+> El frontend selecciona `slotId` desde `GET /workshops/:workshopId/slots`.
+> Se recomienda que backend derive `date` y `time` a partir del slot.
+
+#### Respuesta esperada
+
+```json
+{
+  "id": 120,
+  "courseId": "1",
+  "client": "Maria Alonso",
+  "email": "maria@correo.com",
+  "workshopId": "corte",
+  "workshopTitle": "Corte y peinado",
+  "date": "2026-04-22",
+  "time": "10:00",
+  "status": "Pendiente",
+  "allergies": "Piel sensible"
+}
+```
+
+---
+
 ## 4. Endpoint legado opcional
 
 En `src/services/appointmentService.js` todavía existe una función antigua para consultar disponibilidad por fecha.
@@ -586,7 +710,10 @@ Backend debería implementar como mínimo:
 - `GET /workshops/:workshopId/slots`
 - `POST /appointments`
 - `GET /admin/courses`
+- `POST /admin/courses`
 - `GET /admin/courses/:courseId/appointments`
+- `POST /admin/courses/:courseId/appointments`
+- `POST /admin/courses/:courseId/workshops`
 - `PATCH /admin/appointments/:appointmentId/status`
 
 ---

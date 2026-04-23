@@ -1,4 +1,4 @@
-import api from "../config/api";
+import availabilityService from "./availabilityService";
 import workshopService from "./workshopService";
 
 let appointmentsTable = [
@@ -114,21 +114,35 @@ const appointmentService = {
   },
 
   getAvailableSlots: async (date) => {
-    const response = await api.get("/appointments/available", {
-      params: { date },
-    });
-    return response.data;
+    if (!date) {
+      return [];
+    }
+
+    return availabilityService.getSlotsByDate(date);
   },
 
   createAppointment: async (appointmentData) => {
+    const slot = appointmentData.slotId
+      ? await availabilityService.getSlotById(appointmentData.slotId)
+      : null;
+    const workshopId = appointmentData.workshopId ?? slot?.workshopId ?? "";
+    const workshop = workshopId
+      ? await workshopService.getWorkshopById(workshopId)
+      : null;
+    const courseId = appointmentData.courseId ?? workshop?.courseId ?? "";
+    const date = appointmentData.date ?? slot?.date ?? "";
+    const time = appointmentData.time ?? slot?.time ?? "";
+    const clientName = (appointmentData.client ?? appointmentData.name ?? "").trim();
+
     const newAppointment = {
       id: getNextAppointmentId(),
-      courseId: String(appointmentData.courseId),
-      client: appointmentData.client.trim(),
+      courseId: courseId ? String(courseId) : "",
+      client: clientName,
       email: appointmentData.email?.trim() ?? "",
-      workshopId: appointmentData.workshopId,
-      date: appointmentData.date,
-      time: appointmentData.time,
+      workshopId,
+      slotId: slot?.id ?? appointmentData.slotId ?? null,
+      date,
+      time,
       status: appointmentData.status ?? "Pendiente",
       studentId: appointmentData.studentId ?? null,
       allergies: appointmentData.allergies?.trim() ?? "",
@@ -140,9 +154,19 @@ const appointmentService = {
     return enrichedAppointment;
   },
 
-  cancelAppointment: async (id) => {
-    const response = await api.delete(`/appointments/${id}`);
-    return response.data;
+  cancelAppointment: async (appointmentId) => {
+    appointmentsTable = appointmentsTable.map((appointment) =>
+      appointment.id === appointmentId
+        ? {
+            ...appointment,
+            status: "Cancelada",
+          }
+        : appointment,
+    );
+
+    return cloneData(
+      appointmentsTable.find((appointment) => appointment.id === appointmentId) ?? null,
+    );
   },
 };
 
