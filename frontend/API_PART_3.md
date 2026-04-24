@@ -1,16 +1,31 @@
 # Requerimientos API Frontend - Parte 3 (Citas y Auth)
 
-Este archivo es parte 3 de 3. Las tareas estan mezcladas (publico + admin).
-La numeracion de secciones se mantiene respecto al documento original.
+Este archivo es parte 3 de 3. Las tareas están mezcladas (público + admin).
+
+---
+
+## Tareas de Base de Datos y Backend Asociadas
+
+Para alinear el sistema de reservas y citas con esta parte de la API y el Frontend, deben hacerse los siguientes cambios:
+
+**Tabla `citas`**
+- **Campos existentes a mapear:** `id_cita`, `fecha`, `hora`, `estado`, `id_cliente`, `id_taller`, `id_alumno`.
+- **Añadir/Modificar en BD:**
+  - `fecha_creacion` (TIMESTAMP): Campo NUEVO para guardar el momento exacto en el que el usuario o el administrador reservó la cita.
+  - En el campo `estado` (`ENUM`), hay que añadir el valor `'cancelada'`, ya que actualmente sólo se permiten `'pendiente', 'confirmada', 'completada'`.
+
+**Tabla `cliente`**
+- **Campos existentes a mapear:** `id_cliente`, `nombre` (mapeado a `cliente` en requests), `email`, `telefono` (aunque el payload del frontend no nos pida teléfono, podríamos querer recibirlo en el futuro, pero de momento es irrelevante), `notas_alergias`.
+
+**API Java (Citas y Clientes):**
+- La entidad `Cita` debe añadir el mapeo del nuevo atributo `fechaCreacion`.
+- El enumerado `EstadoCita` debe incluir `CANCELADA`.
+- Los controladores expuestos que atiendan peticiones de creación (y los DTOs) deben interpretar el `id_taller` (antes workshopId) e interrogar la tabla de horarios o el calculador de huecos a través del `id_horario` que ahora viaja en el payload.
+- Es vital recibir el nombre, email y notas_alergias del payload de Cita y guardarlo/actualizarlo en la tabla `cliente`.
 
 ---
 
 ## 3.1 Login admin
-
-Usado en:
-- `src/pages/AdminLogin/AdminLogin.jsx`
-
-Actualmente el frontend todavia navega directamente tras enviar el formulario, pero este endpoint sera necesario para la integracion real.
 
 ### Endpoint
 
@@ -18,7 +33,7 @@ Actualmente el frontend todavia navega directamente tras enviar el formulario, p
 POST /admin/auth/login
 ```
 
-### Que envia el frontend
+### Qué envía el frontend
 
 ```json
 {
@@ -32,11 +47,11 @@ POST /admin/auth/login
 ```json
 {
   "token": "jwt-o-token-de-sesion",
-  "user": {
+  "usuario": {
     "id": "teacher-1",
-    "name": "Profesor",
+    "nombre": "Profesor",
     "email": "profesor@teis.es",
-    "role": "admin"
+    "rol": "admin"
   }
 }
 ```
@@ -45,49 +60,46 @@ POST /admin/auth/login
 
 ## 2.6 Crear una cita
 
-Usado en:
-- `src/pages/Booking/Booking.jsx`
-
 ### Endpoint
 
 ```http
-POST /appointments
+POST /citas
 ```
 
-### Que envia el frontend
+### Qué envía el frontend
 
 ```json
 {
-  "name": "Ana Garcia",
+  "nombre": "Ana Garcia",
   "email": "ana@email.com",
-  "workshopId": "corte",
-  "slotId": "slot-1",
-  "allergies": "Piel sensible"
+  "id_taller": "corte",
+  "id_horario": "slot-1",
+  "notas_alergias": "Piel sensible"
 }
 ```
 
 ### Campos enviados
 
-| Campo | Tipo | Obligatorio | Descripcion |
+| Campo | Tabla DB Destino | Obligatorio | Descripción |
 |---|---|---:|---|
-| `name` | `string` | Si | Nombre del cliente |
-| `email` | `string` | Si | Email del cliente |
-| `workshopId` | `string` | Si | Taller elegido |
-| `slotId` | `string` | Si | Hueco seleccionado |
-| `allergies` | `string` | No | Observaciones o alergias |
+| `nombre` | `cliente.nombre` | Sí | Nombre del cliente |
+| `email` | `cliente.email` | Sí | Email del cliente |
+| `id_taller` | `citas.id_taller` | Sí | Taller elegido |
+| `id_horario` | *(Lógica de fecha)* | Sí | Hueco/Horario seleccionado |
+| `notas_alergias` | `cliente.notas_alergias` | No | Observaciones o alergias |
 
 ### Respuesta esperada
 
 ```json
 {
-  "id": 101,
-  "client": "Ana Garcia",
+  "id_cita": 101,
+  "cliente": "Ana Garcia",
   "email": "ana@email.com",
-  "workshopId": "corte",
-  "slotId": "slot-1",
-  "status": "Pendiente",
-  "allergies": "Piel sensible",
-  "createdAt": "2026-04-22T10:20:00.000Z"
+  "id_taller": "corte",
+  "id_horario": "slot-1",
+  "estado": "pendiente",
+  "notas_alergias": "Piel sensible",
+  "fecha_creacion": "2026-04-22T10:20:00.000Z"
 }
 ```
 
@@ -95,246 +107,121 @@ POST /appointments
 
 ## 3.4 Obtener citas de un curso
 
-Usado en:
-- `src/pages/AdminDashboard/AdminDashboard.jsx`
+El frontend soporta filtros opcionales.
 
-El frontend ya soporta filtros por:
-- `date`
-- `workshopId`
-
-Por tanto, se recomienda que backend los acepte desde ya.
-
-### Endpoint recomendado
+### Endpoint
 
 ```http
-GET /admin/courses/:courseId/appointments?date=2026-04-22&workshopId=corte
+GET /admin/cursos/:id_curso/citas?fecha=2026-04-22&id_taller=corte
 ```
-
-Ambos query params son opcionales.
-
-### Parametros query
-
-| Parametro | Tipo | Obligatorio | Descripcion |
-|---|---|---:|---|
-| `date` | `string` | No | Fecha exacta en formato `YYYY-MM-DD` |
-| `workshopId` | `string` | No | ID del taller |
 
 ### Respuesta esperada
 
 ```json
 [
   {
-    "id": 1,
-    "courseId": "1",
-    "client": "Ana Garcia",
-    "workshopId": "corte",
-    "workshopTitle": "Corte y peinado",
-    "date": "2026-04-22",
-    "time": "10:00",
-    "status": "Pendiente"
-  },
-  {
-    "id": 2,
-    "courseId": "1",
-    "client": "Pedro Sanchez",
-    "workshopId": "color",
-    "workshopTitle": "Coloracion",
-    "date": "2026-04-22",
-    "time": "11:00",
-    "status": "Confirmada"
+    "id_cita": 1,
+    "id_curso": "1",
+    "cliente": "Ana Garcia",
+    "id_taller": "corte",
+    "titulo_taller": "Corte y peinado",
+    "fecha": "2026-04-22",
+    "hora": "10:00",
+    "estado": "pendiente"
   }
 ]
 ```
-
-### Campos esperados
-
-| Campo | Tipo | Obligatorio | Descripcion |
-|---|---|---:|---|
-| `id` | `number|string` | Si | ID de la cita |
-| `courseId` | `string` | Si | ID del curso |
-| `client` | `string` | Si | Nombre del cliente |
-| `workshopId` | `string` | Si | ID del taller |
-| `workshopTitle` | `string` | Si | Nombre del taller ya resuelto |
-| `date` | `string` | Si | Fecha en formato `YYYY-MM-DD` |
-| `time` | `string` | Si | Hora en formato `HH:mm` |
-| `status` | `string` | Si | Uno de los estados validos |
 
 ---
 
 ## 3.5 Actualizar estado de una cita
 
-Usado en:
-- `src/pages/AdminDashboard/AdminDashboard.jsx`
-
 ### Endpoint
 
 ```http
-PATCH /admin/appointments/:appointmentId/status
+PATCH /admin/citas/:id_cita/estado
 ```
 
-### Que envia el frontend
-
-Ejemplo 1:
+### Qué envía el frontend
 
 ```json
 {
-  "status": "Confirmada"
+  "estado": "confirmada"
 }
 ```
 
-Ejemplo 2:
-
-```json
-{
-  "status": "Completada"
-}
-```
-
-Ejemplo 3:
-
-```json
-{
-  "status": "Cancelada"
-}
-```
-
-### Transiciones que hoy hace el frontend
-
-- `Pendiente` -> `Confirmada`
-- `Confirmada` -> `Completada`
-- `Confirmada` -> `Cancelada`
+Estados válidos: `pendiente`, `confirmada`, `completada`, `cancelada`.
 
 ### Respuesta esperada
 
-Opcion preferida:
-
 ```json
 {
-  "id": 2,
-  "courseId": "1",
-  "client": "Pedro Sanchez",
-  "workshopId": "color",
-  "workshopTitle": "Coloracion",
-  "date": "2026-04-22",
-  "time": "11:00",
-  "status": "Completada"
+  "id_cita": 1,
+  "id_curso": "1",
+  "cliente": "Ana Garcia",
+  "id_taller": "corte",
+  "titulo_taller": "Corte y peinado",
+  "fecha": "2026-04-22",
+  "hora": "10:00",
+  "estado": "confirmada"
 }
 ```
-
-Opcion tambien valida:
-- devolver la lista completa de citas actualizada del curso
 
 ---
 
 ## 3.7 Crear cita manual (admin)
 
-Usado en:
-- `src/components/CreateAppointmentModal/CreateAppointmentModal.jsx`
-
 ### Endpoint
 
 ```http
-POST /admin/courses/:courseId/appointments
+POST /admin/cursos/:id_curso/citas
 ```
 
-### Que envia el frontend
+### Qué envía el frontend
 
 ```json
 {
-  "client": "Maria Alonso",
+  "cliente": "Maria Alonso",
   "email": "maria@correo.com",
-  "workshopId": "corte",
-  "slotId": "slot-1",
-  "allergies": "Piel sensible"
+  "id_taller": "corte",
+  "id_horario": "slot-1",
+  "notas_alergias": "Piel sensible"
 }
 ```
-
-> El frontend selecciona `slotId` desde `GET /workshops/:workshopId/slots`.
-> Se recomienda que backend derive `date` y `time` a partir del slot.
 
 ### Respuesta esperada
 
 ```json
 {
-  "id": 120,
-  "courseId": "1",
-  "client": "Maria Alonso",
+  "id_cita": 120,
+  "id_curso": "1",
+  "cliente": "Maria Alonso",
   "email": "maria@correo.com",
-  "workshopId": "corte",
-  "workshopTitle": "Corte y peinado",
-  "date": "2026-04-22",
-  "time": "10:00",
-  "status": "Pendiente",
-  "allergies": "Piel sensible"
+  "id_taller": "corte",
+  "titulo_taller": "Corte y peinado",
+  "fecha": "2026-04-22",
+  "hora": "10:00",
+  "estado": "pendiente",
+  "notas_alergias": "Piel sensible"
 }
 ```
 
 ---
 
-## 4. Endpoint legado opcional
+## 5. Resumen para Backend (Mapeo Completo Español)
 
-En `src/services/appointmentService.js` todavia existe una funcion antigua para consultar disponibilidad por fecha.
-
-Si backend quiere soportarla:
-
-```http
-GET /appointments/available?date=2026-04-22
-```
-
-### Respuesta sugerida
-
-```json
-[
-  {
-    "id": "slot-1",
-    "workshopId": "corte",
-    "date": "2026-04-22",
-    "time": "10:00",
-    "label": "Martes 22 de abril - 10:00"
-  }
-]
-```
-
-Si este endpoint no va a existir, despues conviene limpiar esa funcion del servicio.
-
----
-
-## 5. Resumen minimo para backend
-
-Backend deberia implementar como minimo:
+Backend debería implementar:
 
 - `POST /admin/auth/login`
-- `GET /courses/public`
-- `GET /courses/:courseId`
-- `GET /courses/:courseId/workshops`
-- `GET /workshops`
-- `GET /workshops/:workshopId/slots`
-- `POST /appointments`
-- `GET /admin/courses`
-- `POST /admin/courses`
-- `GET /admin/courses/:courseId/appointments`
-- `POST /admin/courses/:courseId/appointments`
-- `POST /admin/courses/:courseId/workshops`
-- `PATCH /admin/appointments/:appointmentId/status`
-
----
-
-## 6. Recomendacion para integrar rapido
-
-La forma mas directa de conectar backend con este frontend es:
-
-1. Devolver exactamente las estructuras documentadas arriba.
-2. Soportar filtros en:
-
-```http
-GET /admin/courses/:courseId/appointments?date=&workshopId=
-```
-
-3. Mantener exactamente estos estados:
-
-- `Pendiente`
-- `Confirmada`
-- `Completada`
-- `Cancelada`
-
-4. Incluir `workshopTitle` ya resuelto en las citas del panel admin para evitar logica extra en frontend.
+- `GET /cursos/publico`
+- `GET /cursos/:id_curso`
+- `GET /cursos/:id_curso/talleres`
+- `GET /talleres`
+- `GET /talleres/:id_taller/horarios`
+- `POST /citas`
+- `GET /admin/cursos`
+- `POST /admin/cursos`
+- `GET /admin/cursos/:id_curso/citas`
+- `POST /admin/cursos/:id_curso/citas`
+- `POST /admin/cursos/:id_curso/talleres`
+- `PATCH /admin/citas/:id_cita/estado`

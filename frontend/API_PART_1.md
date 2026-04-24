@@ -1,7 +1,6 @@
 # Requerimientos API Frontend - Parte 1 (Cursos y Convenciones)
 
-Este archivo es parte 1 de 3. Las tareas estan mezcladas (publico + admin).
-La numeracion de secciones se mantiene respecto al documento original.
+Este archivo es parte 1 de 3. Las tareas están mezcladas (público + admin).
 
 Base URL esperada por el frontend:
 
@@ -9,11 +8,24 @@ Base URL esperada por el frontend:
 /api
 ```
 
-Ejemplo en local:
+---
 
-```txt
-http://localhost:3000/api
-```
+## Tareas de Base de Datos y Backend Asociadas
+
+Para alinear la base de datos y la API (Java) con el JSON que espera y envía el frontend, deben realizarse las siguientes operaciones:
+
+**Tabla `curso`**
+- **Campos existentes a mapear:** `id_curso`, `nombre_curso` (como `nombre` / `titulo`), `curso_academico`.
+- **Campos NUEVOS que se deben añadir a la base de datos:**
+  - `nivel` (VARCHAR): Almacena el nivel formativo (ej. "Grado Medio", "Grado Superior").
+  - `icono` (VARCHAR): Clave del icono (ej. "scissors", "sparkles").
+  - `descripcion_especialidad` (TEXT): Descripción mostrada en la web pública.
+  - `descripcion_taller` (TEXT): Descripción en la cabecera de la página de reserva.
+- **Dato calculado:** `numero_estudiantes` no está en la tabla `curso`. Deberá calcularse en el backend haciendo un `COUNT(id_alumno)` de la tabla `alumno` asociada, o crear un campo físico si se prefiere.
+
+**API Java:**
+- Actualizar la entidad `Curso` (`es.iesdeteis.gestorcitas.model.Curso`) con los campos nuevos.
+- Ajustar los DTOs de salida (`GET`) y entrada (`POST`) para que todas las claves JSON coincidan exactamente con el español detallado abajo (`id_curso`, `titulo`, `nombre`, etc.).
 
 ---
 
@@ -23,94 +35,80 @@ http://localhost:3000/api
 
 - `Content-Type: application/json`
 - Las respuestas deben venir en JSON.
-- Los errores deberian devolver un mensaje legible para el frontend.
+- Los errores deberían devolver un mensaje legible para el frontend.
 
 ### Respuesta de error recomendada
 
 ```json
 {
-  "message": "Mensaje descriptivo del error"
+  "mensaje": "Mensaje descriptivo del error"
 }
 ```
 
-### Estados de cita validos
+### Estados de cita válidos
 
-El frontend trabaja con estos estados exactos:
+El frontend trabaja con estos estados exactos (ahora adaptado a español y añadiendo cancelada en BD):
 
-- `Pendiente`
-- `Confirmada`
-- `Completada`
-- `Cancelada`
+- `pendiente`
+- `confirmada`
+- `completada`
+- `cancelada`
 
 ### Identificadores
 
-Actualmente el frontend usa sobre todo IDs tipo string para catalogos:
+Ahora el frontend y el backend usarán los identificadores en español, coherentes con la DB:
 
-- `courseId`
-- `workshopId`
-- `slotId`
-
-El `appointmentId` puede ser numerico o string, pero debe mantenerse consistente.
+- `id_curso` (antes courseId)
+- `id_taller` (antes workshopId)
+- `id_horario` (antes slotId)
+- `id_cita` (antes appointmentId)
 
 ---
 
 ## 2.1 Obtener especialidades para Home
 
-Usado en:
-- `src/pages/Home/Home.jsx`
-
-### Endpoint
+### Endpoint (Sugerido adaptado)
 
 ```http
-GET /courses/public
+GET /cursos/publico
 ```
 
-### Que devuelve
+### Qué devuelve
 
 ```json
 [
   {
-    "id": "1",
-    "title": "Peluqueria",
-    "description": "Corte, colorimetria y tratamientos capilares.",
-    "iconKey": "scissors"
+    "id_curso": "1",
+    "titulo": "Peluquería",
+    "descripcion_especialidad": "Corte, colorimetría y tratamientos capilares.",
+    "icono": "scissors"
   },
   {
-    "id": "2",
-    "title": "Cuidado Facial",
-    "description": "Higiene, hidratacion y maquillaje profesional.",
-    "iconKey": "sparkles"
+    "id_curso": "2",
+    "titulo": "Cuidado Facial",
+    "descripcion_especialidad": "Higiene, hidratación y maquillaje profesional.",
+    "icono": "sparkles"
   }
 ]
 ```
 
 ### Campos esperados
 
-| Campo | Tipo | Obligatorio | Descripcion |
+| Campo | Tipo | Obligatorio | Descripción |
 |---|---|---:|---|
-| `id` | `string` | Si | ID de la especialidad |
-| `title` | `string` | Si | Titulo mostrado en Home |
-| `description` | `string` | Si | Texto corto descriptivo |
-| `iconKey` | `string` | Si | Clave de icono usada por frontend |
-
-### Valores admitidos actualmente en `iconKey`
-
-- `scissors`
-- `sparkles`
-- `flower`
-- `hand`
+| `id_curso` | `string|number` | Sí | ID de la especialidad |
+| `titulo` | `string` | Sí | Título mostrado en Home (mapeado de `nombre_curso`) |
+| `descripcion_especialidad` | `string` | Sí | Texto corto descriptivo |
+| `icono` | `string` | Sí | Clave de icono usada por frontend |
 
 ---
 
 ## 3.2 Obtener cursos para el panel admin
 
-Usado en:
-- `src/pages/AdminCourses/AdminCourses.jsx`
-
 ### Endpoint
 
 ```http
-GET /admin/courses
+GET /admin/cursos
 ```
 
 ### Respuesta esperada
@@ -118,18 +116,18 @@ GET /admin/courses
 ```json
 [
   {
-    "id": "1",
-    "name": "Peluqueria",
-    "level": "Grado Medio",
-    "period": "2025/2026",
-    "studentCount": 15
+    "id_curso": "1",
+    "nombre": "Peluquería",
+    "nivel": "Grado Medio",
+    "curso_academico": "2025/2026",
+    "numero_estudiantes": 15
   },
   {
-    "id": "2",
-    "name": "Cuidado Facial",
-    "level": "Grado Superior",
-    "period": "2025/2026",
-    "studentCount": 12
+    "id_curso": "2",
+    "nombre": "Cuidado Facial",
+    "nivel": "Grado Superior",
+    "curso_academico": "2025/2026",
+    "numero_estudiantes": 12
   }
 ]
 ```
@@ -138,42 +136,37 @@ GET /admin/courses
 
 ## 3.3 Crear curso
 
-Usado en:
-- `src/components/CreateCourseModal/CreateCourseModal.jsx`
-
 ### Endpoint
 
 ```http
-POST /admin/courses
+POST /admin/cursos
 ```
 
-### Que envia el frontend
+### Qué envía el frontend
 
 ```json
 {
-  "name": "Peluqueria avanzada",
-  "level": "Grado Medio",
-  "period": "2025/2026",
-  "studentCount": 15,
-  "iconKey": "scissors",
-  "specialtyDescription": "Corte, colorimetria y tratamientos capilares.",
-  "workshopPageDescription": "Selecciona un taller de ejemplo para ver como podriamos organizar los servicios disponibles."
+  "nombre": "Peluquería avanzada",
+  "nivel": "Grado Medio",
+  "curso_academico": "2025/2026",
+  "numero_estudiantes": 15,
+  "icono": "scissors",
+  "descripcion_especialidad": "Corte, colorimetría y tratamientos capilares.",
+  "descripcion_taller": "Selecciona un taller de ejemplo para ver cómo podríamos organizar los servicios..."
 }
 ```
-
-> `workshopPageDescription` puede venir como string vacio si el formulario no lo solicita aun.
 
 ### Respuesta esperada
 
 ```json
 {
-  "id": "1",
-  "name": "Peluqueria avanzada",
-  "level": "Grado Medio",
-  "period": "2025/2026",
-  "studentCount": 15,
-  "iconKey": "scissors",
-  "specialtyDescription": "Corte, colorimetria y tratamientos capilares.",
-  "workshopPageDescription": "Selecciona un taller de ejemplo para ver como podriamos organizar los servicios disponibles."
+  "id_curso": "1",
+  "nombre": "Peluquería avanzada",
+  "nivel": "Grado Medio",
+  "curso_academico": "2025/2026",
+  "numero_estudiantes": 15,
+  "icono": "scissors",
+  "descripcion_especialidad": "Corte, colorimetría y tratamientos capilares.",
+  "descripcion_taller": "Selecciona un taller de ejemplo para ver cómo podríamos organizar los servicios..."
 }
 ```

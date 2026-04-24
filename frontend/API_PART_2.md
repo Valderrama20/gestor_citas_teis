@@ -1,62 +1,54 @@
 # Requerimientos API Frontend - Parte 2 (Talleres y Slots)
 
-Este archivo es parte 2 de 3. Las tareas estan mezcladas (publico + admin).
-La numeracion de secciones se mantiene respecto al documento original.
+Este archivo es parte 2 de 3. Las tareas están mezcladas (público + admin).
+
+---
+
+## Tareas de Base de Datos y Backend Asociadas
+
+**Tabla `taller`**
+- **Campos existentes a mapear:** `id_taller`, `nombre_taller` (mapeado a `titulo`), `duracion_minutos`, `tipo_taller`, `capacidad_maxima`, `id_curso`.
+- **Campos NUEVOS que se deben añadir a la BD:**
+  - `descripcion` (TEXT): Descripción corta visible al elegir el taller en las tarjetas de la web pública.
+  - `icono` (VARCHAR): Clave de icono específica del taller (ej. "brush", "sparkles").
+
+**API Java:**
+- Actualizar el modelo JPA `Taller` para mapear `descripcion` e `icono`.
+- Actualizar DTOs y controladores relacionados con Talleres e interfaces de Cursos para devolver propiedades en español (`id_curso`, `id_taller`, `titulo`, `descripcion`, `icono`).
 
 ---
 
 ## 2.2 Obtener detalle de una especialidad
 
-Usado en:
-- `src/pages/Talleres/Talleres.jsx`
-- `src/pages/AdminDashboard/AdminDashboard.jsx`
-
 ### Endpoint
 
 ```http
-GET /courses/:courseId
+GET /cursos/:id_curso
 ```
 
 ### Ejemplo de respuesta
 
 ```json
 {
-  "id": "1",
-  "name": "Peluqueria",
-  "level": "Grado Medio",
-  "period": "2025/2026",
-  "studentCount": 15,
-  "iconKey": "scissors",
-  "specialtyDescription": "Corte, colorimetria y tratamientos capilares.",
-  "workshopPageDescription": "Selecciona un taller de ejemplo para ver como podriamos organizar los servicios disponibles."
+  "id_curso": "1",
+  "nombre": "Peluquería",
+  "nivel": "Grado Medio",
+  "curso_academico": "2025/2026",
+  "numero_estudiantes": 15,
+  "icono": "scissors",
+  "descripcion_especialidad": "Corte, colorimetría y tratamientos capilares.",
+  "descripcion_taller": "Selecciona un taller de ejemplo para ver cómo podríamos organizar los servicios..."
 }
 ```
-
-### Campos esperados
-
-| Campo | Tipo | Obligatorio | Descripcion |
-|---|---|---:|---|
-| `id` | `string` | Si | ID del curso/especialidad |
-| `name` | `string` | Si | Nombre visible |
-| `level` | `string` | Si | Nivel formativo |
-| `period` | `string` | Si | Curso academico |
-| `studentCount` | `number` | Si | Numero de alumnos |
-| `iconKey` | `string` | Si | Clave de icono |
-| `specialtyDescription` | `string` | Si | Descripcion publica |
-| `workshopPageDescription` | `string` | Si | Descripcion usada en la pagina de talleres |
 
 ---
 
 ## 2.3 Obtener talleres por especialidad
 
-Usado en:
-- `src/pages/Talleres/Talleres.jsx`
-- `src/pages/AdminDashboard/AdminDashboard.jsx` para el filtro por taller
-
 ### Endpoint
 
 ```http
-GET /courses/:courseId/workshops
+GET /cursos/:id_curso/talleres
 ```
 
 ### Ejemplo de respuesta
@@ -64,33 +56,23 @@ GET /courses/:courseId/workshops
 ```json
 [
   {
-    "id": "corte",
-    "courseId": "1",
-    "title": "Corte y peinado",
-    "description": "Cortes clasicos, brushing y acabados para el dia a dia.",
-    "iconKey": "scissors"
+    "id_taller": "corte",
+    "id_curso": "1",
+    "titulo": "Corte y peinado",
+    "descripcion": "Cortes clásicos, brushing y acabados para el día a día.",
+    "icono": "scissors"
   },
   {
-    "id": "color",
-    "courseId": "1",
-    "title": "Coloracion",
-    "description": "Tintes, matices y retoque de raiz con asesoria previa.",
-    "iconKey": "sparkles"
+    "id_taller": "color",
+    "id_curso": "1",
+    "titulo": "Coloración",
+    "descripcion": "Tintes, matices y retoque de raíz con asesoría previa.",
+    "icono": "sparkles"
   }
 ]
 ```
 
-### Campos esperados
-
-| Campo | Tipo | Obligatorio | Descripcion |
-|---|---|---:|---|
-| `id` | `string` | Si | ID del taller |
-| `courseId` | `string` | Si | ID de la especialidad |
-| `title` | `string` | Si | Nombre del taller |
-| `description` | `string` | Si | Descripcion corta |
-| `iconKey` | `string` | Si | Clave de icono |
-
-### Valores admitidos actualmente en `iconKey`
+### Valores admitidos actualmente en `icono`
 
 - `scissors`
 - `sparkles`
@@ -104,13 +86,10 @@ GET /courses/:courseId/workshops
 
 ## 2.4 Obtener todos los talleres para el select de reserva
 
-Usado en:
-- `src/pages/Booking/Booking.jsx`
-
 ### Endpoint
 
 ```http
-GET /workshops
+GET /talleres
 ```
 
 ### Ejemplo de respuesta
@@ -118,11 +97,11 @@ GET /workshops
 ```json
 [
   {
-    "id": "corte",
-    "courseId": "1",
-    "title": "Corte y peinado",
-    "description": "Cortes clasicos, brushing y acabados para el dia a dia.",
-    "iconKey": "scissors"
+    "id_taller": "corte",
+    "id_curso": "1",
+    "titulo": "Corte y peinado",
+    "descripcion": "Cortes clásicos, brushing y acabados para el día a día.",
+    "icono": "scissors"
   }
 ]
 ```
@@ -131,78 +110,46 @@ GET /workshops
 
 ## 2.5 Obtener horarios disponibles de un taller
 
-Usado en:
-- `src/pages/Booking/Booking.jsx`
+*(Se ha renombrado el concepto de Slot a Horario/Hueco, devolviendo `id_horario` en lugar de `slotId`. Estos datos salen de la tabla `horario_taller` y de la disponibilidad calculada según citas previas).*
 
 ### Endpoint
 
 ```http
-GET /workshops/:workshopId/slots
+GET /talleres/:id_taller/horarios
 ```
 
-### Ejemplo de respuesta minima
+### Ejemplo de respuesta recomendada
 
 ```json
 [
   {
-    "id": "slot-1",
-    "workshopId": "corte",
-    "label": "Martes 22 de abril - 10:00"
-  },
-  {
-    "id": "slot-2",
-    "workshopId": "corte",
-    "label": "Jueves 24 de abril - 12:30"
+    "id_horario": "slot-1",
+    "id_taller": "corte",
+    "fecha": "2026-04-22",
+    "hora": "10:00",
+    "etiqueta": "Martes 22 de abril - 10:00",
+    "disponible": true
   }
 ]
 ```
-
-### Respuesta recomendada para crecer mejor
-
-```json
-[
-  {
-    "id": "slot-1",
-    "workshopId": "corte",
-    "date": "2026-04-22",
-    "time": "10:00",
-    "label": "Martes 22 de abril - 10:00",
-    "available": true
-  }
-]
-```
-
-### Campos esperados
-
-| Campo | Tipo | Obligatorio | Descripcion |
-|---|---|---:|---|
-| `id` | `string` | Si | ID del hueco |
-| `workshopId` | `string` | Si | ID del taller |
-| `label` | `string` | Si | Texto mostrado en el select |
-| `date` | `string` | Recomendado | Fecha en formato `YYYY-MM-DD` |
-| `time` | `string` | Recomendado | Hora en formato `HH:mm` |
-| `available` | `boolean` | Recomendado | Si esta libre o no |
 
 ---
 
 ## 3.6 Crear taller en un curso
 
-Usado en:
-- `src/components/CreateWorkshopModal/CreateWorkshopModal.jsx`
-
 ### Endpoint
 
 ```http
-POST /admin/courses/:courseId/workshops
+POST /admin/cursos/:id_curso/talleres
 ```
 
-### Que envia el frontend
+### Qué envía el frontend
 
 ```json
 {
-  "title": "Ritual detox facial",
-  "description": "Tratamiento express con limpieza y mascarilla.",
-  "iconKey": "sparkles"
+  "titulo": "Ritual detox facial",
+  "descripcion": "Tratamiento express con limpieza y mascarilla.",
+  "icono": "sparkles"
 }
 ```
 
@@ -210,10 +157,10 @@ POST /admin/courses/:courseId/workshops
 
 ```json
 {
-  "id": "ritual-detox-facial",
-  "courseId": "1",
-  "title": "Ritual detox facial",
-  "description": "Tratamiento express con limpieza y mascarilla.",
-  "iconKey": "sparkles"
+  "id_taller": "ritual-detox-facial",
+  "id_curso": "1",
+  "titulo": "Ritual detox facial",
+  "descripcion": "Tratamiento express con limpieza y mascarilla.",
+  "icono": "sparkles"
 }
 ```
