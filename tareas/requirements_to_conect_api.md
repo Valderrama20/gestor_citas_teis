@@ -1,106 +1,118 @@
-# 2 vista del home cliente:
+# 1. Vista de Home (Cliente)
 
-## campos actuales 
-    
-- id_curso 
-- nombre_curso 
-- curso_academico 
-- id_admin 
+## Campos actuales 
 
-## campos necesarios devueltos por la api
+- `id_curso`
+- `nombre_curso`
+- `curso_academico`
+- `id_admin`
 
-- id_curso
-- nombre_curso
-- curso_academico
-- descripcion  /  agregar  tipo varchar 
-- icono        / agregar   tipo varchar
-- id_admin 
+## Campos necesarios devueltos por la API
 
-tareas: 
-Actualizar la tabla en a base de datos
-actualizar las entidades en la api
-verificar la respuesta de la api
+- `id_curso`
+- `nombre_curso`
+- `curso_academico`
+- `alumnos` *(agregar: número de alumnos)*
+- `descripcion` *(agregar: tipo varchar)*
+- `icono` *(agregar: tipo varchar)*
+- `nivel` *(agregar tipo. ejemplo: grado medio, grado superior)*
+- `id_admin`
 
+### Tareas:
+- [ ] Actualizar la tabla en la base de datos
+- [ ] Actualizar las entidades en la API
+- [ ] Verificar la respuesta de la API
 
-# 2 vista de talleres cliente:
+---
 
-## campos actuales 
-    
-- id_taller 
-- nombre_taller
-- duracion_minutos 
-- tipo_taller 
-- capacidad_maxima 
-- id_curso 
+# 2. Vista de Talleres (Cliente)
 
-## campos necesarios devueltos por la api
+## Campos actuales 
 
-- id_taller 
-- nombre_taller
-- duracion_minutos 
-- tipo_taller 
-- capacidad_maxima 
-- descripcion  /  agregar  tipo varchar 
-- icono        / agregar   tipo varchar
-- id_curso 
+- `id_taller`
+- `nombre_taller`
+- `duracion_minutos`
+- `tipo_taller`
+- `capacidad_maxima`
+- `id_curso`
 
-tareas: 
-Actualizar la tabla en a base de datos
-actualizar las entidades en la api
-verificar la respuesta de la api
+## Campos necesarios devueltos por la API
 
-# 3.1 vista de fomulario cliente
+- `id_taller`
+- `nombre_taller`
+- `duracion_minutos`
+- `tipo_taller`
+- `capacidad_maxima`
+- `descripcion` *(agregar: tipo varchar)*
+- `icono` *(agregar: tipo varchar)*
+- `id_curso`
 
-ruta para traer los horarios de un taller especifico
-- la ruta debe tomar el id de un taller y retornar sus horarios
+### Tareas:
+- [ ] Actualizar la tabla en la base de datos
+- [ ] Actualizar las entidades en la API
+- [ ] Verificar la respuesta de la API
 
-## campos actuales
+---
 
-    id_horario 
-    dia_semana 
-    hora_apertura
-    hora_cierre  -- verifica si es necesario el campo hora cierre
-    id_taller 
+# 3. Vista de Formulario (Cliente)
+
+## 3.1. Obtener horarios de un taller específico
+**Ruta para traer los horarios de un taller:** La ruta debe tomar el ID de un taller y retornar sus horarios.
+
+### Campos actuales
+
+- `id_horario`
+- `dia_semana`
+- `hora_apertura`
+- `hora_cierre` *(Verificar si es necesario el campo hora cierre)*
+- `id_taller`
 
 ![alt text](image.png)
 
-ya que solo tenemos el dia de la semana, implementar logica para saber que numero es el 
-proximo dia indicado
+> **Nota:** Ya que solo tenemos el día de la semana, implementar la lógica para saber qué número es el próximo día indicado.
 
-# 3.2 vista de fomulario cliente
+## 3.2. Crear una cita
+**Ruta para crear una cita:**
 
-ruta para crea una cita
+### Datos enviados por el formulario
 
-## datos enviados por el from
+- `name`
+- `email`
+- `taller_id` (`initialWorkshopId`)
+- `horario_id`
+- `allergies`
 
-- name
-- email
-- taller_id: initialWorkshopId,
-- horario_id
-- allergies
+### Tabla a crear / actual
 
-## tabla creada
+- `id_cita`
+- `fecha`
+- `hora`
+- `estado` *(default: pendiente)*
+- `id_cliente`
+- `id_taller`
+- `id_alumno`
 
-    id_cita 
-    fecha 
-    hora 
-    estado  -- default pendiente
-    id_cliente 
-    id_taller 
-    id_alumno 
+---
 
+# 4. Vista de Home (Profesores)
 
+- [ ] Crear ruta para obtener todos los cursos de un profesor.
 
-# 4 vista de home profesores
+---
 
-crear ruta para obtener todos los cursos de un profesor
+# 5. Cursos (Profesores)
 
+- [ ] Crear ruta para crear un curso.
 
+---
 
-# 5.1 vista de citas profesores
+# 6. Vista de Citas y Talleres (Profesores)
 
-crear ruta para obtener toda las citas de un cursos
+## 6.1. Obtener citas
+- [ ] Crear ruta para obtener todas las citas de un curso.
 
-# 5.2 vista de citas profesores
+## 6.2. Actualizar cita
+- [ ] Crear ruta para actualizar una cita. *(Esta será para los cambios de estado: "pendiente", "confirmada", "completada" y "cancelada")*.
 
-crear ruta para actualizar una cita (esta sera para los cambios de estados "pendiente", "confirmada", "completada" y cancelada)
+## 6.3. Crear taller
+- [ ] Crear ruta para crear un taller.
