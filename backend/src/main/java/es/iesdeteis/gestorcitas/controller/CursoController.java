@@ -17,7 +17,7 @@ public class CursoController {
     @GetMapping
     public List<Curso> getCursos() { return cursosService.findAll();}
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Curso getCursosById(@PathVariable Long id){ return cursosService.findById(id);
     }
 
