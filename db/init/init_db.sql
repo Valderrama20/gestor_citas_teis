@@ -46,6 +46,8 @@ CREATE TABLE taller (
     duracion_minutos INT NOT NULL,
     tipo_taller VARCHAR(50),
     capacidad_maxima INT NOT NULL,
+    descripcion VARCHAR (500),
+    icono VARCHAR (255),
     id_curso INT,
     FOREIGN KEY (id_curso) REFERENCES curso(id_curso)
 ) ENGINE=InnoDB;

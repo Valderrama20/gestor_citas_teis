@@ -1,0 +1,7 @@
+info:
+  name: Talleres
+  type: folder
+  seq: 3
+
+request:
+  auth: inherit
