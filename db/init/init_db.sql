@@ -62,8 +62,8 @@ CREATE TABLE horario_taller (
     FOREIGN KEY (id_taller) REFERENCES taller(id_taller)
 ) ENGINE=InnoDB;
 
--- 4. Tabla de Citas (Depende de Cliente, Taller y Alumno)
-CREATE TABLE citas (
+-- 4. Tabla de Cita (Depende de Cliente, Taller y Alumno)
+CREATE TABLE cita (
     id_cita INT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
