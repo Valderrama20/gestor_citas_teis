@@ -9,9 +9,11 @@ VALUES ('Profesor Coordinador', 'admin@iesteis.es', '$2a$10$vI8aWBnW3fID.ZQ4/zo1
 -- Contraseña encriptada: 'admin123' (solo como ejemplo)
 
 -- 2. CURSOS
-INSERT INTO curso (nombre_curso, curso_academico, id_admin) VALUES
-('Peluquería', '2025/2026', 1),
-('Estética Integral', '2025/2026', 1);
+INSERT INTO curso (nombre_curso, curso_academico, alumno, descripcion, icono, id_admin, nivel) VALUES
+('Peluquería', '2025/2026', 15, 'Corte, colorimetría y tratamientos capilares.', 'scissors', 1, 'Grado Medio'),
+('Cuidado Facial', '2025/2026', 12, 'Higiene, hidratación y maquillaje profesional.', 'sparkles', 1, 'Grado Superior'),
+('Tratamiento Corporal', '2025/2026', 10, 'Masajes, exfoliaciones y depilación.', 'flower', 1, 'Grado Superior'),
+('Manicura', '2025/2026', 9, 'Cuidado de uñas, esmaltado y pedicura.', 'hand', 1, 'Grado Medio');
 
 -- 3. ALUMNOS
 INSERT INTO alumno (nombre, apellidos, email, id_curso) VALUES
