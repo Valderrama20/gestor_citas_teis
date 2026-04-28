@@ -34,4 +34,9 @@ public class TallerService implements ITallerService {
     public void deleteById(Long id) {
         tallerRepository.deleteById(id);
     }
+
+    @Override
+    public List<Taller> findByIdCurso(Long idCurso) {
+        return tallerRepository.findByIdCurso(idCurso);
+    }
 }

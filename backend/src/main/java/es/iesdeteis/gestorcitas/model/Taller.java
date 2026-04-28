@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "taller")
 public class Taller {
@@ -35,9 +37,10 @@ public class Taller {
     @Column(name = "id_curso")
     private Long idCurso;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_taller")
-    private List<HorarioTaller> horarios;
+    // @OneToMany(cascade = CascadeType.ALL)
+    // @JoinColumn(name = "id_taller")
+    // @JsonIgnore
+    // private List<HorarioTaller> horarios;
 
     // --- CONSTRUCTORES ---
     public Taller() {
@@ -102,13 +105,13 @@ public class Taller {
         this.idCurso = idCurso;
     }
 
-    public List<HorarioTaller> getHorarios() {
-        return horarios;
-    }
+    // public List<HorarioTaller> getHorarios() {
+    //     return horarios;
+    // }
 
-    public void setHorarios(List<HorarioTaller> horarios) {
-        this.horarios = horarios;
-    }
+    // public void setHorarios(List<HorarioTaller> horarios) {
+    //     this.horarios = horarios;
+    // }
 
     // --- OVERRIDES DE OBJECT ---
     @Override

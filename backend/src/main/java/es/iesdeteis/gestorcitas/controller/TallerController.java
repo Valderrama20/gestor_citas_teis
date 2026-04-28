@@ -26,6 +26,11 @@ public class TallerController {
         return tallerService.findById(id);
     }
 
+    @GetMapping("/curso/{idCurso}")
+    public List<Taller> getTalleresByCurso(@PathVariable Long idCurso) {
+        return tallerService.findByIdCurso(idCurso);
+    }
+
     @PostMapping
     public void saveTaller(@RequestBody Taller taller) {
         tallerService.save(taller);
