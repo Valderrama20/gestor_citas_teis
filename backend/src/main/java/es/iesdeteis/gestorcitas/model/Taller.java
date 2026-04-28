@@ -35,7 +35,8 @@ public class Taller {
     @Column(name = "id_curso")
     private Long idCurso;
 
-    @OneToMany(mappedBy = "taller", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_taller")
     private List<HorarioTaller> horarios;
 
     // --- CONSTRUCTORES ---
