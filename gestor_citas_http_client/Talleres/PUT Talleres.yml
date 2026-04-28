@@ -1,0 +1,28 @@
+info:
+  name: PUT Talleres
+  type: http
+  seq: 2
+
+http:
+  method: PUT
+  url: http://localhost:9001/talleres
+  body:
+    type: json
+    data: |-
+      {
+        "idTaller": 1,
+        "nombreTaller": "Taller Actualizado",
+        "duracionMinutos": 90,
+        "tipoTaller": "Híbrido",
+        "capacidadMaxima": 20,
+        "descripcion": "Nueva descripción probando el puerto 9001.",
+        "icono": "update-icon.png",
+        "idCurso": 1
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -26,6 +26,12 @@ public class Taller {
     @Column(name = "capacidad_maxima")
     private int capacidadMaxima;
 
+    @Column(name = "descripcion")
+    private String descripcion;
+
+    @Column(name = "icono")
+    private String icono;
+
     @Column(name = "id_curso")
     private Long idCurso;
 
@@ -36,11 +42,13 @@ public class Taller {
     public Taller() {
     }
 
-    public Taller(String nombreTaller, int duracionMinutos, String tipoTaller, int capacidadMaxima, Long idCurso) {
+    public Taller(String nombreTaller, int duracionMinutos, String tipoTaller, int capacidadMaxima, String descripcion, String icono, Long idCurso) {
         this.nombreTaller = nombreTaller;
         this.duracionMinutos = duracionMinutos;
         this.tipoTaller = tipoTaller;
         this.capacidadMaxima = capacidadMaxima;
+        this.descripcion = descripcion;
+        this.icono = icono;
         this.idCurso = idCurso;
     }
 
