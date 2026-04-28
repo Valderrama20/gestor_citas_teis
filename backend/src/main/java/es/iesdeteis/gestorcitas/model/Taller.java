@@ -97,6 +97,22 @@ public class Taller {
         this.capacidadMaxima = capacidadMaxima;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getIcono() {
+        return icono;
+    }
+
+    public void setIcono(String icono) {
+        this.icono = icono;
+    }
+
     public Long getIdCurso() {
         return idCurso;
     }
