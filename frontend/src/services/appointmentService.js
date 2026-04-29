@@ -1,4 +1,4 @@
-import api from "../config/api";
+import availabilityService from "./availabilityService";
 import workshopService from "./workshopService";
 
 let appointmentsTable = [
@@ -68,6 +68,15 @@ function cloneData(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function getNextAppointmentId() {
+  return (
+    appointmentsTable.reduce(
+      (maxId, appointment) => Math.max(maxId, appointment.id),
+      0,
+    ) + 1
+  );
+}
+
 async function enrichAppointments(appointments) {
   const allWorkshops = await workshopService.getAllWorkshops();
 
@@ -105,20 +114,59 @@ const appointmentService = {
   },
 
   getAvailableSlots: async (date) => {
-    const response = await api.get("/appointments/available", {
-      params: { date },
-    });
-    return response.data;
+    if (!date) {
+      return [];
+    }
+
+    return availabilityService.getSlotsByDate(date);
   },
 
   createAppointment: async (appointmentData) => {
-    const response = await api.post("/appointments", appointmentData);
-    return response.data;
+    const slot = appointmentData.slotId
+      ? await availabilityService.getSlotById(appointmentData.slotId)
+      : null;
+    const workshopId = appointmentData.workshopId ?? slot?.workshopId ?? "";
+    const workshop = workshopId
+      ? await workshopService.getWorkshopById(workshopId)
+      : null;
+    const courseId = appointmentData.courseId ?? workshop?.courseId ?? "";
+    const date = appointmentData.date ?? slot?.date ?? "";
+    const time = appointmentData.time ?? slot?.time ?? "";
+    const clientName = (appointmentData.client ?? appointmentData.name ?? "").trim();
+
+    const newAppointment = {
+      id: getNextAppointmentId(),
+      courseId: courseId ? String(courseId) : "",
+      client: clientName,
+      email: appointmentData.email?.trim() ?? "",
+      workshopId,
+      slotId: slot?.id ?? appointmentData.slotId ?? null,
+      date,
+      time,
+      status: appointmentData.status ?? "Pendiente",
+      studentId: appointmentData.studentId ?? null,
+      allergies: appointmentData.allergies?.trim() ?? "",
+    };
+
+    appointmentsTable = [...appointmentsTable, newAppointment];
+
+    const [enrichedAppointment] = await enrichAppointments([newAppointment]);
+    return enrichedAppointment;
   },
 
-  cancelAppointment: async (id) => {
-    const response = await api.delete(`/appointments/${id}`);
-    return response.data;
+  cancelAppointment: async (appointmentId) => {
+    appointmentsTable = appointmentsTable.map((appointment) =>
+      appointment.id === appointmentId
+        ? {
+            ...appointment,
+            status: "Cancelada",
+          }
+        : appointment,
+    );
+
+    return cloneData(
+      appointmentsTable.find((appointment) => appointment.id === appointmentId) ?? null,
+    );
   },
 };
 

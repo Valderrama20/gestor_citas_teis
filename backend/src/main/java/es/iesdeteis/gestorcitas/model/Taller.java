@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "taller")
 public class Taller {
@@ -26,21 +28,31 @@ public class Taller {
     @Column(name = "capacidad_maxima")
     private int capacidadMaxima;
 
+    @Column(name = "descripcion")
+    private String descripcion;
+
+    @Column(name = "icono")
+    private String icono;
+
     @Column(name = "id_curso")
     private Long idCurso;
 
-    @OneToMany(mappedBy = "taller", cascade = CascadeType.ALL)
-    private List<HorarioTaller> horarios;
+    // @OneToMany(cascade = CascadeType.ALL)
+    // @JoinColumn(name = "id_taller")
+    // @JsonIgnore
+    // private List<HorarioTaller> horarios;
 
     // --- CONSTRUCTORES ---
     public Taller() {
     }
 
-    public Taller(String nombreTaller, int duracionMinutos, String tipoTaller, int capacidadMaxima, Long idCurso) {
+    public Taller(String nombreTaller, int duracionMinutos, String tipoTaller, int capacidadMaxima, String descripcion, String icono, Long idCurso) {
         this.nombreTaller = nombreTaller;
         this.duracionMinutos = duracionMinutos;
         this.tipoTaller = tipoTaller;
         this.capacidadMaxima = capacidadMaxima;
+        this.descripcion = descripcion;
+        this.icono = icono;
         this.idCurso = idCurso;
     }
 
@@ -85,6 +97,22 @@ public class Taller {
         this.capacidadMaxima = capacidadMaxima;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getIcono() {
+        return icono;
+    }
+
+    public void setIcono(String icono) {
+        this.icono = icono;
+    }
+
     public Long getIdCurso() {
         return idCurso;
     }
@@ -93,13 +121,13 @@ public class Taller {
         this.idCurso = idCurso;
     }
 
-    public List<HorarioTaller> getHorarios() {
-        return horarios;
-    }
+    // public List<HorarioTaller> getHorarios() {
+    //     return horarios;
+    // }
 
-    public void setHorarios(List<HorarioTaller> horarios) {
-        this.horarios = horarios;
-    }
+    // public void setHorarios(List<HorarioTaller> horarios) {
+    //     this.horarios = horarios;
+    // }
 
     // --- OVERRIDES DE OBJECT ---
     @Override

@@ -1,6 +1,7 @@
 import { Lock, Mail, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import adminAuthService from "../../services/adminAuthService";
 import styles from "./AdminLogin.module.css";
 
 export default function AdminLogin() {
@@ -9,6 +10,8 @@ export default function AdminLogin() {
     email: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -18,9 +21,20 @@ export default function AdminLogin() {
     }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    navigate("/admin/cursos");
+    setIsSubmitting(true);
+    setErrorMessage("");
+
+    try {
+      await adminAuthService.login(credentials);
+      navigate("/admin/cursos");
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Credenciales invalidas.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -60,8 +74,10 @@ export default function AdminLogin() {
             />
           </div>
 
-          <button type="submit" className={styles.button}>
-            Entrar al panel
+          {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+
+          <button type="submit" className={styles.button} disabled={isSubmitting}>
+            {isSubmitting ? "Entrando..." : "Entrar al panel"}
           </button>
         </form>
       </section>

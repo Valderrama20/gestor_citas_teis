@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Modal from "../../components/Modal";
+import appointmentService from "../../services/appointmentService";
 import availabilityService from "../../services/availabilityService";
 import workshopService from "../../services/workshopService";
 import styles from "./Booking.module.css";
@@ -9,6 +10,7 @@ export default function Booking() {
   const location = useLocation();
   const initialWorkshopId = location.state?.selectedWorkshopId ?? "";
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [workshops, setWorkshops] = useState([]);
   const [slots, setSlots] = useState([]);
   const [formData, setFormData] = useState({
@@ -109,9 +111,24 @@ export default function Booking() {
     }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    setShowSuccessModal(true);
+    setIsSubmitting(true);
+
+    try {
+      await appointmentService.createAppointment({
+        name: formData.name,
+        email: formData.email,
+        workshopId: formData.workshopId,
+        slotId: formData.slotId,
+        allergies: formData.allergies,
+      });
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   const selectedWorkshop = workshops.find(
@@ -228,8 +245,8 @@ export default function Booking() {
               </p>
             </div>
 
-            <button type="submit" className={styles.button}>
-              Solicitar cita
+            <button type="submit" className={styles.button} disabled={isSubmitting}>
+              {isSubmitting ? "Enviando..." : "Solicitar cita"}
             </button>
           </form>
         </div>

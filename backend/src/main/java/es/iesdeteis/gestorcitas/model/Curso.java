@@ -13,6 +13,14 @@ public class Curso {
     private String nombreCurso;
     @Column(name = "curso_academico")
     private String cursoAcademico;
+    @Column(name = "alumnos")
+    private Integer alumnos;
+    @Column(name = "descripcion")
+    private String descripcion;
+    @Column(name = "icono")
+    private String icono;
+    @Column(name = "nivel")
+    private String nivel;
     // MUCHOS cursos pertenecen a UN administrador
     //@ManyToOne
     //@JoinColumn(name = "idAdmin")
@@ -21,16 +29,24 @@ public class Curso {
     public Curso() {
     }
 
-    public Curso(String nombreCurso, String cursoAcademico, Administrador administrador) {
+    public Curso(String nombreCurso, String cursoAcademico, Integer alumnos, String descripcion, String icono, String nivel, Administrador administrador) {
         this.nombreCurso = nombreCurso;
         this.cursoAcademico = cursoAcademico;
+        this.alumnos = alumnos;
+        this.descripcion = descripcion;
+        this.icono = icono;
+        this.nivel = nivel;
         //this.administrador = administrador;
     }
 
-    public Curso(Long idCurso, String nombreCurso, String cursoAcademico, Administrador administrador) {
+    public Curso(Long idCurso, String nombreCurso, String cursoAcademico, Integer alumnos, String descripcion, String icono, String nivel, Administrador administrador) {
         this.idCurso = idCurso;
         this.nombreCurso = nombreCurso;
         this.cursoAcademico = cursoAcademico;
+        this.alumnos = alumnos;
+        this.descripcion = descripcion;
+        this.icono = icono;
+        this.nivel = nivel;
         //this.administrador = administrador;
     }
 
@@ -58,6 +74,38 @@ public class Curso {
         this.cursoAcademico = cursoAcademico;
     }
 
+    public Integer getAlumnos() {
+        return alumnos;
+    }
+
+    public void setAlumnos(Integer alumnos) {
+        this.alumnos = alumnos;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getIcono() {
+        return icono;
+    }
+
+    public void setIcono(String icono) {
+        this.icono = icono;
+    }
+
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
+    }
+
     /*public Administrador getAdministrador() {
         return administrador;
     }
@@ -74,6 +122,10 @@ public class Curso {
                 "idCurso=" + idCurso +
                 ", nombreCurso='" + nombreCurso + '\'' +
                 ", cursoAcademico='" + cursoAcademico + '\'' +
+                ", alumnos=" + alumnos +
+                ", descripcion='" + descripcion + '\'' +
+                ", icono='" + icono + '\'' +
+                ", nivel='" + nivel + '\'' +
                 //", administrador=" + administrador +
                 '}';
     }

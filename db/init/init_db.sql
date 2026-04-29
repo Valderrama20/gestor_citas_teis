@@ -27,7 +27,11 @@ CREATE TABLE curso (
     id_curso INT AUTO_INCREMENT PRIMARY KEY,
     nombre_curso VARCHAR(100) NOT NULL,
     curso_academico VARCHAR(20) NOT NULL,
+    alumnos INT,
+    descripcion VARCHAR(255) NOT NULL,
+    icono VARCHAR(255) NOT NULL,
     id_admin INT, -- Relación "gestiona"
+    nivel VARCHAR(255) NOT NULL,
     FOREIGN KEY (id_admin) REFERENCES administrador(id_admin)
 ) ENGINE=InnoDB;
 
@@ -46,6 +50,8 @@ CREATE TABLE taller (
     duracion_minutos INT NOT NULL,
     tipo_taller VARCHAR(50),
     capacidad_maxima INT NOT NULL,
+    descripcion VARCHAR (500),
+    icono VARCHAR (255),
     id_curso INT,
     FOREIGN KEY (id_curso) REFERENCES curso(id_curso)
 ) ENGINE=InnoDB;
@@ -60,8 +66,8 @@ CREATE TABLE horario_taller (
     FOREIGN KEY (id_taller) REFERENCES taller(id_taller)
 ) ENGINE=InnoDB;
 
--- 4. Tabla de Citas (Depende de Cliente, Taller y Alumno)
-CREATE TABLE citas (
+-- 4. Tabla de Cita (Depende de Cliente, Taller y Alumno)
+CREATE TABLE cita (
     id_cita INT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,

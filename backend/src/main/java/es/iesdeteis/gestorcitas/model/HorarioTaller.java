@@ -27,18 +27,18 @@ public class HorarioTaller {
     @JsonIgnoreProperties("horarios")
     @ManyToOne
     @JoinColumn(name = "id_taller")
+    private Taller idTaller;
 
-    private Taller taller;
 
     // --- CONSTRUCTORES ---
     public HorarioTaller() {
     }
 
-    public HorarioTaller(String diaSemana, Time horaApertura, Time horaCierre, Taller taller) {
+    public HorarioTaller(String diaSemana, Time horaApertura, Time horaCierre, Taller idTaller) {
         this.diaSemana = diaSemana;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
-        this.taller = taller;
+        this.idTaller = idTaller;
     }
 
     // --- GETTERS Y SETTERS ---
@@ -74,12 +74,12 @@ public class HorarioTaller {
         this.horaCierre = horaCierre;
     }
 
-    public Taller getTaller() {
-        return taller;
+    public Taller getIdTaller() {
+        return idTaller;
     }
 
-    public void setTaller(Taller taller) {
-        this.taller = taller;
+    public void setIdTaller(Taller idTaller) {
+        this.idTaller = idTaller;
     }
 
     // --- OVERRIDES DE OBJECT ---
