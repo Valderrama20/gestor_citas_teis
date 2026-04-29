@@ -1,0 +1,23 @@
+info:
+  name: POST administradores
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:9001/administradores
+  body:
+    type: json
+    data: |-
+      {
+            "email": "admin_Corte@iesteis.es",
+          "nombre": "Profesor Corte",
+          "password": "admininstrador.123"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
