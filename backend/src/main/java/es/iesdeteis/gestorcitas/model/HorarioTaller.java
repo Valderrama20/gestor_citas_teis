@@ -1,5 +1,6 @@
 package es.iesdeteis.gestorcitas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.sql.Time;
@@ -23,14 +24,17 @@ public class HorarioTaller {
     @Column(name = "hora_cierre")
     private Time horaCierre;
 
-    @Column(name = "id_taller", insertable = false, updatable = false)
-    private Long idTaller;
+    @JsonIgnoreProperties("horarios")
+    @ManyToOne
+    @JoinColumn(name = "id_taller")
+    private Taller idTaller;
+
 
     // --- CONSTRUCTORES ---
     public HorarioTaller() {
     }
 
-    public HorarioTaller(String diaSemana, Time horaApertura, Time horaCierre, Long idTaller) {
+    public HorarioTaller(String diaSemana, Time horaApertura, Time horaCierre, Taller idTaller) {
         this.diaSemana = diaSemana;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
@@ -70,11 +74,11 @@ public class HorarioTaller {
         this.horaCierre = horaCierre;
     }
 
-    public Long getIdTaller() {
+    public Taller getIdTaller() {
         return idTaller;
     }
 
-    public void setIdTaller(Long idTaller) {
+    public void setIdTaller(Taller idTaller) {
         this.idTaller = idTaller;
     }
 
