@@ -78,22 +78,7 @@ const courseService = {
 
   getCourseById: async (courseId) => (await api.get(`/CursosController/${courseId}`)).data,
 
-  createCourse: async (courseData) => {
-    const newCourse = {
-      id: getNextCourseId(),
-      name: courseData.name.trim(),
-      level: courseData.level,
-      period: courseData.period.trim(),
-      studentCount: Number(courseData.studentCount) || 0,
-      iconKey: courseData.iconKey,
-      specialtyDescription: courseData.specialtyDescription.trim(),
-      workshopPageDescription: courseData.workshopPageDescription.trim(),
-    };
-
-    coursesTable = [...coursesTable, newCourse];
-
-    return cloneData(newCourse);
-  },
+  createCourse: async (courseData) => (await api.post(`/CursosController`, courseData)).data,
 };
 
 export default courseService;
