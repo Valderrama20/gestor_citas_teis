@@ -86,20 +86,20 @@ export default function Talleres() {
 
       <div className={styles.hero}>
         <span className={styles.eyebrow}>Taller educativo</span>
-        <h2 className={styles.title}>Talleres de {course.name}</h2>
+        <h2 className={styles.title}>Talleres de {course.nombreCurso}</h2>
         <p className={styles.description}>{course.workshopPageDescription}</p>
       </div>
 
       <div className={styles.grid}>
         {workshops.map((workshop) => (
           <ServiceCard
-            key={workshop.id}
-            title={workshop.title}
-            description={workshop.description}
-            Icon={workshopIconMap[workshop.iconKey] ?? Sparkles}
+            key={workshop.idTaller}
+            title={workshop.nombreTaller}
+            description={workshop.descripcion}
+            Icon={workshopIconMap[workshop.icono] ?? Sparkles}
             to="/reservar"
             state={{
-              selectedWorkshopId: workshop.id,
+              selectedWorkshopId: workshop.idTaller,
               selectedCourseId: course.id,
             }}
           />

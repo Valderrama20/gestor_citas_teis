@@ -27,7 +27,11 @@ CREATE TABLE curso (
     id_curso INT AUTO_INCREMENT PRIMARY KEY,
     nombre_curso VARCHAR(100) NOT NULL,
     curso_academico VARCHAR(20) NOT NULL,
+    alumnos INT,
+    descripcion VARCHAR(255) NOT NULL,
+    icono VARCHAR(255) NOT NULL,
     id_admin INT, -- Relación "gestiona"
+    nivel VARCHAR(255) NOT NULL,
     FOREIGN KEY (id_admin) REFERENCES administrador(id_admin)
 ) ENGINE=InnoDB;
 

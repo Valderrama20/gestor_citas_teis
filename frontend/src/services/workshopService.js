@@ -1,3 +1,5 @@
+import api from "../config/api";
+
 let workshopsTable = [
   {
     id: "corte",
@@ -148,10 +150,7 @@ function getNextWorkshopId(title) {
 const workshopService = {
   getAllWorkshops: async () => cloneData(workshopsTable),
 
-  getWorkshopsByCourseId: async (courseId) =>
-    cloneData(
-      workshopsTable.filter((workshop) => workshop.courseId === String(courseId)),
-    ),
+  getWorkshopsByCourseId: async (courseId) => (await api.get(`/talleres/curso/${courseId}`)).data,
 
   getWorkshopById: async (workshopId) =>
     cloneData(workshopsTable.find((workshop) => workshop.id === workshopId) ?? null),

@@ -14,4 +14,6 @@ public interface ITallerService {
     public void save(Taller taller);
 
     public void deleteById(Long id);
+
+    public List<Taller> findByIdCurso(Long idCurso);
 }

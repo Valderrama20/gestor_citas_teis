@@ -20,6 +20,8 @@ export default function Home() {
     async function loadCourses() {
       const courses = await courseService.getPublicCourses();
 
+      console.log(courses);
+
       if (isMounted) {
         setSpecialties(courses);
       }
@@ -49,11 +51,11 @@ export default function Home() {
       <div className={styles.grid}>
         {specialties.map((specialty) => (
           <ServiceCard
-            key={specialty.id}
-            title={specialty.title}
-            description={specialty.description}
-            Icon={courseIconMap[specialty.iconKey] ?? Sparkles}
-            to={`/curso/${specialty.id}/talleres`}
+            key={specialty.idCurso}
+            title={specialty.nombreCurso}
+            description={specialty.descripcion}
+            Icon={courseIconMap[specialty.icono] ?? Sparkles}
+            to={`/curso/${specialty.idCurso}/talleres`}
           />
         ))}
       </div>

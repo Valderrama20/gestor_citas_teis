@@ -1,3 +1,5 @@
+import api from "../config/api";
+
 let coursesTable = [
   {
     id: "1",
@@ -61,15 +63,7 @@ function getNextCourseId() {
 const courseService = {
   getAllCourses: async () => cloneData(coursesTable),
 
-  getPublicCourses: async () =>
-    cloneData(
-      coursesTable.map((course) => ({
-        id: course.id,
-        title: course.name,
-        description: course.specialtyDescription,
-        iconKey: course.iconKey,
-      })),
-    ),
+  getPublicCourses: async () => (await api.get("/CursosController")).data,
 
   getAdminCourses: async () =>
     cloneData(
@@ -82,8 +76,7 @@ const courseService = {
       })),
     ),
 
-  getCourseById: async (courseId) =>
-    cloneData(coursesTable.find((course) => course.id === String(courseId)) ?? null),
+  getCourseById: async (courseId) => (await api.get(`/CursosController/${courseId}`)).data,
 
   createCourse: async (courseData) => {
     const newCourse = {
