@@ -1,0 +1,10 @@
+opencollection: 1.0.0
+
+info:
+  name: gestor_citas_http_client
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git

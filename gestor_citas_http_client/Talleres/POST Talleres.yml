@@ -1,0 +1,27 @@
+info:
+  name: POST Talleres
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:9001/talleres
+  body:
+    type: json
+    data: |-
+      {
+        "nombreTaller": "Taller de Pruebas",
+        "duracionMinutos": 120,
+        "tipoTaller": "Online",
+        "capacidadMaxima": 30,
+        "descripcion": "Este es un taller de prueba para verificar los nuevos campos de la API.",
+        "icono": "url_o_nombre_del_icono.png",
+        "idCurso": 1
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

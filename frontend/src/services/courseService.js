@@ -76,8 +76,7 @@ const courseService = {
       })),
     ),
 
-  getCourseById: async (courseId) =>
-    cloneData(coursesTable.find((course) => course.id === String(courseId)) ?? null),
+  getCourseById: async (courseId) => (await api.get(`/CursosController/${courseId}`)).data,
 
   createCourse: async (courseData) => {
     const newCourse = {

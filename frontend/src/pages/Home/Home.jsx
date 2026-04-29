@@ -55,7 +55,7 @@ export default function Home() {
             title={specialty.nombreCurso}
             description={specialty.descripcion}
             Icon={courseIconMap[specialty.icono] ?? Sparkles}
-            to={`/curso/${specialty.id}/talleres`}
+            to={`/curso/${specialty.idCurso}/talleres`}
           />
         ))}
       </div>
