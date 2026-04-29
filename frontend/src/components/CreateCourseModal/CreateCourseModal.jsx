@@ -3,13 +3,12 @@ import Modal from "../Modal";
 import styles from "./CreateCourseModal.module.css";
 
 const INITIAL_FORM = {
-  name: "",
-  level: "Grado Medio",
-  period: "2025/2026",
-  studentCount: "0",
-  iconKey: "sparkles",
-  specialtyDescription: "",
-  workshopPageDescription: "",
+  nombreCurso: "",
+  nivel: "Grado Medio",
+  cursoAcademico: "2025/2026",
+  alumnos: "0",
+  icono: "sparkles",
+  descripcion: "",
 };
 
 export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
@@ -38,7 +37,7 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
     try {
       await onSubmit({
         ...formData,
-        studentCount: Number(formData.studentCount),
+        alumnos: Number(formData.alumnos),
       });
     } finally {
       setIsSubmitting(false);
@@ -58,15 +57,15 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.grid}>
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="name">
+            <label className={styles.label} htmlFor="nombreCurso">
               Nombre del curso
             </label>
             <input
-              id="name"
-              name="name"
+              id="nombreCurso"
+              name="nombreCurso"
               type="text"
               className={styles.input}
-              value={formData.name}
+              value={formData.nombreCurso}
               onChange={handleChange}
               placeholder="Ej. Peluqueria avanzada"
               required
@@ -74,14 +73,14 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="level">
+            <label className={styles.label} htmlFor="nivel">
               Nivel
             </label>
             <select
-              id="level"
-              name="level"
+              id="nivel"
+              name="nivel"
               className={styles.input}
-              value={formData.level}
+              value={formData.nivel}
               onChange={handleChange}
             >
               <option value="Grado Medio">Grado Medio</option>
@@ -90,15 +89,15 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="period">
+            <label className={styles.label} htmlFor="cursoAcademico">
               Periodo
             </label>
             <input
-              id="period"
-              name="period"
+              id="cursoAcademico"
+              name="cursoAcademico"
               type="text"
               className={styles.input}
-              value={formData.period}
+              value={formData.cursoAcademico}
               onChange={handleChange}
               placeholder="2025/2026"
               required
@@ -106,30 +105,30 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="studentCount">
+            <label className={styles.label} htmlFor="alumnos">
               Numero de alumnos
             </label>
             <input
-              id="studentCount"
-              name="studentCount"
+              id="alumnos"
+              name="alumnos"
               type="number"
               min="0"
               className={styles.input}
-              value={formData.studentCount}
+              value={formData.alumnos}
               onChange={handleChange}
               required
             />
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="iconKey">
+            <label className={styles.label} htmlFor="icono">
               Icono
             </label>
             <select
-              id="iconKey"
-              name="iconKey"
+              id="icono"
+              name="icono"
               className={styles.input}
-              value={formData.iconKey}
+              value={formData.icono}
               onChange={handleChange}
             >
               <option value="sparkles">Sparkles</option>
@@ -141,15 +140,15 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="specialtyDescription">
+          <label className={styles.label} htmlFor="descripcion">
             Descripcion
           </label>
           <textarea
-            id="specialtyDescription"
-            name="specialtyDescription"
+            id="descripcion"
+            name="descripcion"
             className={styles.textarea}
             rows="3"
-            value={formData.specialtyDescription}
+            value={formData.descripcion}
             onChange={handleChange}
             placeholder="Texto corto para mostrar la especialidad en la home."
             required
