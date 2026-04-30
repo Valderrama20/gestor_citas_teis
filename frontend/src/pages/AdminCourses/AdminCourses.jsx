@@ -10,15 +10,22 @@ import styles from "./AdminCourses.module.css";
 export default function AdminCourses() {
   const [courses, setCourses] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
 
     async function loadCourses() {
-      const nextCourses = await courseService.getAdminCourses();
+      try {
+        const nextCourses = await courseService.getAdminCourses();
 
-      if (isMounted) {
-        setCourses(nextCourses);
+        if (isMounted) {
+          setCourses(nextCourses);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error al cargar los cursos", error);
+        if (isMounted) setIsLoading(false);
       }
     }
 
@@ -72,11 +79,15 @@ export default function AdminCourses() {
             </p>
           </header>
 
-          <div className={styles.grid}>
-            {courses.map((course) => (
-              <AdminCourseCard key={course.id} course={course} />
-            ))}
-          </div>
+          {isLoading ? (
+            <p>Cargando cursos...</p>
+          ) : (
+            <div className={styles.grid}>
+              {courses.map((course) => (
+                <AdminCourseCard key={course.id} course={course} />
+              ))}
+            </div>
+          )}
         </section>
       </main>
 
