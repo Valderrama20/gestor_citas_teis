@@ -6,11 +6,14 @@ import CreateCourseModal from "../../components/CreateCourseModal";
 import AdminTopbar from "../../components/AdminTopbar";
 import courseService from "../../services/courseService";
 import styles from "./AdminCourses.module.css";
+import { useToast } from "../../context/ToastContext";
 
 export default function AdminCourses() {
   const [courses, setCourses] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [courseToEdit, setCourseToEdit] = useState(null);
+  const { addToast } = useToast();
 
   useEffect(() => {
     let isMounted = true;
@@ -37,10 +40,68 @@ export default function AdminCourses() {
   }, []);
 
   async function handleCreateCourse(courseData) {
-    await courseService.createCourse(courseData);
-    const nextCourses = await courseService.getAdminCourses();
-    setCourses(nextCourses);
-    setIsCreateModalOpen(false);
+    try {
+      if (courseToEdit) {
+        await courseService.updateCourse(courseData);
+        // Lanzamos el aviso de éxito
+        addToast("¡Curso actualizado correctamente!", "success");
+      } else {
+        await courseService.createCourse(courseData);
+        // Lanzamos el aviso de éxito
+        addToast("¡Curso creado correctamente!", "success");
+      }
+      const nextCourses = await courseService.getAdminCourses();
+      setCourses(nextCourses);
+      setIsCreateModalOpen(false);
+      setCourseToEdit(null); // Limpiamos el estado al terminar
+    } catch (error) {
+      console.error(error);
+      // Lanzamos un aviso de error si la API falla
+      addToast("Error al guardar el curso. Inténtalo de nuevo.", "error");
+    }
+  }
+
+  async function handleDeleteCourse(curso) {
+    const isConfirmed = window.confirm(`¿Estás seguro de que deseas borrar el curso "${curso.name}"?`);
+    if (!isConfirmed) return;
+
+    try {
+      await courseService.deleteCourse(curso.id);
+      setCourses(currentCourses => currentCourses.filter(c => c.id !== curso.id));
+      addToast(`El curso "${curso.name}" ha sido eliminado.`, "success");
+    } catch (error) {
+      console.error("Error al borrar:", error);
+      addToast("No se pudo borrar el curso. Comprueba si tiene citas asociadas.", "error");
+    }
+  }
+
+  async function handleEditCourse(curso) {
+    try {
+      // Traemos todos los datos de la base de datos (incluida la descripción)
+      const fullCourse = await courseService.getCourseById(curso.id);
+      setCourseToEdit(fullCourse);
+      setIsCreateModalOpen(true);
+    } catch (error) {
+      console.error("Error al cargar los datos:", error);
+      addToast("Error al cargar los datos del curso.", "error");
+    }
+  }
+
+  async function handleDuplicateCourse(curso) {
+    try {
+      const fullCourse = await courseService.getCourseById(curso.id);
+      await courseService.createCourse({
+        ...fullCourse,
+        idCurso: null, // Dejamos que la API le asigne un ID nuevo
+        nombreCurso: fullCourse.nombreCurso + " (Copia)"
+      });
+      addToast("¡Curso duplicado correctamente!", "success");
+      const nextCourses = await courseService.getAdminCourses();
+      setCourses(nextCourses);
+    } catch (error) {
+      console.error("Error al duplicar:", error);
+      addToast("Error al duplicar el curso.", "error");
+    }
   }
 
   return (
@@ -84,7 +145,7 @@ export default function AdminCourses() {
           ) : (
             <div className={styles.grid}>
               {courses.map((course) => (
-                <AdminCourseCard key={course.id} course={course} />
+                <AdminCourseCard key={course.id} course={course} onDelete={handleDeleteCourse} onEdit={handleEditCourse} onDuplicate={handleDuplicateCourse} />
               ))}
             </div>
           )}
@@ -93,8 +154,12 @@ export default function AdminCourses() {
 
       <CreateCourseModal
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={() => {
+          setIsCreateModalOpen(false);
+          setCourseToEdit(null); // Nos aseguramos de limpiar el estado al cerrar
+        }}
         onSubmit={handleCreateCourse}
+        courseToEdit={courseToEdit}
       />
     </>
   );

@@ -1,0 +1,70 @@
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg); /* Usamos tus variables de variables.css */
+  box-shadow: var(--shadow-soft-md);
+  min-width: 300px;
+  max-width: 450px;
+  animation: fadeIn 0.3s ease-out forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tipos de Toast */
+.success {
+  background-color: #e6fffa;
+  border: 1px solid #b2f5ea;
+  color: #2c7a7b;
+}
+
+.error {
+  background-color: #fdecec;
+  border: 1px solid #fecaca;
+  color: #b83232;
+}
+
+.info {
+  background-color: #ebf8ff;
+  border: 1px solid #bee3f8;
+  color: #2b6cb0;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.message {
+  flex-grow: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+  opacity: 0.6;
+  padding: 0 0.25rem;
+}
+
+.closeBtn:hover {
+  opacity: 1;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -23,6 +23,14 @@ getAdminCourses: async () => {
   getCourseById: async (courseId) => (await api.get(`/CursosController/${courseId}`)).data,
 
   createCourse: async (courseData) => (await api.post(`/CursosController`, courseData)).data,
+
+  deleteCourse: async (courseId) => {
+    await api.delete(`/CursosController/${courseId}`);
+  },
+
+  updateCourse: async (courseData) => {
+    await api.put(`/CursosController`, courseData);
+  },
 };
 
 export default courseService;

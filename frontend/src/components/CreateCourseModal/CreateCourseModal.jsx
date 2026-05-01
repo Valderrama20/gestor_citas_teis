@@ -11,16 +11,28 @@ const INITIAL_FORM = {
   descripcion: "",
 };
 
-export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
+export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToEdit }) {
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      setFormData(INITIAL_FORM);
+      if (courseToEdit) {
+        setFormData({
+          idCurso: courseToEdit.idCurso,
+          nombreCurso: courseToEdit.nombreCurso,
+          nivel: courseToEdit.nivel,
+          cursoAcademico: courseToEdit.cursoAcademico,
+          alumnos: courseToEdit.alumnos,
+          icono: courseToEdit.icono,
+          descripcion: courseToEdit.descripcion,
+        });
+      } else {
+        setFormData(INITIAL_FORM);
+      }
       setIsSubmitting(false);
     }
-  }, [isOpen]);
+  }, [isOpen, courseToEdit]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -49,7 +61,7 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
       isOpen={isOpen}
       onClose={onClose}
       eyebrow="Panel administrativo"
-      title="Crear nuevo curso"
+      title={courseToEdit ? "Editar curso" : "Crear nuevo curso"}
       showAction={false}
       modalClassName={styles.modal}
       contentClassName={styles.content}
@@ -169,7 +181,7 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit }) {
             className={styles.primaryButton}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Creando..." : "Crear curso"}
+            {isSubmitting ? "Guardando..." : (courseToEdit ? "Guardar cambios" : "Crear curso")}
           </button>
         </div>
       </form>
