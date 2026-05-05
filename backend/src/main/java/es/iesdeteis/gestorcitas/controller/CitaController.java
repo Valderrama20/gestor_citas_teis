@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/citas")
+@CrossOrigin(origins = "*")
 public class CitaController {
 
     // --- ATRIBUTOS ---
