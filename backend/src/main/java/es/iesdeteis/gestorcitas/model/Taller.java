@@ -20,13 +20,13 @@ public class Taller {
     private String nombreTaller;
 
     @Column(name = "duracion_minutos")
-    private int duracionMinutos;
+    private Integer duracionMinutos;
 
     @Column(name = "tipo_taller")
     private String tipoTaller;
 
     @Column(name = "capacidad_maxima")
-    private int capacidadMaxima;
+    private Integer capacidadMaxima;
 
     @Column(name = "descripcion")
     private String descripcion;
@@ -46,7 +46,7 @@ public class Taller {
     public Taller() {
     }
 
-    public Taller(String nombreTaller, int duracionMinutos, String tipoTaller, int capacidadMaxima, String descripcion, String icono, Long idCurso) {
+    public Taller(String nombreTaller, Integer duracionMinutos, String tipoTaller, Integer capacidadMaxima, String descripcion, String icono, Long idCurso) {
         this.nombreTaller = nombreTaller;
         this.duracionMinutos = duracionMinutos;
         this.tipoTaller = tipoTaller;
@@ -73,7 +73,7 @@ public class Taller {
         this.nombreTaller = nombreTaller;
     }
 
-    public int getDuracionMinutos() {
+    public Integer getDuracionMinutos() {
         return duracionMinutos;
     }
 
@@ -89,7 +89,7 @@ public class Taller {
         this.tipoTaller = tipoTaller;
     }
 
-    public int getCapacidadMaxima() {
+    public Integer getCapacidadMaxima() {
         return capacidadMaxima;
     }
 
