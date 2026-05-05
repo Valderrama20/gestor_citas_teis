@@ -8,99 +8,91 @@ import styles from "./Booking.module.css";
 
 export default function Booking() {
   const location = useLocation();
-  const initialWorkshopId = location.state?.selectedWorkshopId ?? "";
+  // Mantenemos esto por si vienes desde la pantalla de talleres
+  const initialTallerId = location.state?.selectedWorkshopId ?? ""; 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [workshops, setWorkshops] = useState([]);
-  const [slots, setSlots] = useState([]);
+  
+  // Usamos nombres en español
+  const [talleres, setTalleres] = useState([]);
+  const [horarios, setHorarios] = useState([]);
+  
+  // Nuestro estado ahora habla el mismo idioma que Spring Boot
   const [formData, setFormData] = useState({
-    name: "",
+    nombre: "",
     email: "",
-    workshopId: initialWorkshopId,
-    slotId: "",
-    allergies: "",
+    idTaller: initialTallerId,
+    idHorario: "",
+    alergias: "",
   });
 
   useEffect(() => {
     let isMounted = true;
 
-    async function loadWorkshops() {
-      const nextWorkshops = await workshopService.getAllWorkshops();
+    async function loadTalleres() {
+      const nextTalleres = await workshopService.getAllWorkshops();
 
-      if (!isMounted) {
-        return;
-      }
+      if (!isMounted) return;
 
-      setWorkshops(nextWorkshops);
+      setTalleres(nextTalleres);
       setFormData((current) => ({
         ...current,
-        workshopId: current.workshopId || nextWorkshops[0]?.id || "",
+        idTaller: current.idTaller || nextTalleres[0]?.idTaller || "",
       }));
     }
 
-    loadWorkshops();
+    loadTalleres();
 
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
-    const nextWorkshopId = location.state?.selectedWorkshopId;
-
-    if (!nextWorkshopId || nextWorkshopId === formData.workshopId) {
-      return;
-    }
+    const nextTallerId = location.state?.selectedWorkshopId;
+    if (!nextTallerId || nextTallerId === formData.idTaller) return;
 
     setFormData((current) => ({
       ...current,
-      workshopId: nextWorkshopId,
-      slotId: "",
+      idTaller: nextTallerId,
+      idHorario: "",
     }));
-  }, [location.state, formData.workshopId]);
+  }, [location.state, formData.idTaller]);
 
   useEffect(() => {
     let isMounted = true;
 
-    async function loadSlots() {
-      if (!formData.workshopId) {
-        setSlots([]);
+    async function loadHorarios() {
+      if (!formData.idTaller) {
+        setHorarios([]);
         return;
       }
 
-      const nextSlots = await availabilityService.getSlotsByWorkshopId(
-        formData.workshopId,
-      );
+      const nextHorarios = await availabilityService.getSlotsByWorkshopId(formData.idTaller);
 
-      if (!isMounted) {
-        return;
-      }
+      if (!isMounted) return;
 
-      setSlots(nextSlots);
+      setHorarios(nextHorarios);
       setFormData((current) => ({
         ...current,
-        slotId:
-          nextSlots.find((slot) => slot.id === current.slotId)?.id ??
-          nextSlots[0]?.id ??
+        idHorario:
+          nextHorarios.find((horario) => String(horario.id) === String(current.idHorario))?.id ??
+          nextHorarios[0]?.id ??
           "",
       }));
     }
 
-    loadSlots();
+    loadHorarios();
 
-    return () => {
-      isMounted = false;
-    };
-  }, [formData.workshopId]);
+    return () => { isMounted = false; };
+  }, [formData.idTaller]);
 
   function handleChange(event) {
     const { name, value } = event.target;
 
-    if (name === "workshopId") {
+    if (name === "idTaller") {
       setFormData((current) => ({
         ...current,
-        workshopId: value,
-        slotId: "",
+        idTaller: value,
+        idHorario: "",
       }));
       return;
     }
@@ -117,11 +109,11 @@ export default function Booking() {
 
     try {
       await appointmentService.createAppointment({
-        name: formData.name,
+        nombre: formData.nombre,
         email: formData.email,
-        workshopId: formData.workshopId,
-        slotId: formData.slotId,
-        allergies: formData.allergies,
+        idTaller: formData.idTaller,
+        idHorario: formData.idHorario,
+        alergias: formData.alergias,
       });
       setShowSuccessModal(true);
     } catch (error) {
@@ -131,10 +123,13 @@ export default function Booking() {
     }
   }
 
-  const selectedWorkshop = workshops.find(
-    (workshop) => workshop.id === formData.workshopId,
+  // Comparamos convirtiendo a String por seguridad
+  const tallerSeleccionado = talleres.find(
+    (taller) => String(taller.idTaller) === String(formData.idTaller)
   );
-  const selectedSlot = slots.find((slot) => slot.id === formData.slotId);
+  const horarioSeleccionado = horarios.find(
+    (horario) => String(horario.id) === String(formData.idHorario)
+  );
 
   return (
     <>
@@ -143,22 +138,21 @@ export default function Booking() {
           <span className={styles.eyebrow}>Reserva</span>
           <h2 className={styles.title}>Reserva tu cita</h2>
           <p className={styles.description}>
-            Completa este formulario simple para dejar preparada la reserva del
-            taller.
+            Completa este formulario simple para dejar preparada la reserva del taller.
           </p>
 
           <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.fieldGroup}>
-              <label className={styles.label} htmlFor="name">
+              <label className={styles.label} htmlFor="nombre">
                 Nombre
               </label>
               <input
-                id="name"
-                name="name"
+                id="nombre"
+                name="nombre"
                 type="text"
                 className={styles.input}
                 placeholder="Tu nombre completo"
-                value={formData.name}
+                value={formData.nombre}
                 onChange={handleChange}
                 required
               />
@@ -181,56 +175,56 @@ export default function Booking() {
             </div>
 
             <div className={styles.fieldGroup}>
-              <label className={styles.label} htmlFor="workshopId">
+              <label className={styles.label} htmlFor="idTaller">
                 Taller
               </label>
               <select
-                id="workshopId"
-                name="workshopId"
+                id="idTaller"
+                name="idTaller"
                 className={styles.select}
-                value={formData.workshopId}
+                value={formData.idTaller}
                 onChange={handleChange}
                 required
               >
-                {workshops.map((workshop) => (
-                  <option key={workshop.id} value={workshop.id}>
-                    {workshop.title}
+                {talleres.map((taller) => (
+                  <option key={taller.idTaller} value={taller.idTaller}>
+                    {taller.nombreTaller}
                   </option>
                 ))}
               </select>
             </div>
 
             <div className={styles.fieldGroup}>
-              <label className={styles.label} htmlFor="slotId">
-                Dia y horario disponible
+              <label className={styles.label} htmlFor="idHorario">
+                Día y horario disponible
               </label>
               <select
-                id="slotId"
-                name="slotId"
+                id="idHorario"
+                name="idHorario"
                 className={styles.select}
-                value={formData.slotId}
+                value={formData.idHorario}
                 onChange={handleChange}
                 required
               >
-                {slots.map((slot) => (
-                  <option key={slot.id} value={slot.id}>
-                    {slot.label}
+                {horarios.map((horario) => (
+                  <option key={horario.id} value={horario.id}>
+                    {horario.label}
                   </option>
                 ))}
               </select>
             </div>
 
             <div className={`${styles.fieldGroup} ${styles.fullWidth}`}>
-              <label className={styles.label} htmlFor="allergies">
+              <label className={styles.label} htmlFor="alergias">
                 Alergias o contraindicaciones
               </label>
               <textarea
-                id="allergies"
-                name="allergies"
+                id="alergias"
+                name="alergias"
                 className={styles.textarea}
-                placeholder="Indica alergias, sensibilidad en la piel o cualquier observacion relevante."
+                placeholder="Indica alergias, sensibilidad en la piel o cualquier observación relevante."
                 rows="4"
-                value={formData.allergies}
+                value={formData.alergias}
                 onChange={handleChange}
               />
             </div>
@@ -238,10 +232,10 @@ export default function Booking() {
             <div className={styles.summary}>
               <p className={styles.summaryTitle}>Resumen de la reserva</p>
               <p className={styles.summaryText}>
-                Taller: <strong>{selectedWorkshop?.title || "Sin seleccionar"}</strong>
+                Taller: <strong>{tallerSeleccionado?.nombreTaller || "Sin seleccionar"}</strong>
               </p>
               <p className={styles.summaryText}>
-                Horario: <strong>{selectedSlot?.label || "Sin disponibilidad"}</strong>
+                Horario: <strong>{horarioSeleccionado?.label || "Sin disponibilidad"}</strong>
               </p>
             </div>
 
@@ -260,12 +254,11 @@ export default function Booking() {
       >
         <p>
           Hemos registrado la solicitud para{" "}
-          <strong>{selectedWorkshop?.title || "tu taller"}</strong> el{" "}
-          <strong>{selectedSlot?.label || "horario elegido"}</strong>.
+          <strong>{tallerSeleccionado?.nombreTaller || "tu taller"}</strong> el{" "}
+          <strong>{horarioSeleccionado?.label || "horario elegido"}</strong>.
         </p>
         <p>
-          Te contactaremos en <strong>{formData.email}</strong> para confirmar
-          la reserva.
+          Te contactaremos en <strong>{formData.email}</strong> para confirmar la reserva.
         </p>
       </Modal>
     </>
