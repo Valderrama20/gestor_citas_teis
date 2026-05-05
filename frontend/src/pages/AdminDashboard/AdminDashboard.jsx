@@ -180,7 +180,7 @@ export default function AdminDashboard() {
         endContent={
           <div className={styles.brand}>
             <Settings className={styles.brandIcon} strokeWidth={1.8} />
-            <span>IES TEIS | {course.name}</span>
+            <span>IES TEIS | {course.nombreCurso}</span>
           </div>
         }
       />
@@ -188,9 +188,9 @@ export default function AdminDashboard() {
       <section className={styles.container}>
         <header className={styles.headerRow}>
           <div>
-            <h1 className={styles.title}>Citas de {course.name}</h1>
+            <h1 className={styles.title}>Citas de {course.nombreCurso}</h1>
             <p className={styles.subtitle}>
-              Gestiona el estado de cada cita: pendiente, confirmada, completada o cancelada.
+              Gestiona el estado de cada cita: pendiente, confirmada o cancelada.
             </p>
           </div>
 
@@ -308,13 +308,13 @@ export default function AdminDashboard() {
         isOpen={isCreateWorkshopModalOpen}
         onClose={() => setIsCreateWorkshopModalOpen(false)}
         onSubmit={handleCreateWorkshop}
-        courseName={course.name}
+        courseName={course.nombreCurso}
       />
       <CreateAppointmentModal
         isOpen={isCreateAppointmentModalOpen}
         onClose={() => setIsCreateAppointmentModalOpen(false)}
         onSubmit={handleCreateAppointment}
-        courseName={course.name}
+        courseName={course.nombreCurso}
         workshops={workshops}
       />
     </main>
