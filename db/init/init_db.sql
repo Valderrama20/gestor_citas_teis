@@ -71,7 +71,7 @@ CREATE TABLE cita (
     id_cita INT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
-    estado ENUM('pendiente', 'confirmada', 'completada') NOT NULL,
+    estado ENUM('PENDIENTE', 'CONFIRMADA', 'CANCELADA') NOT NULL,
     id_cliente INT,
     id_taller INT,
     id_alumno INT NULL, -- Nulo en MVP, se asignará en el futuro
@@ -79,3 +79,4 @@ CREATE TABLE cita (
     FOREIGN KEY (id_taller) REFERENCES taller(id_taller),
     FOREIGN KEY (id_alumno) REFERENCES alumno(id_alumno)
 ) ENGINE=InnoDB;
+

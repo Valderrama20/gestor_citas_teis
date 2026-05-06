@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cita")
+@RequestMapping("/citas")
+@CrossOrigin(origins = "*")
 public class CitaController {
 
     // --- ATRIBUTOS ---

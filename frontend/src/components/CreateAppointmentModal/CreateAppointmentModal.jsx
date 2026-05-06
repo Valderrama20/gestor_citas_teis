@@ -66,6 +66,7 @@ export default function CreateAppointmentModal({
           time: selectedSlot?.time ?? "",
         };
       });
+
     }
 
     loadSlots();
@@ -73,6 +74,8 @@ export default function CreateAppointmentModal({
     return () => {
       isMounted = false;
     };
+
+    
   }, [formData.workshopId]);
 
   function handleChange(event) {

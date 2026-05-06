@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/horarios-talleres")
+@CrossOrigin(origins = "*")
 public class HorarioTallerController {
 
     // --- ATRIBUTOS ---
