@@ -63,7 +63,7 @@ export default function AdminCourses() {
     }
   }
 
-  async function handleDeleteCourse(curso) {
+  function handleDeleteCourse(curso) {
     setCourseToDelete(curso);
   }
 
@@ -177,25 +177,22 @@ export default function AdminCourses() {
         showAction={false}
       >
         <div className={styles.confirmWrapper}>
-          {/* 1. Icono visual de peligro */}
           <div className={styles.dangerIconBox}>
             <AlertCircle size={48} color="#b83232" strokeWidth={1.5} />
           </div>
 
-          {/* 2. Pregunta directa y destacada */}
           <div className={styles.confirmTextGroup}>
             <p className={styles.confirmQuestion}>¡Esta acción no se puede deshacer!</p>
             <h3 className={styles.confirmTargetName}>{courseToDelete?.name}</h3>
           </div>
 
-          {/* 3. Acciones con jerarquía clara */}
           <div className={styles.modalActionsVertical}>
             <button
               type="button"
               className={styles.dangerButton}
               onClick={handleConfirmDelete}
             >
-              Eliminar
+              Eliminar definitivamente
             </button>
             <button
               type="button"
