@@ -1,9 +1,11 @@
 package es.iesdeteis.gestorcitas.service;
 
 import es.iesdeteis.gestorcitas.model.Cita;
-import es.iesdeteis.gestorcitas.model.Cliente;
+import es.iesdeteis.gestorcitas.model.PerfilCliente;
+import es.iesdeteis.gestorcitas.model.Usuario;
 import es.iesdeteis.gestorcitas.repository.CitaRepository;
-import es.iesdeteis.gestorcitas.repository.ClienteRepository;
+import es.iesdeteis.gestorcitas.repository.PerfilClienteRepository;
+import es.iesdeteis.gestorcitas.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +15,15 @@ import java.util.Optional;
 @Service
 public class CitaService implements ICitaService {
 
-    // --- ATRIBUTOS ---
     @Autowired
     private CitaRepository citaRepository;
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private UsuarioRepository usuarioRepository;
 
-    // --- MÉTODOS HEREDADOS ---
+    @Autowired
+    private PerfilClienteRepository perfilClienteRepository;
+
     @Override
     public List<Cita> findAll() {
         return (List<Cita>) citaRepository.findAll();
@@ -33,32 +36,28 @@ public class CitaService implements ICitaService {
 
     @Override
     public void save(Cita cita) {
-        Cliente clienteRequest = cita.getCliente();
+        Usuario usuarioRequest = cita.getCliente();
 
-        if (clienteRequest != null && clienteRequest.getEmail() != null) {
+        if (usuarioRequest != null && usuarioRequest.getEmail() != null) {
+            Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuarioRequest.getEmail());
 
-            Optional<Cliente> clienteExistente = clienteRepository.findByEmail(clienteRequest.getEmail());
+            if (usuarioExistente.isPresent()) {
+                Usuario usuarioDB = usuarioExistente.get();
 
-            if (clienteExistente.isPresent()) {
-                // 3A. Si el cliente existe, lo sacamos de la BD
-                Cliente clienteDB = clienteExistente.get();
-
-                // ¡NUEVO!: Actualizamos sus alergias con lo que acaba de escribir en el formulario
-                clienteDB.setNotasAlergias(clienteRequest.getNotasAlergias());
-
-                // Guardamos el cliente para que se actualice en la base de datos
-                clienteRepository.save(clienteDB);
-
-                // Se lo asignamos a la cita
-                cita.setCliente(clienteDB);
+                if (usuarioRequest.getPerfilCliente() != null && usuarioRequest.getPerfilCliente().getNotasAlergias() != null) {
+                    PerfilCliente perfil = usuarioDB.getPerfilCliente();
+                    if (perfil != null) {
+                        perfil.setNotasAlergias(usuarioRequest.getPerfilCliente().getNotasAlergias());
+                        perfilClienteRepository.save(perfil);
+                    }
+                }
+                
+                cita.setCliente(usuarioDB);
             } else {
-                // 3B. Si NO existe, creamos uno nuevo como hacíamos antes
-                Cliente nuevoCliente = clienteRepository.save(clienteRequest);
-                cita.setCliente(nuevoCliente);
+                throw new RuntimeException("El usuario con email " + usuarioRequest.getEmail() + " no existe. El registro temporal está deshabilitado.");
             }
         }
 
-        // 4. Guardamos la cita
         citaRepository.save(cita);
     }
 
