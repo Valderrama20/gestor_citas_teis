@@ -209,12 +209,12 @@ export default function Booking() {
                 id="alergias"
                 name="alergias"
                 className={styles.textarea}
-                // 👇 Modificamos el placeholder para darle una pista al usuario
+                // placeholder para darle una pista al usuario
                 placeholder="Indica tus alergias. Si no tienes ninguna, escribe 'Ninguna'."
                 rows="4"
                 value={formData.alergias}
                 onChange={handleChange}
-                required // 👈 ¡AÑADIMOS ESTO PARA HACERLO OBLIGATORIO!
+                required // ¡SE AGREGA ESTO PARA HACERLO OBLIGATORIO!
               />
             </div>
 
