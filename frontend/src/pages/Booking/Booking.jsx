@@ -46,19 +46,6 @@ export default function Booking() {
     return () => { isMounted = false; };
   }, []);
 
-  /*useEffect(() => {
-    const nextTallerId = location.state?.selectedWorkshopId;
-    if (!nextTallerId || nextTallerId === formData.idTaller) return;
-    
-
-    setFormData((current) => ({
-      ...current,
-      idTaller: nextTallerId,
-      idHorario: "",
-    }));
-  }, [location.state, formData.idTaller]);
-  */
-
   useEffect(() => {
     let isMounted = true;
 
@@ -222,10 +209,12 @@ export default function Booking() {
                 id="alergias"
                 name="alergias"
                 className={styles.textarea}
-                placeholder="Indica alergias, sensibilidad en la piel o cualquier observación relevante."
+                // 👇 Modificamos el placeholder para darle una pista al usuario
+                placeholder="Indica tus alergias. Si no tienes ninguna, escribe 'Ninguna'."
                 rows="4"
                 value={formData.alergias}
                 onChange={handleChange}
+                required // 👈 ¡AÑADIMOS ESTO PARA HACERLO OBLIGATORIO!
               />
             </div>
 
