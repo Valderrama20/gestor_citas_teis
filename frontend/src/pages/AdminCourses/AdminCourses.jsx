@@ -45,20 +45,17 @@ export default function AdminCourses() {
     try {
       if (courseToEdit) {
         await courseService.updateCourse(courseData);
-        // Lanzamos el aviso de éxito
         addToast("¡Curso actualizado correctamente!", "success");
       } else {
         await courseService.createCourse(courseData);
-        // Lanzamos el aviso de éxito
         addToast("¡Curso creado correctamente!", "success");
       }
       const nextCourses = await courseService.getAdminCourses();
       setCourses(nextCourses);
       setIsCreateModalOpen(false);
-      setCourseToEdit(null); // Limpiamos el estado al terminar
+      setCourseToEdit(null);
     } catch (error) {
       console.error(error);
-      // Lanzamos un aviso de error si la API falla
       addToast("Error al guardar el curso. Inténtalo de nuevo.", "error");
     }
   }
@@ -69,23 +66,19 @@ export default function AdminCourses() {
 
   async function handleConfirmDelete() {
     try {
-      // Usamos el ID del curso que tenemos guardado en el estado
       await courseService.deleteCourse(courseToDelete.id);
 
-      // Actualizamos la lista y avisamos al usuario
       setCourses(prev => prev.filter(c => c.id !== courseToDelete.id));
       addToast("Curso eliminado", "success");
     } catch (error) {
       addToast("Error al borrar", "error");
     } finally {
-      // IMPORTANTE: Pase lo que pase, vaciamos el cajón para que el Modal se cierre
       setCourseToDelete(null);
     }
   }
 
   async function handleEditCourse(curso) {
     try {
-      // Traemos todos los datos de la base de datos (incluida la descripción)
       const fullCourse = await courseService.getCourseById(curso.id);
       setCourseToEdit(fullCourse);
       setIsCreateModalOpen(true);
@@ -100,7 +93,7 @@ export default function AdminCourses() {
       const fullCourse = await courseService.getCourseById(curso.id);
       await courseService.createCourse({
         ...fullCourse,
-        idCurso: null, // Dejamos que la API le asigne un ID nuevo
+        idCurso: null,
         nombreCurso: fullCourse.nombreCurso + " (Copia)"
       });
       addToast("¡Curso duplicado correctamente!", "success");
@@ -164,7 +157,7 @@ export default function AdminCourses() {
         isOpen={isCreateModalOpen}
         onClose={() => {
           setIsCreateModalOpen(false);
-          setCourseToEdit(null); // Nos aseguramos de limpiar el estado al cerrar
+          setCourseToEdit(null);
         }}
         onSubmit={handleCreateCourse}
         courseToEdit={courseToEdit}

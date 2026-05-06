@@ -51,6 +51,9 @@
 
 .secondaryButton,
 .primaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   border: 0;
   border-radius: var(--radius-full);
   padding: 0.9rem 1.35rem;

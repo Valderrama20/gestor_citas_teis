@@ -33,33 +33,73 @@ export default function AdminDashboard() {
   useEffect(() => {
     let isMounted = true;
 
-    async function loadDashboardData() {
-      const [nextCourse, nextAppointments, nextWorkshops] = await Promise.all([
-        courseService.getCourseById(courseId),
-        appointmentService.getAppointmentsByCourseId(courseId),
-        workshopService.getWorkshopsByCourseId(courseId),
-      ]);
+    async function loadCourseAndWorkshops() {
+      try {
+        const [nextCourse, nextWorkshops] = await Promise.all([
+          courseService.getCourseById(courseId),
+          workshopService.getWorkshopsByCourseId(courseId),
+        ]);
 
-      if (!isMounted) {
-        return;
+        if (isMounted) {
+          setCourse(nextCourse);
+          setWorkshops(nextWorkshops);
+        }
+      } catch (error) {
+        if (isMounted) setCourse(null);
       }
-
-      setCourse(nextCourse);
-      setAppointments(nextAppointments);
-      setWorkshops(nextWorkshops);
-      setFilters({
-        date: "",
-        workshopId: "",
-      });
-      setIsFilterOpen(false);
     }
 
-    loadDashboardData();
+    loadCourseAndWorkshops();
 
     return () => {
       isMounted = false;
     };
   }, [courseId]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadAppointments() {
+      try {
+        const nextAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
+        if (isMounted) setAppointments(nextAppointments);
+      } catch (error) {
+        console.error("Error al cargar citas:", error);
+      }
+    }
+
+    if (courseId) {
+      loadAppointments();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [courseId]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function fetchFilteredAppointments() {
+      try {
+        if (filters.workshopId) {
+          const nextAppointments = await appointmentService.getAppointmentsByWorkshopId(filters.workshopId);
+          if (isMounted) setAppointments(nextAppointments);
+        } else {
+          const allAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
+          if (isMounted) setAppointments(allAppointments);
+        }
+      } catch (error) {
+        console.error("Error al filtrar por taller:", error);
+      }
+    }
+
+    fetchFilteredAppointments();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [filters.workshopId, courseId]);
 
   async function handleConfirmAppointment(appointment) {
     const updatedAppointments = await appointmentService.updateAppointmentStatus({
@@ -129,11 +169,7 @@ export default function AdminDashboard() {
   }
 
   const filteredAppointments = appointments.filter((appointment) => {
-    const matchesDate = !filters.date || appointment.date === filters.date;
-    const matchesWorkshop =
-      !filters.workshopId || appointment.workshopId === filters.workshopId;
-
-    return matchesDate && matchesWorkshop;
+    return !filters.date || appointment.date === filters.date;
   });
 
   const hasActiveFilters = Boolean(filters.date || filters.workshopId);

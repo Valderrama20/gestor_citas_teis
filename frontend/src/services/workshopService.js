@@ -155,18 +155,38 @@ const workshopService = {
   getWorkshopById: async (workshopId) =>
     cloneData(workshopsTable.find((workshop) => workshop.id === workshopId) ?? null),
 
+  // createWorkshop: async (workshopData) => {
+  //   const newWorkshop = {
+  //     id: getNextWorkshopId(workshopData.title),
+  //     courseId: String(workshopData.courseId),
+  //     title: workshopData.title.trim(),
+  //     description: workshopData.description.trim(),
+  //     iconKey: workshopData.iconKey,
+  //   };
+
+  //   workshopsTable = [...workshopsTable, newWorkshop];
+
+  //   return cloneData(newWorkshop);
+  // },
   createWorkshop: async (workshopData) => {
-    const newWorkshop = {
-      id: getNextWorkshopId(workshopData.title),
-      courseId: String(workshopData.courseId),
-      title: workshopData.title.trim(),
-      description: workshopData.description.trim(),
-      iconKey: workshopData.iconKey,
+    const payload = {
+      nombreTaller: workshopData.title.trim(),
+      descripcion: workshopData.description.trim(),
+      icono: workshopData.iconKey,
+      idCurso: parseInt(workshopData.courseId),
+      // Campos obligatorios en tu backend que no están en el form:
+      duracionMinutos: 60, 
+      tipoTaller: "General",
+      capacidadMaxima: 15
     };
 
-    workshopsTable = [...workshopsTable, newWorkshop];
+    const { data } = await api.post('/talleres', payload);
+    return data;
+  },
 
-    return cloneData(newWorkshop);
+  getAppointmentsByWorkshopId: async (workshopId) => {
+    const { data } = await api.get(`/cita/taller/${workshopId}`);
+    return data;
   },
 };
 
