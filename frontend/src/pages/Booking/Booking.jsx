@@ -46,9 +46,10 @@ export default function Booking() {
     return () => { isMounted = false; };
   }, []);
 
-  useEffect(() => {
+  /*useEffect(() => {
     const nextTallerId = location.state?.selectedWorkshopId;
     if (!nextTallerId || nextTallerId === formData.idTaller) return;
+    
 
     setFormData((current) => ({
       ...current,
@@ -56,6 +57,7 @@ export default function Booking() {
       idHorario: "",
     }));
   }, [location.state, formData.idTaller]);
+  */
 
   useEffect(() => {
     let isMounted = true;
@@ -176,16 +178,16 @@ export default function Booking() {
               <label className={styles.label} htmlFor="idTaller">
                 Taller
               </label>
-             <select
+              <select
                 id="idTaller"
                 name="idTaller"
                 className={styles.select}
-                value={String(formData.idTaller)} // Evita que el select se bloquee
+                value={String(formData.idTaller)} // 👈 ¡EL TRUCO ESTÁ AQUÍ!
                 onChange={handleChange}
                 required
               >
                 {talleres.map((taller) => (
-                  <option key={taller.idTaller} value={String(taller.idTaller)}>
+                  <option key={taller.idTaller} value={String(taller.idTaller)}> {/* 👈 Y AQUÍ! */}
                     {taller.nombreTaller}
                   </option>
                 ))}
