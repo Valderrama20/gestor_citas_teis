@@ -106,18 +106,19 @@ const appointmentService = {
       const horaParaSQL = horarioElegido ? `${horarioElegido.time}:00` : "09:00:00";
 
       // Payload con la estructura exacta que exige la API
-      const citaParaMariaDB = {
+   const citaParaMariaDB = {
         estado: "PENDIENTE",
         fecha: fechaParaSQL,
         hora: horaParaSQL,
         cliente: {
-          idCliente: 1 // MVP: Cliente de prueba forzado para evitar errores de clave foránea
+          nombre: datosCita.nombre,
+          email: datosCita.email,
+          notasAlergias: datosCita.alergias // 👈 ¡CAMBIADO AQUÍ!
         },
         taller: {
           idTaller: parseInt(datosCita.idTaller)
         }
       };
-
       console.log("Enviando JSON al backend:", citaParaMariaDB);
 
       const response = await fetch("http://localhost:9001/citas", {
