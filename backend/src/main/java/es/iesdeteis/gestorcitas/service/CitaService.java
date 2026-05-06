@@ -31,29 +31,34 @@ public class CitaService implements ICitaService {
         return citaRepository.findById(id).orElse(null);
     }
 
-    // 🚀 AQUÍ UNIFICAMOS LA LÓGICA NUESTRA CON EL MÉTODO DE LA INTERFAZ
     @Override
     public void save(Cita cita) {
         Cliente clienteRequest = cita.getCliente();
 
-        // 1. Verificamos que nos llega un cliente con un email
         if (clienteRequest != null && clienteRequest.getEmail() != null) {
 
-            // 2. Buscamos si el email ya existe en la base de datos
             Optional<Cliente> clienteExistente = clienteRepository.findByEmail(clienteRequest.getEmail());
 
             if (clienteExistente.isPresent()) {
-                // 3A. Si existe, sobrescribimos el cliente de la cita con el que ya tiene ID en la BD
-                cita.setCliente(clienteExistente.get());
+                // 3A. Si el cliente existe, lo sacamos de la BD
+                Cliente clienteDB = clienteExistente.get();
+
+                // ¡NUEVO!: Actualizamos sus alergias con lo que acaba de escribir en el formulario
+                clienteDB.setNotasAlergias(clienteRequest.getNotasAlergias());
+
+                // Guardamos el cliente para que se actualice en la base de datos
+                clienteRepository.save(clienteDB);
+
+                // Se lo asignamos a la cita
+                cita.setCliente(clienteDB);
             } else {
-                // 3B. Si NO existe, guardamos al nuevo cliente en la BD para generar su ID...
+                // 3B. Si NO existe, creamos uno nuevo como hacíamos antes
                 Cliente nuevoCliente = clienteRepository.save(clienteRequest);
-                // ...y se lo asignamos a la cita
                 cita.setCliente(nuevoCliente);
             }
         }
 
-        // 4. Guardamos la cita (ya no usamos "return" porque el método es void)
+        // 4. Guardamos la cita
         citaRepository.save(cita);
     }
 
