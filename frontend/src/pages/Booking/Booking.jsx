@@ -85,23 +85,21 @@ export default function Booking() {
     return () => { isMounted = false; };
   }, [formData.idTaller]);
 
-  function handleChange(event) {
-    const { name, value } = event.target;
+ function handleChange(event) {
+  const { name, value } = event.target;
 
+  setFormData((current) => {
+    // Creamos el nuevo estado basado en el anterior
+    const nextData = { ...current, [name]: value };
+    
+    // Lógica de negocio: Si cambio el taller, el horario anterior ya no es válido
     if (name === "idTaller") {
-      setFormData((current) => ({
-        ...current,
-        idTaller: value,
-        idHorario: "",
-      }));
-      return;
+      nextData.idHorario = "";
     }
-
-    setFormData((current) => ({
-      ...current,
-      [name]: value,
-    }));
-  }
+    
+    return nextData;
+  });
+}
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -178,16 +176,16 @@ export default function Booking() {
               <label className={styles.label} htmlFor="idTaller">
                 Taller
               </label>
-              <select
+             <select
                 id="idTaller"
                 name="idTaller"
                 className={styles.select}
-                value={formData.idTaller}
+                value={String(formData.idTaller)} // Evita que el select se bloquee
                 onChange={handleChange}
                 required
               >
                 {talleres.map((taller) => (
-                  <option key={taller.idTaller} value={taller.idTaller}>
+                  <option key={taller.idTaller} value={String(taller.idTaller)}>
                     {taller.nombreTaller}
                   </option>
                 ))}
