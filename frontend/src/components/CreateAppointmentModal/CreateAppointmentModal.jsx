@@ -3,14 +3,13 @@ import availabilityService from "../../services/availabilityService";
 import Modal from "../Modal";
 import styles from "./CreateAppointmentModal.module.css";
 
+// 1️⃣ TRADUCIMOS EL ESTADO PARA QUE COINCIDA CON EL BACKEND
 const INITIAL_FORM = {
-  client: "",
+  nombre: "",
   email: "",
-  workshopId: "",
-  slotId: "",
-  date: "",
-  time: "",
-  allergies: "",
+  idTaller: "",
+  idHorario: "",
+  alergias: "",
 };
 
 export default function CreateAppointmentModal({
@@ -38,13 +37,13 @@ export default function CreateAppointmentModal({
     let isMounted = true;
 
     async function loadSlots() {
-      if (!formData.workshopId) {
+      if (!formData.idTaller) {
         setSlots([]);
         return;
       }
 
       const nextSlots = await availabilityService.getSlotsByWorkshopId(
-        formData.workshopId,
+        formData.idTaller
       );
 
       if (!isMounted) {
@@ -54,19 +53,15 @@ export default function CreateAppointmentModal({
       setSlots(nextSlots);
       setFormData((current) => {
         const nextSlotId =
-          nextSlots.find((slot) => slot.id === current.slotId)?.id ??
+          nextSlots.find((slot) => String(slot.id) === String(current.idHorario))?.id ??
           nextSlots[0]?.id ??
           "";
-        const selectedSlot = nextSlots.find((slot) => slot.id === nextSlotId);
 
         return {
           ...current,
-          slotId: nextSlotId,
-          date: selectedSlot?.date ?? "",
-          time: selectedSlot?.time ?? "",
+          idHorario: nextSlotId,
         };
       });
-
     }
 
     loadSlots();
@@ -74,38 +69,21 @@ export default function CreateAppointmentModal({
     return () => {
       isMounted = false;
     };
+  }, [formData.idTaller]); // 👈 Actualizamos la dependencia
 
-    
-  }, [formData.workshopId]);
-
+  // 2️⃣ SIMPLIFICAMOS EL HANDLE CHANGE COMO HICIMOS EN BOOKING.JSX
   function handleChange(event) {
     const { name, value } = event.target;
-    if (name === "workshopId") {
-      setFormData((current) => ({
-        ...current,
-        workshopId: value,
-        slotId: "",
-        date: "",
-        time: "",
-      }));
-      return;
-    }
 
-    if (name === "slotId") {
-      const selectedSlot = slots.find((slot) => slot.id === value);
-      setFormData((current) => ({
-        ...current,
-        slotId: value,
-        date: selectedSlot?.date ?? "",
-        time: selectedSlot?.time ?? "",
-      }));
-      return;
-    }
+    setFormData((current) => {
+      const nextData = { ...current, [name]: value };
 
-    setFormData((current) => ({
-      ...current,
-      [name]: value,
-    }));
+      if (name === "idTaller") {
+        nextData.idHorario = ""; // Reseteamos horario si cambia el taller
+      }
+
+      return nextData;
+    });
   }
 
   async function handleSubmit(event) {
@@ -113,6 +91,7 @@ export default function CreateAppointmentModal({
     setIsSubmitting(true);
 
     try {
+      // Al hacer submit, enviamos el formData ya en español
       await onSubmit(formData);
     } finally {
       setIsSubmitting(false);
@@ -120,7 +99,7 @@ export default function CreateAppointmentModal({
   }
 
   const isSubmitDisabled =
-    isSubmitting || !formData.workshopId || !formData.slotId;
+    isSubmitting || !formData.idTaller || !formData.idHorario;
 
   return (
     <Modal
@@ -147,15 +126,15 @@ export default function CreateAppointmentModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="client">
+          <label className={styles.label} htmlFor="nombre">
             Cliente
           </label>
           <input
-            id="client"
-            name="client"
+            id="nombre"
+            name="nombre" /* 👈 Cambiado a nombre */
             type="text"
             className={styles.input}
-            value={formData.client}
+            value={formData.nombre}
             onChange={handleChange}
             placeholder="Ej. Maria Alonso"
             required
@@ -179,20 +158,20 @@ export default function CreateAppointmentModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="workshopId">
+          <label className={styles.label} htmlFor="idTaller">
             Taller
           </label>
           <select
-            id="workshopId"
-            name="workshopId"
+            id="idTaller"
+            name="idTaller" /* 👈 Cambiado a idTaller */
             className={styles.input}
-            value={formData.workshopId}
+            value={String(formData.idTaller)} /* 👈 Magia anti-congelamiento */
             onChange={handleChange}
             required
           >
             <option value="">Selecciona un taller</option>
             {workshops.map((workshop) => (
-              <option key={workshop.id || workshop.idTaller} value={workshop.id || workshop.idTaller}>
+              <option key={workshop.id || workshop.idTaller} value={String(workshop.id || workshop.idTaller)}>
                 {workshop.title || workshop.nombreTaller}
               </option>
             ))}
@@ -200,26 +179,26 @@ export default function CreateAppointmentModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="slotId">
+          <label className={styles.label} htmlFor="idHorario">
             Fecha y hora disponibles
           </label>
           <select
-            id="slotId"
-            name="slotId"
+            id="idHorario"
+            name="idHorario" /* 👈 Cambiado a idHorario */
             className={styles.input}
-            value={formData.slotId}
+            value={String(formData.idHorario)} /* 👈 Magia anti-congelamiento */
             onChange={handleChange}
             required
-            disabled={!formData.workshopId || slots.length === 0}
+            disabled={!formData.idTaller || slots.length === 0}
           >
-            {!formData.workshopId && (
+            {!formData.idTaller && (
               <option value="">Selecciona un taller primero</option>
             )}
-            {formData.workshopId && slots.length === 0 && (
+            {formData.idTaller && slots.length === 0 && (
               <option value="">Sin horarios disponibles</option>
             )}
             {slots.map((slot) => (
-              <option key={slot.id} value={slot.id}>
+              <option key={slot.id} value={String(slot.id)}>
                 {slot.label}
               </option>
             ))}
@@ -227,17 +206,18 @@ export default function CreateAppointmentModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="allergies">
+          <label className={styles.label} htmlFor="alergias">
             Alergias o contraindicaciones
           </label>
           <textarea
-            id="allergies"
-            name="allergies"
+            id="alergias"
+            name="alergias" /* 👈 Cambiado a alergias */
             className={styles.textarea}
-            placeholder="Indica alergias, sensibilidad en la piel o cualquier observacion relevante."
+            placeholder="Indica tus alergias. Si no tienes ninguna, escribe 'Ninguna'."
             rows="4"
-            value={formData.allergies}
+            value={formData.alergias}
             onChange={handleChange}
+            required /* 👈 Obligatorio */
           />
         </div>
 
