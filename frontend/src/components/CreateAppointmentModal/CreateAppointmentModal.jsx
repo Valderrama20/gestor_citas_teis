@@ -189,8 +189,8 @@ export default function CreateAppointmentModal({
           >
             <option value="">Selecciona un taller</option>
             {workshops.map((workshop) => (
-              <option key={workshop.id} value={workshop.id}>
-                {workshop.title}
+              <option key={workshop.id || workshop.idTaller} value={workshop.id || workshop.idTaller}>
+                {workshop.title || workshop.nombreTaller}
               </option>
             ))}
           </select>

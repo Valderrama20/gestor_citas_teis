@@ -1,4 +1,4 @@
-import { LogOut, Plus, Settings } from "lucide-react";
+import { AlertCircle, LogOut, Plus, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AdminCourseCard from "../../components/AdminCourseCard";
@@ -7,12 +7,14 @@ import AdminTopbar from "../../components/AdminTopbar";
 import courseService from "../../services/courseService";
 import styles from "./AdminCourses.module.css";
 import { useToast } from "../../context/ToastContext";
+import Modal from "../../components/Modal";
 
 export default function AdminCourses() {
   const [courses, setCourses] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [courseToEdit, setCourseToEdit] = useState(null);
+  const [courseToDelete, setCourseToDelete] = useState(null);
   const { addToast } = useToast();
 
   useEffect(() => {
@@ -61,17 +63,23 @@ export default function AdminCourses() {
     }
   }
 
-  async function handleDeleteCourse(curso) {
-    const isConfirmed = window.confirm(`¿Estás seguro de que deseas borrar el curso "${curso.name}"?`);
-    if (!isConfirmed) return;
+  function handleDeleteCourse(curso) {
+    setCourseToDelete(curso);
+  }
 
+  async function handleConfirmDelete() {
     try {
-      await courseService.deleteCourse(curso.id);
-      setCourses(currentCourses => currentCourses.filter(c => c.id !== curso.id));
-      addToast(`El curso "${curso.name}" ha sido eliminado.`, "success");
+      // Usamos el ID del curso que tenemos guardado en el estado
+      await courseService.deleteCourse(courseToDelete.id);
+
+      // Actualizamos la lista y avisamos al usuario
+      setCourses(prev => prev.filter(c => c.id !== courseToDelete.id));
+      addToast("Curso eliminado", "success");
     } catch (error) {
-      console.error("Error al borrar:", error);
-      addToast("No se pudo borrar el curso. Comprueba si tiene citas asociadas.", "error");
+      addToast("Error al borrar", "error");
+    } finally {
+      // IMPORTANTE: Pase lo que pase, vaciamos el cajón para que el Modal se cierre
+      setCourseToDelete(null);
     }
   }
 
@@ -161,6 +169,41 @@ export default function AdminCourses() {
         onSubmit={handleCreateCourse}
         courseToEdit={courseToEdit}
       />
+
+      <Modal
+        isOpen={courseToDelete !== null}
+        onClose={() => setCourseToDelete(null)}
+        title="Eliminar curso"
+        showAction={false}
+      >
+        <div className={styles.confirmWrapper}>
+          <div className={styles.dangerIconBox}>
+            <AlertCircle size={48} color="#b83232" strokeWidth={1.5} />
+          </div>
+
+          <div className={styles.confirmTextGroup}>
+            <p className={styles.confirmQuestion}>¡Esta acción no se puede deshacer!</p>
+            <h3 className={styles.confirmTargetName}>{courseToDelete?.name}</h3>
+          </div>
+
+          <div className={styles.modalActionsVertical}>
+            <button
+              type="button"
+              className={styles.dangerButton}
+              onClick={handleConfirmDelete}
+            >
+              Eliminar definitivamente
+            </button>
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={() => setCourseToDelete(null)}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }
