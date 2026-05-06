@@ -1,28 +1,54 @@
 -- -----------------------------------------------------
--- Esquema: gestor_citas
+-- Esquema: gestor_citas Refactorizado (RBAC)
 -- -----------------------------------------------------
 CREATE DATABASE IF NOT EXISTS gestor_citas_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 USE gestor_citas_db;
 
--- 1. Tablas Independientes (Sin claves foráneas)
-CREATE TABLE administrador (
-    id_admin INT AUTO_INCREMENT PRIMARY KEY,
+-- ==========================================
+-- BLOQUE 1: SEGURIDAD Y ACCESO (RBAC)
+-- ==========================================
+
+CREATE TABLE usuario (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL, -- Centralizamos las contraseñas aquí
+    activo BOOLEAN DEFAULT TRUE
 ) ENGINE=InnoDB;
 
-CREATE TABLE cliente (
-    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
+CREATE TABLE rol (
+    id_rol INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_rol VARCHAR(50) NOT NULL UNIQUE -- Ej: 'ROLE_ADMIN', 'ROLE_USUARIO', 'ROLE_PROFESOR'
+) ENGINE=InnoDB;
+
+CREATE TABLE usuario_rol (
+    id_usuario INT NOT NULL,
+    id_rol INT NOT NULL,
+    PRIMARY KEY (id_usuario, id_rol),
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_rol) REFERENCES rol(id_rol) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+
+-- ==========================================
+-- BLOQUE 2: PERFILES DE DOMINIO (Datos extra)
+-- ==========================================
+
+-- El cliente ahora es una extensión del usuario. Solo guarda datos de negocio.
+CREATE TABLE perfil_cliente (
+    id_usuario INT PRIMARY KEY, -- Clave primaria y foránea al mismo tiempo (Relación 1 a 1)
     telefono VARCHAR(20),
-    password VARCHAR(255) NULL, -- Nulo para el MVP
-    notas_alergias TEXT
+    notas_alergias TEXT, -- Mantenemos este requerimiento
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- 2. Tablas dependientes (Necesitan Curso o Admin)
+
+-- ==========================================
+-- BLOQUE 3: ENTIDADES DEL NEGOCIO
+-- ==========================================
+
+-- La tabla curso original tenía un id_admin. 
+-- Ahora apunta a un usuario (que mediante RBAC tendrá el rol de ADMIN o PROFESOR).
 CREATE TABLE curso (
     id_curso INT AUTO_INCREMENT PRIMARY KEY,
     nombre_curso VARCHAR(100) NOT NULL,
@@ -30,9 +56,9 @@ CREATE TABLE curso (
     alumnos INT,
     descripcion VARCHAR(255) NOT NULL,
     icono VARCHAR(255) NOT NULL,
-    id_admin INT, -- Relación "gestiona"
     nivel VARCHAR(255) NOT NULL,
-    FOREIGN KEY (id_admin) REFERENCES administrador(id_admin)
+    id_gestor INT, -- Reemplaza a id_admin
+    FOREIGN KEY (id_gestor) REFERENCES usuario(id_usuario)
 ) ENGINE=InnoDB;
 
 CREATE TABLE alumno (
@@ -56,7 +82,6 @@ CREATE TABLE taller (
     FOREIGN KEY (id_curso) REFERENCES curso(id_curso)
 ) ENGINE=InnoDB;
 
--- 3. Tabla de horarios (Depende de Taller)
 CREATE TABLE horario_taller (
     id_horario INT AUTO_INCREMENT PRIMARY KEY,
     dia_semana VARCHAR(20) NOT NULL,
@@ -66,17 +91,17 @@ CREATE TABLE horario_taller (
     FOREIGN KEY (id_taller) REFERENCES taller(id_taller)
 ) ENGINE=InnoDB;
 
--- 4. Tabla de Cita (Depende de Cliente, Taller y Alumno)
+-- La tabla cita original vinculaba cliente, taller y alumno.
+-- Ahora vincula directamente el id_usuario (que asume el perfil cliente) con el taller y alumno.
 CREATE TABLE cita (
     id_cita INT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     estado ENUM('PENDIENTE', 'CONFIRMADA', 'CANCELADA') NOT NULL,
-    id_cliente INT,
-    id_taller INT,
-    id_alumno INT NULL, -- Nulo en MVP, se asignará en el futuro
-    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+    id_cliente INT NOT NULL, -- Apunta a usuario(id_usuario) que hace la reserva
+    id_taller INT NOT NULL,
+    id_alumno INT NULL, 
+    FOREIGN KEY (id_cliente) REFERENCES usuario(id_usuario),
     FOREIGN KEY (id_taller) REFERENCES taller(id_taller),
     FOREIGN KEY (id_alumno) REFERENCES alumno(id_alumno)
 ) ENGINE=InnoDB;
-
