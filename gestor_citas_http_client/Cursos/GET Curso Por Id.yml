@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:9001/CursosController
+  url: http://localhost:9001/CursosController/1
   auth: inherit
 
 settings:

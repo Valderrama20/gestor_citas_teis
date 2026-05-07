@@ -6,6 +6,13 @@ info:
 http:
   method: GET
   url: http://localhost:9001/CursosController
+  body:
+    type: json
+    data: |-
+      {
+        "correo": "admin@iesteis.es",
+        "contrasena": "admin123"
+      }
   auth: inherit
 
 settings:

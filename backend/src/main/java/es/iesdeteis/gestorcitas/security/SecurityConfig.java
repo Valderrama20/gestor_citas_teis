@@ -39,7 +39,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
                 // Accesos públicos
-                .requestMatchers("/auth/login", "/auth/registro").permitAll()
+                .requestMatchers("/auth/login", "/auth/registro", "/error/**").permitAll()
                 // Reglas según Roles. Asumiendo nombres exactos mapeados a ROLE_ADMIN y ROLE_PROFESOR
                 .requestMatchers("/administradores/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/talleres/**").hasAnyRole("ADMIN", "PROFESOR")

@@ -13,7 +13,7 @@ INSERT INTO rol (nombre_rol) VALUES
 -- ==========================================
 -- ID 1: Administrador original
 INSERT INTO usuario (nombre, email, password, activo) VALUES
-('Profesor Coordinador', 'admin@iesteis.es', '$2a$10$vI8aWBnW3fID.ZQ4/zo1G.q1QlSups.KGWQl.YqGPHqbg9J17.39i', TRUE); 
+('Profesor Coordinador', 'admin@iesteis.es', '$2a$10$1SfJIRCjzenQ6NZLzB6O7uVCwSB4evSK2DEHdwXxcAu1g3EjteI1m', TRUE); 
 
 -- IDs 2, 3 y 4: Clientes originales
 INSERT INTO usuario (nombre, email, password, activo) VALUES
