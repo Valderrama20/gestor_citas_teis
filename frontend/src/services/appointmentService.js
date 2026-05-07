@@ -183,21 +183,15 @@ const appointmentService = {
       };
       console.log("Enviando JSON al backend:", citaParaMariaDB);
 
-      const response = await fetch("http://localhost:9001/citas", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(citaParaMariaDB),
-      });
-
-      if (!response.ok) {
-        console.error("Fallo al guardar la cita. Código HTTP:", response.status);
-      } else {
-        console.log("✅ ¡Cita creada con éxito en la API real!");
-      }
+      await api.post("/citas", citaParaMariaDB);
+      console.log("✅ ¡Cita creada con éxito en la API real!");
     } catch (error) {
-      console.error("Error de conexión al servidor de Spring Boot:", error);
+      const status = error?.response?.status;
+      if (status) {
+        console.error("Fallo al guardar la cita. Código HTTP:", status);
+      } else {
+        console.error("Error de conexión al servidor de Spring Boot:", error);
+      }
     }
 
     // ==========================================
