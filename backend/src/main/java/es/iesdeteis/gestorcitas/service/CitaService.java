@@ -66,4 +66,9 @@ public class CitaService implements ICitaService {
     public void deleteById(Long id) {
         citaRepository.deleteById(id);
     }
+
+    @Override
+    public List<Cita> findByTallerIdTaller(Long idTaller) {
+        return citaRepository.findByTallerIdTaller(idTaller);
+    }
 }

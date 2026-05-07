@@ -22,6 +22,15 @@ public class CitaController {
         return citaService.findAll();
     }
 
+    // Nuevo endpoint: obtener todas las citas de un taller
+    @GetMapping("/taller/{idTaller}")
+    public List<Cita> getCitasByTaller(@PathVariable Long idTaller) {
+        if (idTaller == null || idTaller <= 0) {
+            return List.of();
+        }
+        return citaService.findByTallerIdTaller(idTaller);
+    }
+
     @GetMapping("/{id}")
     public Cita getCitaById(@PathVariable Long id) {
         return citaService.findById(id);

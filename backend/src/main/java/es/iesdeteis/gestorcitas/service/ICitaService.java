@@ -14,4 +14,6 @@ public interface ICitaService {
     public void save(Cita cita);
 
     public void deleteById(Long id);
+
+    public List<Cita> findByTallerIdTaller(Long idTaller);
 }

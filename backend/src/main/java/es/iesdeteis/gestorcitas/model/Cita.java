@@ -26,7 +26,7 @@ public class Cita {
     @Column(name = "estado", nullable = false, length = 20)
     private EstadoCita estado = EstadoCita.PENDIENTE;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 
