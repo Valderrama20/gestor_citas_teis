@@ -55,6 +55,14 @@ public class Cita {
         this.hora = hora;
     }
 
+    public EstadoCita getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoCita estado) {
+        this.estado = estado;
+    }
+
     public Usuario getCliente() {
         return cliente;
     }

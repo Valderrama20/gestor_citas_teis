@@ -1,3 +1,4 @@
+import api from "../config/api";
 import availabilityService from "./availabilityService";
 import workshopService from "./workshopService";
 
@@ -103,16 +104,15 @@ async function enriquecerCitas(citas) {
 const appointmentService = {
   getAppointmentsByCourseId: async (idCurso) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/citas/curso/${idCurso}`);
-      if (!response.ok) {
-        console.error("Error cargando citas por curso:", response.status);
-        return [];
-      }
-
-      const citas = await response.json();
-      return citas.map(normalizeBackendCita);
+      const { data } = await api.get(`/citas/curso/${idCurso}`);
+      return (data ?? []).map(normalizeBackendCita);
     } catch (error) {
-      console.error("Error de conexión cargando citas por curso:", error);
+      const status = error?.response?.status;
+      if (status) {
+        console.error("Error cargando citas por curso:", status);
+      } else {
+        console.error("Error de conexión cargando citas por curso:", error);
+      }
       return [];
     }
   },

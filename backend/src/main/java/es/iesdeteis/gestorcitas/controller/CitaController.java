@@ -1,6 +1,9 @@
 package es.iesdeteis.gestorcitas.controller;
 
+import es.iesdeteis.gestorcitas.dto.CitaDTO;
 import es.iesdeteis.gestorcitas.model.Cita;
+import es.iesdeteis.gestorcitas.model.Taller;
+import es.iesdeteis.gestorcitas.model.Usuario;
 import es.iesdeteis.gestorcitas.service.ICitaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,29 +21,29 @@ public class CitaController {
 
     // --- MÉTODOS PROPIOS ---
     @GetMapping
-    public List<Cita> getCitas() {
-        return citaService.findAll();
+    public List<CitaDTO> getCitas() {
+        return toDtoList(citaService.findAll());
     }
 
     @GetMapping("/taller/{idTaller}")
-    public List<Cita> getCitasByTaller(@PathVariable Long idTaller) {
+    public List<CitaDTO> getCitasByTaller(@PathVariable Long idTaller) {
         if (idTaller == null || idTaller <= 0) {
             return List.of();
         }
-        return citaService.findByTallerIdTaller(idTaller);
+        return toDtoList(citaService.findByTallerIdTaller(idTaller));
     }
 
     @GetMapping("/curso/{idCurso}")
-    public List<Cita> getCitasByCurso(@PathVariable Long idCurso) {
+    public List<CitaDTO> getCitasByCurso(@PathVariable Long idCurso) {
         if (idCurso == null || idCurso <= 0) {
             return List.of();
         }
-        return citaService.findByCursoId(idCurso);
+        return toDtoList(citaService.findByCursoId(idCurso));
     }
 
     @GetMapping("/{id}")
-    public Cita getCitaById(@PathVariable Long id) {
-        return citaService.findById(id);
+    public CitaDTO getCitaById(@PathVariable Long id) {
+        return toDto(citaService.findById(id));
     }
 
     @PostMapping
@@ -56,5 +59,43 @@ public class CitaController {
     @PutMapping
     public void updateCita(@RequestBody Cita cita) {
         citaService.save(cita);
+    }
+
+    private List<CitaDTO> toDtoList(List<Cita> citas) {
+        return citas.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    private CitaDTO toDto(Cita cita) {
+        if (cita == null) {
+            return null;
+        }
+
+        CitaDTO dto = new CitaDTO();
+        dto.setIdCita(cita.getIdCita());
+        dto.setFecha(cita.getFecha());
+        dto.setHora(cita.getHora());
+        dto.setEstado(cita.getEstado());
+
+        Usuario cliente = cita.getCliente();
+        if (cliente != null) {
+            CitaDTO.ClienteDTO clienteDto = new CitaDTO.ClienteDTO();
+            clienteDto.setIdUsuario(cliente.getIdUsuario());
+            clienteDto.setNombre(cliente.getNombre());
+            clienteDto.setEmail(cliente.getEmail());
+            dto.setCliente(clienteDto);
+        }
+
+        Taller taller = cita.getTaller();
+        if (taller != null) {
+            CitaDTO.TallerDTO tallerDto = new CitaDTO.TallerDTO();
+            tallerDto.setIdTaller(taller.getIdTaller());
+            tallerDto.setNombreTaller(taller.getNombreTaller());
+            tallerDto.setIdCurso(taller.getIdCurso());
+            dto.setTaller(tallerDto);
+        }
+
+        return dto;
     }
 }

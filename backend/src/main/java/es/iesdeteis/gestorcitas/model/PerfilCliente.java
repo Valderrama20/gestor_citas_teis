@@ -1,5 +1,6 @@
 package es.iesdeteis.gestorcitas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,6 +10,7 @@ public class PerfilCliente {
     @Id
     private Integer idUsuario;
 
+    @JsonIgnore
     @OneToOne
     @MapsId
     @JoinColumn(name = "id_usuario")
