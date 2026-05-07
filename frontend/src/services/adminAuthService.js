@@ -10,6 +10,9 @@ const adminAuthService = {
     }
 
     // Petición POST real al endpoint de login en Spring Boot
+    
+    console.log(normalizedEmail, normalizedPassword)
+
     const response = await api.post('/auth/login', {
       email: normalizedEmail,
       password: normalizedPassword,

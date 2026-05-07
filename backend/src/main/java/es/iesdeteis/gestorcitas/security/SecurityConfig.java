@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/talleres/**").hasAnyRole("ADMIN", "PROFESOR")
                 .requestMatchers(HttpMethod.PUT, "/talleres/**").hasAnyRole("ADMIN", "PROFESOR")
                 .requestMatchers(HttpMethod.DELETE, "/talleres/**").hasAnyRole("ADMIN", "PROFESOR")
+                    .requestMatchers(HttpMethod.GET, "/citas/**").hasAnyRole("ADMIN", "PROFESOR")
                 // Cualquier otra requerir autenticación
                 .anyRequest().authenticated()
             );

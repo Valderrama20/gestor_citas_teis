@@ -65,9 +65,7 @@ public class CitaService implements ICitaService {
     public void deleteById(Long id) {
         citaRepository.deleteById(id);
     }
-<<<<<<< HEAD
-}
-=======
+
 
     @Override
     public List<Cita> findByTallerIdTaller(Long idTaller) {
@@ -79,4 +77,3 @@ public class CitaService implements ICitaService {
         return citaRepository.findByTallerIdCurso(idCurso);
     }
 }
->>>>>>> main
