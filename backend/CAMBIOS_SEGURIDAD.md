@@ -54,10 +54,16 @@ Para interactuar con la nueva API desde Postman o Frontend:
      "password": "tu_password_en_BD"
    }
    ```
-2. La API responderá con `200 OK` y entregará:
+2. La API responderá con `200 OK` y entregará el token junto a la información indispensable del usuario (para facilitar su uso en Front sin descifrar el token), encapsulada en el objeto `usuario`:
    ```json
    {
-       "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI..."
+       "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI...",
+       "usuario": {
+           "id": 1,
+           "nombre": "Juan",
+           "email": "juan@ejemplo.com",
+           "roles": ["ROLE_ADMIN"]
+       }
    }
    ```
 3. Para cualquier otra petición (por ejemplo, buscar todas las citas `GET /citas`), se debe incluir el Token en los **Headers** de la petición:

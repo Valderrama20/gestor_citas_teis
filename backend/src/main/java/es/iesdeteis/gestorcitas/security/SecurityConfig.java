@@ -40,6 +40,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 // Accesos públicos
                 .requestMatchers("/auth/login", "/auth/registro", "/error/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/CursosController/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/talleres/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/horarios-talleres/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/citas/**").permitAll()
                 // Reglas según Roles. Asumiendo nombres exactos mapeados a ROLE_ADMIN y ROLE_PROFESOR
                 .requestMatchers("/administradores/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/talleres/**").hasAnyRole("ADMIN", "PROFESOR")
