@@ -15,6 +15,7 @@ import CreateWorkshopModal from "../../components/CreateWorkshopModal";
 import appointmentService from "../../services/appointmentService";
 import courseService from "../../services/courseService";
 import workshopService from "../../services/workshopService";
+import { useToast } from "../../context/ToastContext";
 import styles from "./AdminDashboard.module.css";
 
 export default function AdminDashboard() {
@@ -33,124 +34,102 @@ export default function AdminDashboard() {
   useEffect(() => {
     let isMounted = true;
 
-    async function loadCourseAndWorkshops() {
-      try {
-        const [nextCourse, nextWorkshops] = await Promise.all([
-          courseService.getCourseById(courseId),
-          workshopService.getWorkshopsByCourseId(courseId),
-        ]);
+    async function loadDashboardData() {
+      const [nextCourse, nextAppointments, nextWorkshops] = await Promise.all([
+        courseService.getCourseById(courseId),
+        appointmentService.getAppointmentsByCourseId(courseId),
+        workshopService.getWorkshopsByCourseId(courseId),
+      ]);
 
-        if (isMounted) {
-          setCourse(nextCourse);
-          setWorkshops(nextWorkshops);
-        }
-      } catch (error) {
-        if (isMounted) setCourse(null);
+      if (!isMounted) {
+        return;
       }
+
+      setCourse(nextCourse);
+      setAppointments(nextAppointments);
+      setWorkshops(nextWorkshops);
+      setFilters({
+        date: "",
+        workshopId: "",
+      });
+      setIsFilterOpen(false);
     }
 
-    loadCourseAndWorkshops();
+    loadDashboardData();
 
     return () => {
       isMounted = false;
     };
   }, [courseId]);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadAppointments() {
-      try {
-        const nextAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
-        if (isMounted) setAppointments(nextAppointments);
-      } catch (error) {
-        console.error("Error al cargar citas:", error);
-      }
-    }
-
-    if (courseId) {
-      loadAppointments();
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [courseId]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchFilteredAppointments() {
-      try {
-        if (filters.workshopId) {
-          const nextAppointments = await appointmentService.getAppointmentsByWorkshopId(filters.workshopId);
-          if (isMounted) setAppointments(nextAppointments);
-        } else {
-          const allAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
-          if (isMounted) setAppointments(allAppointments);
-        }
-      } catch (error) {
-        console.error("Error al filtrar por taller:", error);
-      }
-    }
-
-    fetchFilteredAppointments();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [filters.workshopId, courseId]);
+  const { addToast } = useToast();
 
   async function handleConfirmAppointment(appointment) {
     const updatedAppointments = await appointmentService.updateAppointmentStatus({
       courseId,
+      appointment,
       appointmentId: appointment.id,
-      status: "Confirmada",
+      estado: "Confirmada",
     });
 
     setAppointments(updatedAppointments);
+    addToast("Cita confirmada correctamente", "success");
   }
 
   async function handleCreateAppointment(appointmentData) {
-    await appointmentService.createAppointment({
-      ...appointmentData,
-      courseId,
-    });
-
-    const nextAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
-    setAppointments(nextAppointments);
-    setIsCreateAppointmentModalOpen(false);
-  }
-
-  async function handleCreateWorkshop(workshopData) {
-    await workshopService.createWorkshop({
-      ...workshopData,
-      courseId,
-    });
-
-    const nextWorkshops = await workshopService.getWorkshopsByCourseId(courseId);
-    setWorkshops(nextWorkshops);
-    setIsCreateWorkshopModalOpen(false);
-  }
-
-  async function handleCompleteAppointment(appointment) {
-    const updatedAppointments = await appointmentService.updateAppointmentStatus({
-      courseId,
-      appointmentId: appointment.id,
-      status: "Completada",
-    });
-
-    setAppointments(updatedAppointments);
+    try {
+      await appointmentService.createAppointment({
+        ...appointmentData,
+        courseId,
+      });
+      const nextAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
+      setAppointments(nextAppointments);
+      setIsCreateAppointmentModalOpen(false);
+      addToast("Cita creada correctamente", "success");
+    } catch (error) {
+      console.error(error);
+      addToast("Error creando la cita", "error");
+    }
   }
 
   async function handleCancelAppointment(appointment) {
     const updatedAppointments = await appointmentService.updateAppointmentStatus({
       courseId,
+      appointment,
       appointmentId: appointment.id,
-      status: "Cancelada",
+      estado: "Cancelada",
     });
 
     setAppointments(updatedAppointments);
+    addToast("Cita cancelada correctamente", "success");
+  }
+
+  async function handleCreateWorkshop(workshopData) {
+    try {
+      // Guardamos la respuesta del servicio en una variable
+      const exito = await workshopService.createWorkshop({
+        ...workshopData,
+        courseId,
+      });
+
+      if (!exito) {
+        // Si falló, lanzamos error y no cerramos el modal
+        addToast("Error: El servidor rechazó el taller", "error");
+        return;
+      }
+      await workshopService.createWorkshop({
+        ...workshopData,
+        courseId,
+      });
+
+      const nextWorkshops = await workshopService.getWorkshopsByCourseId(courseId);
+      setWorkshops(nextWorkshops);
+      setIsCreateWorkshopModalOpen(false);
+      addToast("Taller creado correctamente", "success");
+    } catch (error) {
+      console.error(error);
+      addToast("Error creando el taller", "error");
+    }
   }
 
   function handleFilterChange(event) {
@@ -169,7 +148,11 @@ export default function AdminDashboard() {
   }
 
   const filteredAppointments = appointments.filter((appointment) => {
-    return !filters.date || appointment.date === filters.date;
+    const matchesDate = !filters.date || appointment.date === filters.date;
+    const matchesWorkshop =
+      !filters.workshopId || appointment.workshopId === filters.workshopId;
+
+    return matchesDate && matchesWorkshop;
   });
 
   const hasActiveFilters = Boolean(filters.date || filters.workshopId);
@@ -314,8 +297,11 @@ export default function AdminDashboard() {
                 >
                   <option value="">Todos los talleres</option>
                   {workshops.map((workshop) => (
-                    <option key={workshop.id} value={workshop.id}>
-                      {workshop.title}
+                    <option
+                      key={workshop.idTaller ?? workshop.id}
+                      value={String(workshop.idTaller ?? workshop.id)}
+                    >
+                      {workshop.nombreTaller ?? workshop.title}
                     </option>
                   ))}
                 </select>
@@ -335,7 +321,6 @@ export default function AdminDashboard() {
         <AdminAppointmentsTable
           appointments={filteredAppointments}
           onConfirm={handleConfirmAppointment}
-          onComplete={handleCompleteAppointment}
           onCancel={handleCancelAppointment}
         />
       </section>

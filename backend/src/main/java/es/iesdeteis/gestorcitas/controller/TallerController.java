@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/talleres")
+@CrossOrigin(origins = "*")
 public class TallerController {
 
     // --- ATRIBUTOS ---

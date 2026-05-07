@@ -1,0 +1,112 @@
+[
+  {
+    "estado": "CONFIRMADA",
+    "fecha": "2026-05-20",
+    "hora": "10:00:00",
+    "cliente": {
+      "nombre": "Chewbacca Martínez",
+      "email": "wookie_hair@kashyyyk.com",
+      "notasAlergias": "Alergia a las maquinillas eléctricas. Por favor, usad solo tijera y mucha paciencia."
+    },
+    "taller": { "idTaller": 1 }
+  },
+  {
+    "estado": "PENDIENTE",
+    "fecha": "2026-05-21",
+    "hora": "11:30:00",
+    "cliente": {
+      "nombre": "Eduardo Manostijeras",
+      "email": "edu_tijeras@castillo.com",
+      "notasAlergias": "Sin alergias, pero por favor no me dejéis tocar nada, vengo a que me lo hagan a mí."
+    },
+    "taller": { "idTaller": 3 }
+  },
+  {
+    "estado": "CANCELADA",
+    "fecha": "2026-05-22",
+    "hora": "09:15:00",
+    "cliente": {
+      "nombre": "Medusa Gorgona",
+      "email": "mirada_petrificante@mitologia.gr",
+      "notasAlergias": "Cuidado con las serpientes, son un poco tímidas. No usar el secador muy caliente."
+    },
+    "taller": { "idTaller": 4 }
+  },
+  {
+    "estado": "CONFIRMADA",
+    "fecha": "2026-05-23",
+    "hora": "16:00:00",
+    "cliente": {
+      "nombre": "Marge Simpson",
+      "email": "marge_blue@springfield.com",
+      "notasAlergias": "Ninguna. Pero voy a necesitar al menos 4 botes enteros de laca azul extra fuerte."
+    },
+    "taller": { "idTaller": 10 }
+  },
+  {
+    "estado": "PENDIENTE",
+    "fecha": "2026-05-24",
+    "hora": "12:00:00",
+    "cliente": {
+      "nombre": "Rapunzel",
+      "email": "pelo_largo@torre.com",
+      "notasAlergias": "Traed ayudantes extra, tengo 15 metros de pelo y un poco de prisa."
+    },
+    "taller": { "idTaller": 6 }
+  },
+  {
+    "estado": "CONFIRMADA",
+    "fecha": "2026-05-25",
+    "hora": "20:30:00",
+    "cliente": {
+      "nombre": "Conde Drácula",
+      "email": "vlad_impaler@transilvania.ro",
+      "notasAlergias": "Citas solo de noche. Alergia mortal al ajo, al agua bendita y a los espejos (no me veo)."
+    },
+    "taller": { "idTaller": 2 }
+  },
+  {
+    "estado": "PENDIENTE",
+    "fecha": "2026-05-26",
+    "hora": "13:45:00",
+    "cliente": {
+      "nombre": "Gollum",
+      "email": "mi_tesoro@mordor.com",
+      "notasAlergias": "Queremos que nos laven nuestro tesssoro. Solo nos quedan tres pelos, tened mucho cuidado."
+    },
+    "taller": { "idTaller": 4 }
+  },
+  {
+    "estado": "CONFIRMADA",
+    "fecha": "2026-05-27",
+    "hora": "22:00:00",
+    "cliente": {
+      "nombre": "Cenicienta",
+      "email": "zapatos_cristal@reino.com",
+      "notasAlergias": "Sin alergias, pero tengo que salir corriendo a las 23:59 exactas. Ni un minuto más."
+    },
+    "taller": { "idTaller": 9 }
+  },
+  {
+    "estado": "CANCELADA",
+    "fecha": "2026-05-28",
+    "hora": "10:30:00",
+    "cliente": {
+      "nombre": "Shrek",
+      "email": "pantano_verde@muy_muy_lejano.com",
+      "notasAlergias": "Exfoliación profunda con barro de pantano, por favor. Alergia grave a los perfumes florales."
+    },
+    "taller": { "idTaller": 7 }
+  },
+  {
+    "estado": "CONFIRMADA",
+    "fecha": "2026-05-29",
+    "hora": "17:15:00",
+    "cliente": {
+      "nombre": "Legolas",
+      "email": "elfo_arquero@rivendel.com",
+      "notasAlergias": "Solo un retoque en las puntas y brillo extra. La perfección élfica requiere mantenimiento."
+    },
+    "taller": { "idTaller": 1 }
+  }
+]

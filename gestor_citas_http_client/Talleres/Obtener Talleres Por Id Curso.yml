@@ -1,11 +1,11 @@
 info:
-  name: Post CIta
+  name: Obtener Talleres Por Id Curso
   type: http
-  seq: 1
+  seq: 2
 
 http:
-  method: POST
-  url: http://localhost:9001/cita
+  method: GET
+  url: http://localhost:9001/talleres/curso/1
   auth: inherit
 
 settings:

@@ -1,197 +1,254 @@
 import availabilityService from "./availabilityService";
 import workshopService from "./workshopService";
-import api from "../config/api";
 
-let appointmentsTable = [
+const API_BASE_URL = "http://localhost:9001";
+
+const STATUS_LABELS = {
+  PENDIENTE: "Pendiente",
+  CONFIRMADA: "Confirmada",
+  CANCELADA: "Cancelada",
+};
+
+function formatAppointmentStatus(status) {
+  if (!status) return "Pendiente";
+  const normalized = String(status).toUpperCase();
+  return STATUS_LABELS[normalized] ?? status;
+}
+
+function normalizeBackendCita(cita) {
+  const taller = cita.taller ?? {};
+  const cliente = cita.cliente ?? {};
+
+  const date = cita.fecha ?? "";
+  const time = cita.hora ? String(cita.hora).slice(0, 5) : "";
+  const status = formatAppointmentStatus(cita.estado);
+
+  return {
+    id: cita.idCita,
+    client: cliente.nombre || cliente.email || "Cliente desconocido",
+    workshopTitle: taller.nombreTaller || "Taller no encontrado",
+    date,
+    time,
+    status,
+    workshopId: String(taller.idTaller ?? cita.idTaller ?? ""),
+    idTaller: String(taller.idTaller ?? cita.idTaller ?? ""),
+    idCurso: String(taller.idCurso ?? cita.idCurso ?? ""),
+    original: cita,
+  };
+}
+
+// Tabla Mock para mantener funcionando el panel de administración temporalmente
+let tablaCitas = [
   {
     id: 1,
-    courseId: "1",
-    client: "Ana Garcia",
-    workshopId: "corte",
-    date: "2026-04-22",
-    time: "10:00",
-    status: "Pendiente",
-    studentId: null,
+    idCurso: "1",
+    nombre: "Ana Garcia",
+    idTaller: "1", 
+    fecha: "Lunes",
+    hora: "10:00",
+    estado: "PENDIENTE",
+    idAlumno: null,
   },
   {
     id: 2,
-    courseId: "1",
-    client: "Pedro Sanchez",
-    workshopId: "color",
-    date: "2026-04-22",
-    time: "11:00",
-    status: "Confirmada",
-    studentId: "student-3",
+    idCurso: "1",
+    nombre: "Pedro Sanchez",
+    idTaller: "2",
+    fecha: "Lunes",
+    hora: "11:00",
+    estado: "Confirmada",
+    idAlumno: "alumno-3",
   },
   {
     id: 3,
-    courseId: "2",
-    client: "Sonia Castro",
-    workshopId: "limpieza-facial",
-    date: "2026-04-23",
-    time: "09:30",
-    status: "Pendiente",
-    studentId: null,
-  },
-  {
-    id: 4,
-    courseId: "2",
-    client: "Mario Alonso",
-    workshopId: "maquillaje-social",
-    date: "2026-04-23",
-    time: "12:30",
-    status: "Completada",
-    studentId: "student-4",
-  },
-  {
-    id: 5,
-    courseId: "3",
-    client: "Rocio Vidal",
-    workshopId: "masaje-relajante",
-    date: "2026-04-24",
-    time: "10:30",
-    status: "Pendiente",
-    studentId: null,
-  },
-  {
-    id: 6,
-    courseId: "3",
-    client: "Diego Nunez",
-    workshopId: "exfoliacion-corporal",
-    date: "2026-04-24",
-    time: "13:00",
-    status: "Confirmada",
-    studentId: "student-7",
-  },
+    idCurso: "2",
+    nombre: "Sonia Castro",
+    idTaller: "3",
+    fecha: "Martes",
+    hora: "09:30",
+    estado: "PENDIENTE",
+    idAlumno: null,
+  }
 ];
 
 function cloneData(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
-function getNextAppointmentId() {
+function getSiguienteIdCita() {
   return (
-    appointmentsTable.reduce(
-      (maxId, appointment) => Math.max(maxId, appointment.id),
+    tablaCitas.reduce(
+      (maxId, cita) => Math.max(maxId, cita.id),
       0,
     ) + 1
   );
 }
 
-async function enrichAppointments(appointments) {
-  const allWorkshops = await workshopService.getAllWorkshops();
+// Añade el nombre del taller a la cita para el panel admin
+async function enriquecerCitas(citas) {
+  const todosLosTalleres = await workshopService.getAllWorkshops();
 
-  return appointments.map((appointment) => {
-    const workshop = allWorkshops.find(
-      (item) => item.id === appointment.workshopId,
+  return citas.map((cita) => {
+    const taller = todosLosTalleres.find(
+      (item) => String(item.idTaller) === String(cita.idTaller),
     );
 
     return {
-      ...cloneData(appointment),
-      workshopTitle: workshop?.title ?? "Taller no encontrado",
+      ...cloneData(cita),
+      nombreTaller: taller?.nombreTaller ?? "Taller no encontrado",
     };
   });
 }
 
 const appointmentService = {
-  getAppointmentsByCourseId: async (courseId) => {
-    const { data } = await api.get(`/cita/curso/${courseId}`);
-    return data;
+  getAppointmentsByCourseId: async (idCurso) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/citas/curso/${idCurso}`);
+      if (!response.ok) {
+        console.error("Error cargando citas por curso:", response.status);
+        return [];
+      }
+
+      const citas = await response.json();
+      return citas.map(normalizeBackendCita);
+    } catch (error) {
+      console.error("Error de conexión cargando citas por curso:", error);
+      return [];
+    }
   },
 
-  updateAppointmentStatus: async ({ courseId, appointmentId, status }) => {
-    await api.put(`/cita/${appointmentId}`, { estado: status });
+  updateAppointmentStatus: async ({ courseId, appointment, appointmentId, estado }) => {
+    const payload = appointment?.original
+      ? { ...appointment.original, estado }
+      : {
+          idCita: appointmentId,
+          estado,
+          cliente: { email: appointment?.client ?? "" },
+          taller: { idTaller: parseInt(appointment?.workshopId ?? "", 10) || null },
+        };
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/citas`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        console.error("Error actualizando estado de la cita:", response.status);
+      }
+    } catch (error) {
+      console.error("Error de conexión actualizando cita:", error);
+    }
+
     return appointmentService.getAppointmentsByCourseId(courseId);
   },
 
-  getAvailableSlots: async (date) => {
-    if (!date) {
+  getAvailableSlots: async (fecha) => {
+    if (!fecha) {
       return [];
     }
-
-    return availabilityService.getSlotsByDate(date);
+    return availabilityService.getSlotsByDate(fecha);
   },
 
-  // createAppointment: async (appointmentData) => {
-  //   const slot = appointmentData.slotId
-  //     ? await availabilityService.getSlotById(appointmentData.slotId)
-  //     : null;
-  //   const workshopId = appointmentData.workshopId ?? slot?.workshopId ?? "";
-  //   const workshop = workshopId
-  //     ? await workshopService.getWorkshopById(workshopId)
-  //     : null;
-  //   const courseId = appointmentData.courseId ?? workshop?.courseId ?? "";
-  //   const date = appointmentData.date ?? slot?.date ?? "";
-  //   const time = appointmentData.time ?? slot?.time ?? "";
-  //   const clientName = (appointmentData.client ?? appointmentData.name ?? "").trim();
+  createAppointment: async (datosCita) => {
+    // ==========================================
+    // 1. GUARDADO REAL EN SPRING BOOT (MARIADB)
+    // ==========================================
+    try {
+      // Necesitamos la hora exacta obtenida del servicio de horarios
+      const horarioElegido = await availabilityService.getSlotById(datosCita.slotId);
+      
+      // Adaptación a formato SQL estricto (DATE y TIME)
+      // MVP: Mandamos una fecha estática válida. En producción se calcularía el próximo día disponible.
+      const fechaParaSQL = "2026-05-20";
+      const horaParaSQL = horarioElegido ? `${horarioElegido.time}:00` : "09:00:00";
 
-  //   const newAppointment = {
-  //     id: getNextAppointmentId(),
-  //     courseId: courseId ? String(courseId) : "",
-  //     client: clientName,
-  //     email: appointmentData.email?.trim() ?? "",
-  //     workshopId,
-  //     slotId: slot?.id ?? appointmentData.slotId ?? null,
-  //     date,
-  //     time,
-  //     status: appointmentData.status ?? "Pendiente",
-  //     studentId: appointmentData.studentId ?? null,
-  //     allergies: appointmentData.allergies?.trim() ?? "",
-  //   };
+      const idTaller = datosCita.workshopId ?? (horarioElegido?.workshopId ?? "");
 
-  //   appointmentsTable = [...appointmentsTable, newAppointment];
+      const citaParaMariaDB = {
+        estado: "PENDIENTE",
+        fecha: fechaParaSQL,
+        hora: horaParaSQL,
+        cliente: {
+          nombre: datosCita.client,
+          email: datosCita.email,
+          notasAlergias: datosCita.allergies,
+        },
+        taller: {
+          idTaller: parseInt(idTaller, 10) || null,
+        },
+      };
+      console.log("Enviando JSON al backend:", citaParaMariaDB);
 
-  //   const [enrichedAppointment] = await enrichAppointments([newAppointment]);
-  //   return enrichedAppointment;
-  // },
+      const response = await fetch("http://localhost:9001/citas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(citaParaMariaDB),
+      });
 
-  createAppointment: async (appointmentData) => {
-    // Obtenemos el slot para extraer hora y fecha si existen
-    const slot = appointmentData.slotId
-      ? await availabilityService.getSlotById(appointmentData.slotId)
-      : null;
-
-    const workshopId = appointmentData.workshopId ?? slot?.workshopId ?? "";
-    const date = appointmentData.date ?? slot?.date ?? "";
-    const time = appointmentData.time ?? slot?.time ?? "";
-    const clientName = (appointmentData.client ?? appointmentData.name ?? "").trim();
-
-    const payload = {
-      fecha: date,
-      hora: time.length === 5 ? `${time}:00` : time, // El backend espera formato HH:mm:ss o HH:mm
-      estado: "PENDIENTE",
-      cliente: {
-        nombre: clientName,
-        email: appointmentData.email?.trim() ?? "",
-        notasAlergias: appointmentData.allergies?.trim() ?? ""
-      },
-      taller: {
-        idTaller: parseInt(workshopId)
+      if (!response.ok) {
+        console.error("Fallo al guardar la cita. Código HTTP:", response.status);
+      } else {
+        console.log("✅ ¡Cita creada con éxito en la API real!");
       }
+    } catch (error) {
+      console.error("Error de conexión al servidor de Spring Boot:", error);
+    }
+
+    // ==========================================
+    // 2. MANTENIMIENTO DEL MOCK PARA EL PANEL ADMIN
+    // ==========================================
+    // Esto permite que el frontend siga funcionando visualmente hasta migrar los GET
+    const horario = datosCita.slotId
+      ? await availabilityService.getSlotById(datosCita.slotId)
+      : null;
+    const idTaller = datosCita.workshopId ?? horario?.workshopId ?? "";
+    const taller = idTaller
+      ? await workshopService.getWorkshopById(idTaller)
+      : null;
+    const idCurso = datosCita.idCurso ?? taller?.idCurso ?? "";
+    const fecha = datosCita.date ?? horario?.date ?? "";
+    const hora = datosCita.time ?? horario?.time ?? "";
+    const nombreCliente = (datosCita.client ?? "").trim();
+
+    const nuevaCitaMock = {
+      id: getSiguienteIdCita(),
+      idCurso: idCurso ? String(idCurso) : "",
+      nombre: nombreCliente,
+      email: datosCita.email?.trim() ?? "",
+      idTaller,
+      idHorario: horario?.id ?? datosCita.slotId ?? null,
+      fecha,
+      hora,
+      estado: datosCita.estado ?? "PENDIENTE",
+      idAlumno: datosCita.idAlumno ?? null,
+      alergias: datosCita.allergies?.trim() ?? "",
     };
 
-    const { data } = await api.post('/cita', payload);
-    return data;
+    tablaCitas = [...tablaCitas, nuevaCitaMock];
+
+    const [citaEnriquecida] = await enriquecerCitas([nuevaCitaMock]);
+    return citaEnriquecida;
   },
 
-  cancelAppointment: async (appointmentId) => {
-    appointmentsTable = appointmentsTable.map((appointment) =>
-      appointment.id === appointmentId
+  cancelAppointment: async (idCita) => {
+    tablaCitas = tablaCitas.map((cita) =>
+      cita.id === idCita
         ? {
-            ...appointment,
-            status: "Cancelada",
+            ...cita,
+            estado: "Cancelada",
           }
-        : appointment,
+        : cita,
     );
 
     return cloneData(
-      appointmentsTable.find((appointment) => appointment.id === appointmentId) ?? null,
+      tablaCitas.find((cita) => cita.id === idCita) ?? null,
     );
-  },
-
-  getAppointmentsByWorkshopId: async (workshopId) => {
-    const { data } = await api.get(`/cita/taller/${workshopId}`);
-    return data;
   },
 };
 

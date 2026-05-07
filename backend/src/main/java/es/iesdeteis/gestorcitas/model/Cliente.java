@@ -10,7 +10,7 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cliente")
-    private Long idCLiente;
+    private Long idCliente;
     private String nombre;
     private String email;
     private String telefono;
@@ -30,7 +30,7 @@ public class Cliente {
     }
 
     public Cliente(Long idCLiente, String nombre, String email, String telefono, String password, String notasAlergias) {
-        this.idCLiente = idCLiente;
+        this.idCliente = idCLiente;
         this.nombre = nombre;
         this.email = email;
         this.telefono = telefono;
@@ -38,12 +38,12 @@ public class Cliente {
         this.notasAlergias = notasAlergias;
     }
 
-    public Long getIdCLiente() {
-        return idCLiente;
+    public Long getIdCliente() {
+        return idCliente;
     }
 
-    public void setIdCLiente(Long idCLiente) {
-        this.idCLiente = idCLiente;
+    public void setIdCliente(Long idCLiente) {
+        this.idCliente = idCLiente;
     }
 
     public String getNombre() {
@@ -89,7 +89,7 @@ public class Cliente {
     @Override
     public String toString() {
         return "Cliente{" +
-                "idCLiente=" + idCLiente +
+                "idCLiente=" + idCliente +
                 ", nombre='" + nombre + '\'' +
                 ", email='" + email + '\'' +
                 ", telefono='" + telefono + '\'' +

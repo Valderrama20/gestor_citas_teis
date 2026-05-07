@@ -1,10 +1,10 @@
 info:
-  name: GET Curso Por Id
+  name: Crear Cursos
   type: http
   seq: 2
 
 http:
-  method: GET
+  method: POST
   url: http://localhost:9001/CursosController
   auth: inherit
 

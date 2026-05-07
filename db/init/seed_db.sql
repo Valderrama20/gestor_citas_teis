@@ -44,6 +44,6 @@ INSERT INTO horario_taller (dia_semana, hora_apertura, hora_cierre, id_taller) V
 
 -- 7. CITAS (Algunas con id_alumno, otras nulas como en el MVP)
 INSERT INTO cita (fecha, hora, estado, id_cliente, id_taller, id_alumno) VALUES
-('2026-04-22', '10:00:00', 'pendiente', 1, 1, NULL), -- Cita sin alumno asignado (MVP)
-('2026-04-22', '11:00:00', 'confirmada', 2, 3, 3),   -- Cita asignada a Lucía (id 3)
-('2026-04-23', '10:00:00', 'completada', 3, 2, 1);   -- Cita pasada, atendida por María (id 1)
+('2026-04-22', '10:00:00', 'PENDIENTE', 1, 1, NULL), -- Cita sin alumno asignado (MVP)
+('2026-04-22', '11:00:00', 'CONFIRMADA', 2, 3, 3),   -- Cita asignada a Lucía (id 3)
+('2026-04-23', '10:00:00', 'CANCELADA', 3, 2, 1);   -- Cita pasada, atendida por María (id 1)

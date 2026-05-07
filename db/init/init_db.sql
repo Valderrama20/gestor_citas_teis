@@ -79,3 +79,4 @@ CREATE TABLE cita (
     FOREIGN KEY (id_taller) REFERENCES taller(id_taller),
     FOREIGN KEY (id_alumno) REFERENCES alumno(id_alumno)
 ) ENGINE=InnoDB;
+

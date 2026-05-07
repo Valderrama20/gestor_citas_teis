@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CitaRepository extends CrudRepository<Cita, Long> {
     List<Cita> findByTallerIdTaller(Long idTaller);
+
+    List<Cita> findByTallerIdCurso(Long idCurso);
 }

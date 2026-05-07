@@ -1,193 +1,65 @@
-import api from "../config/api";
-
-let workshopsTable = [
-  {
-    id: "corte",
-    courseId: "1",
-    title: "Corte y peinado",
-    description: "Cortes clasicos, brushing y acabados para el dia a dia.",
-    iconKey: "scissors",
-  },
-  {
-    id: "color",
-    courseId: "1",
-    title: "Coloracion",
-    description: "Tintes, matices y retoque de raiz con asesoria previa.",
-    iconKey: "sparkles",
-  },
-  {
-    id: "tratamiento-capilar",
-    courseId: "1",
-    title: "Tratamiento capilar",
-    description: "Hidratacion profunda, mascarillas y cuidado del cuero cabelludo.",
-    iconKey: "droplets",
-  },
-  {
-    id: "recogidos",
-    courseId: "1",
-    title: "Recogidos",
-    description: "Peinados para eventos, ondas y recogidos de practica.",
-    iconKey: "waves",
-  },
-  {
-    id: "limpieza-facial",
-    courseId: "2",
-    title: "Limpieza facial",
-    description: "Rutina completa con exfoliacion, vapor y extraccion suave.",
-    iconKey: "sparkles",
-  },
-  {
-    id: "maquillaje-social",
-    courseId: "2",
-    title: "Maquillaje social",
-    description: "Pruebas de maquillaje de dia, tarde y eventos sencillos.",
-    iconKey: "brush",
-  },
-  {
-    id: "hidratacion-intensiva",
-    courseId: "2",
-    title: "Hidratacion intensiva",
-    description: "Mascarillas y activos adaptados a cada tipo de piel.",
-    iconKey: "droplets",
-  },
-  {
-    id: "diseno-cejas",
-    courseId: "2",
-    title: "Diseno de cejas",
-    description: "Perfilado basico y armonizacion del rostro.",
-    iconKey: "flower",
-  },
-  {
-    id: "masaje-relajante",
-    courseId: "3",
-    title: "Masaje relajante",
-    description: "Sesiones enfocadas en bienestar, descarga y relajacion.",
-    iconKey: "flower",
-  },
-  {
-    id: "exfoliacion-corporal",
-    courseId: "3",
-    title: "Exfoliacion corporal",
-    description: "Preparacion de la piel con productos y maniobras suaves.",
-    iconKey: "droplets",
-  },
-  {
-    id: "depilacion-basica",
-    courseId: "3",
-    title: "Depilacion basica",
-    description: "Practicas guiadas por zonas con protocolo higienico.",
-    iconKey: "sparkles",
-  },
-  {
-    id: "ritual-spa",
-    courseId: "3",
-    title: "Ritual spa",
-    description: "Experiencia combinada con envoltura y masaje final.",
-    iconKey: "waves",
-  },
-  {
-    id: "manicura-basica",
-    courseId: "4",
-    title: "Manicura basica",
-    description: "Limpieza, limado, cuticulas y esmaltado tradicional.",
-    iconKey: "hand",
-  },
-  {
-    id: "pedicura",
-    courseId: "4",
-    title: "Pedicura",
-    description: "Cuidado integral del pie con acabado estetico.",
-    iconKey: "flower",
-  },
-  {
-    id: "semipermanente",
-    courseId: "4",
-    title: "Semipermanente",
-    description: "Aplicacion de color de larga duracion y retirada segura.",
-    iconKey: "sparkles",
-  },
-  {
-    id: "nail-art",
-    courseId: "4",
-    title: "Nail art",
-    description: "Disenos sencillos para practicas creativas del alumnado.",
-    iconKey: "brush",
-  },
-];
-
-function cloneData(value) {
-  return JSON.parse(JSON.stringify(value));
-}
-
-function slugifyWorkshopTitle(title) {
-  return title
-    .toLowerCase()
-    .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-function getNextWorkshopId(title) {
-  const baseId = slugifyWorkshopTitle(title) || "nuevo-taller";
-
-  if (!workshopsTable.some((workshop) => workshop.id === baseId)) {
-    return baseId;
-  }
-
-  let suffix = 2;
-  let nextId = `${baseId}-${suffix}`;
-
-  while (workshopsTable.some((workshop) => workshop.id === nextId)) {
-    suffix += 1;
-    nextId = `${baseId}-${suffix}`;
-  }
-
-  return nextId;
-}
+const API_BASE_URL = "http://localhost:9001";
 
 const workshopService = {
-  getAllWorkshops: async () => cloneData(workshopsTable),
-
-  getWorkshopsByCourseId: async (courseId) => (await api.get(`/talleres/curso/${courseId}`)).data,
-
-  getWorkshopById: async (workshopId) =>
-    cloneData(workshopsTable.find((workshop) => workshop.id === workshopId) ?? null),
-
-  // createWorkshop: async (workshopData) => {
-  //   const newWorkshop = {
-  //     id: getNextWorkshopId(workshopData.title),
-  //     courseId: String(workshopData.courseId),
-  //     title: workshopData.title.trim(),
-  //     description: workshopData.description.trim(),
-  //     iconKey: workshopData.iconKey,
-  //   };
-
-  //   workshopsTable = [...workshopsTable, newWorkshop];
-
-  //   return cloneData(newWorkshop);
-  // },
-  createWorkshop: async (workshopData) => {
-    const payload = {
-      nombreTaller: workshopData.title.trim(),
-      descripcion: workshopData.description.trim(),
-      icono: workshopData.iconKey,
-      idCurso: parseInt(workshopData.courseId),
-      // Campos obligatorios en tu backend que no están en el form:
-      duracionMinutos: 60, 
-      tipoTaller: "General",
-      capacidadMaxima: 15
-    };
-
-    const { data } = await api.post('/talleres', payload);
-    return data;
+  // Obtener todos los talleres
+  getAllWorkshops: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/talleres`);
+      if (!response.ok) throw new Error("Error HTTP al cargar talleres");
+      
+      // Spring Boot ya nos devuelve idTaller, nombreTaller, etc.
+      return await response.json(); 
+    } catch (error) {
+      console.error("Error de conexión cargando talleres:", error);
+      return [];
+    }
   },
 
-  getAppointmentsByWorkshopId: async (workshopId) => {
-    const { data } = await api.get(`/cita/taller/${workshopId}`);
-    return data;
+  // Obtener talleres por curso (lo usa el panel de administración)
+  getWorkshopsByCourseId: async (idCurso) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/talleres/curso/${idCurso}`);
+      if (!response.ok) return [];
+      return await response.json();
+    } catch (error) {
+      console.error("Error cargando talleres del curso:", error);
+      return [];
+    }
   },
+
+  // Obtener un solo taller por su ID
+  getWorkshopById: async (idTaller) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/talleres/${idTaller}`);
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      return null;
+    }
+  },
+
+  // (Opcional) Crear taller si el panel de admin lo necesita
+  createWorkshop: async (datosTaller) => {
+    try {
+      const payload = {
+        nombreTaller: datosTaller.title,
+        descripcion: datosTaller.description,
+        icono: datosTaller.iconKey,
+        idCurso: parseInt(datosTaller.courseId, 10) || null,
+      };
+
+      const response = await fetch(`${API_BASE_URL}/talleres`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      return response.ok;
+    } catch (error) {
+      console.error("Error creando taller:", error);
+      return false;
+    }
+  }
 };
 
 export default workshopService;
