@@ -1,0 +1,31 @@
+info:
+  name: Reemplazar Cita
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: http://localhost:9001/citas
+  body:
+    type: json
+    data: |-
+      {
+        "estado": "PENDIENTE",
+        "fecha": "2026-05-20",
+        "hora": "09:00:00",
+        "cliente": {
+          "nombre": "Prueba Cita Update",
+          "email": "rafa@test.com",
+          "notasAlergias": "Ninguna"
+        },
+        "taller": {
+          "idTaller": 1
+        }
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,5 +1,5 @@
 info:
-  name: GET Cursos
+  name: Obtener Cursos
   type: http
   seq: 1
 

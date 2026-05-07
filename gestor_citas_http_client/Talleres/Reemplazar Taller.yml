@@ -1,0 +1,27 @@
+info:
+  name: Reemplazar Taller
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: http://localhost:9001/talleres
+  body:
+    type: json
+    data: |-
+      {
+          "nombreTaller": "Maquillaje de Camuflaje para Lunes",
+          "duracionMinutos": 45,
+          "tipoTaller": "Estética",
+          "capacidadMaxima": 8,
+          "descripcion": "Oculta tus ojeras post-fin de semana con técnicas ninja avanzadas.",
+          "icono": "sparkles",
+          "idCurso": 2
+        }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

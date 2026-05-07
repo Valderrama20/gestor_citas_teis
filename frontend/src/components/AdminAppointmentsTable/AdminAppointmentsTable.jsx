@@ -53,9 +53,7 @@ export default function AdminAppointmentsTable({
                       ? styles.pending
                       : appointment.status === "Confirmada"
                         ? styles.confirmed
-                        : appointment.status === "Completada"
-                          ? styles.completed
-                          : styles.cancelled,
+                        : styles.cancelled,
                   ].join(" ")}
                 >
                   {appointment.status}
@@ -74,34 +72,14 @@ export default function AdminAppointmentsTable({
                 )}
 
                 {appointment.status === "Confirmada" && (
-                  <div className={styles.actionGroup}>
-                    <button
-                      type="button"
-                      className={`${styles.actionButton} ${styles.completeButton}`}
-                      onClick={() => onComplete(appointment)}
-                    >
-                      <CircleCheckBig
-                        className={styles.actionIcon}
-                        strokeWidth={1.8}
-                      />
-                      Finalizar cita
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.actionButton} ${styles.cancelButton}`}
-                      onClick={() => onCancel(appointment)}
-                    >
-                      <XCircle className={styles.actionIcon} strokeWidth={1.8} />
-                      Cancelar cita
-                    </button>
-                  </div>
-                )}
-
-                {appointment.status === "Completada" && (
-                  <span className={styles.completedText}>
-                    <RotateCcw className={styles.completedIcon} strokeWidth={1.8} />
-                    Sin acciones
-                  </span>
+                  <button
+                    type="button"
+                    className={`${styles.actionButton} ${styles.cancelButton}`}
+                    onClick={() => onCancel(appointment)}
+                  >
+                    <XCircle className={styles.actionIcon} strokeWidth={1.8} />
+                    Cancelar cita
+                  </button>
                 )}
 
                 {appointment.status === "Cancelada" && (

@@ -1,11 +1,11 @@
 info:
-  name: Put Cita
+  name: Obtener Citas
   type: http
-  seq: 3
+  seq: 2
 
 http:
-  method: PUT
-  url: ""
+  method: GET
+  url: http://localhost:9001/citas
   auth: inherit
 
 settings:

@@ -1,0 +1,34 @@
+info:
+  name: Crear HORARIO-TALLERES
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: http://localhost:9001/horarios-talleres
+  body:
+    type: json
+    data: |-
+      {
+          "diaSemana": "Viernes",
+          "horaApertura": "15:00:00",
+          "horaCierre": "22:00:00",
+          "idTaller": {
+            "nombreTaller": "Manicura y Pedicura",
+            "duracionMinutos": 60,
+            "tipoTaller": "Estética",
+            "capacidadMaxima": 6,
+            "descripcion": "Cuidado completo de uñas, manos y pies con esmaltado clásico.",
+            "icono": "hand",
+            "idCurso": 1,
+            "idTaller": 5
+          },
+          "idHorario": 1
+        }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

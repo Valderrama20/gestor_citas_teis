@@ -1,6 +1,42 @@
 import availabilityService from "./availabilityService";
 import workshopService from "./workshopService";
 
+const API_BASE_URL = "http://localhost:9001";
+
+const STATUS_LABELS = {
+  PENDIENTE: "Pendiente",
+  CONFIRMADA: "Confirmada",
+  CANCELADA: "Cancelada",
+};
+
+function formatAppointmentStatus(status) {
+  if (!status) return "Pendiente";
+  const normalized = String(status).toUpperCase();
+  return STATUS_LABELS[normalized] ?? status;
+}
+
+function normalizeBackendCita(cita) {
+  const taller = cita.taller ?? {};
+  const cliente = cita.cliente ?? {};
+
+  const date = cita.fecha ?? "";
+  const time = cita.hora ? String(cita.hora).slice(0, 5) : "";
+  const status = formatAppointmentStatus(cita.estado);
+
+  return {
+    id: cita.idCita,
+    client: cliente.nombre || cliente.email || "Cliente desconocido",
+    workshopTitle: taller.nombreTaller || "Taller no encontrado",
+    date,
+    time,
+    status,
+    workshopId: String(taller.idTaller ?? cita.idTaller ?? ""),
+    idTaller: String(taller.idTaller ?? cita.idTaller ?? ""),
+    idCurso: String(taller.idCurso ?? cita.idCurso ?? ""),
+    original: cita,
+  };
+}
+
 // Tabla Mock para mantener funcionando el panel de administración temporalmente
 let tablaCitas = [
   {
@@ -65,24 +101,49 @@ async function enriquecerCitas(citas) {
 }
 
 const appointmentService = {
-  getAppointmentsByCourseId: async (idCurso) =>
-    enriquecerCitas(
-      tablaCitas.filter(
-        (cita) => String(cita.idCurso) === String(idCurso),
-      ),
-    ),
+  getAppointmentsByCourseId: async (idCurso) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/citas/curso/${idCurso}`);
+      if (!response.ok) {
+        console.error("Error cargando citas por curso:", response.status);
+        return [];
+      }
 
-  updateAppointmentStatus: async ({ idCurso, idCita, estado }) => {
-    tablaCitas = tablaCitas.map((cita) =>
-      cita.id === idCita
-        ? {
-            ...cita,
-            estado,
-          }
-        : cita,
-    );
+      const citas = await response.json();
+      return citas.map(normalizeBackendCita);
+    } catch (error) {
+      console.error("Error de conexión cargando citas por curso:", error);
+      return [];
+    }
+  },
 
-    return appointmentService.getAppointmentsByCourseId(idCurso);
+  updateAppointmentStatus: async ({ courseId, appointment, appointmentId, estado }) => {
+    const payload = appointment?.original
+      ? { ...appointment.original, estado }
+      : {
+          idCita: appointmentId,
+          estado,
+          cliente: { email: appointment?.client ?? "" },
+          taller: { idTaller: parseInt(appointment?.workshopId ?? "", 10) || null },
+        };
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/citas`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        console.error("Error actualizando estado de la cita:", response.status);
+      }
+    } catch (error) {
+      console.error("Error de conexión actualizando cita:", error);
+    }
+
+    return appointmentService.getAppointmentsByCourseId(courseId);
   },
 
   getAvailableSlots: async (fecha) => {
@@ -98,26 +159,27 @@ const appointmentService = {
     // ==========================================
     try {
       // Necesitamos la hora exacta obtenida del servicio de horarios
-      const horarioElegido = await availabilityService.getSlotById(datosCita.idHorario);
+      const horarioElegido = await availabilityService.getSlotById(datosCita.slotId);
       
       // Adaptación a formato SQL estricto (DATE y TIME)
       // MVP: Mandamos una fecha estática válida. En producción se calcularía el próximo día disponible.
-      const fechaParaSQL = "2026-05-20"; 
+      const fechaParaSQL = "2026-05-20";
       const horaParaSQL = horarioElegido ? `${horarioElegido.time}:00` : "09:00:00";
 
-      // Payload con la estructura exacta que exige la API
-   const citaParaMariaDB = {
+      const idTaller = datosCita.workshopId ?? (horarioElegido?.workshopId ?? "");
+
+      const citaParaMariaDB = {
         estado: "PENDIENTE",
         fecha: fechaParaSQL,
         hora: horaParaSQL,
         cliente: {
-          nombre: datosCita.nombre,
+          nombre: datosCita.client,
           email: datosCita.email,
-          notasAlergias: datosCita.alergias // 👈 ¡CAMBIADO AQUÍ!
+          notasAlergias: datosCita.allergies,
         },
         taller: {
-          idTaller: parseInt(datosCita.idTaller)
-        }
+          idTaller: parseInt(idTaller, 10) || null,
+        },
       };
       console.log("Enviando JSON al backend:", citaParaMariaDB);
 
@@ -142,17 +204,17 @@ const appointmentService = {
     // 2. MANTENIMIENTO DEL MOCK PARA EL PANEL ADMIN
     // ==========================================
     // Esto permite que el frontend siga funcionando visualmente hasta migrar los GET
-    const horario = datosCita.idHorario
-      ? await availabilityService.getSlotById(datosCita.idHorario)
+    const horario = datosCita.slotId
+      ? await availabilityService.getSlotById(datosCita.slotId)
       : null;
-    const idTaller = datosCita.idTaller ?? horario?.workshopId ?? "";
+    const idTaller = datosCita.workshopId ?? horario?.workshopId ?? "";
     const taller = idTaller
       ? await workshopService.getWorkshopById(idTaller)
       : null;
     const idCurso = datosCita.idCurso ?? taller?.idCurso ?? "";
-    const fecha = datosCita.fecha ?? horario?.date ?? "";
-    const hora = datosCita.hora ?? horario?.time ?? "";
-    const nombreCliente = (datosCita.nombre ?? "").trim();
+    const fecha = datosCita.date ?? horario?.date ?? "";
+    const hora = datosCita.time ?? horario?.time ?? "";
+    const nombreCliente = (datosCita.client ?? "").trim();
 
     const nuevaCitaMock = {
       id: getSiguienteIdCita(),
@@ -160,12 +222,12 @@ const appointmentService = {
       nombre: nombreCliente,
       email: datosCita.email?.trim() ?? "",
       idTaller,
-      idHorario: horario?.id ?? datosCita.idHorario ?? null,
+      idHorario: horario?.id ?? datosCita.slotId ?? null,
       fecha,
       hora,
       estado: datosCita.estado ?? "PENDIENTE",
       idAlumno: datosCita.idAlumno ?? null,
-      alergias: datosCita.alergias?.trim() ?? "",
+      alergias: datosCita.allergies?.trim() ?? "",
     };
 
     tablaCitas = [...tablaCitas, nuevaCitaMock];
