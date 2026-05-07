@@ -31,6 +31,8 @@ export default function AdminDashboard() {
     workshopId: "",
   });
 
+  const { addToast } = useToast();
+
   useEffect(() => {
     let isMounted = true;
 
@@ -61,8 +63,6 @@ export default function AdminDashboard() {
       isMounted = false;
     };
   }, [courseId]);
-
-  const { addToast } = useToast();
 
   async function handleConfirmAppointment(appointment) {
     const updatedAppointments = await appointmentService.updateAppointmentStatus({
@@ -106,45 +106,28 @@ export default function AdminDashboard() {
 
   async function handleCreateWorkshop(workshopData) {
     try {
-      // Guardamos la respuesta del servicio en una variable
-      const exito = await workshopService.createWorkshop({
-        ...workshopData,
-        courseId,
-      });
-
-      if (!exito) {
-        // Si falló, lanzamos error y no cerramos el modal
-        addToast("Error: El servidor rechazó el taller", "error");
-        return;
-      }
+      // 1. Enviamos los datos
       await workshopService.createWorkshop({
         ...workshopData,
-        courseId,
+        idCurso: Number(courseId), 
       });
 
+      // 2. Cerramos la ventana INMEDIATAMENTE
+      setIsCreateWorkshopModalOpen(false);
+
+      // 3. Recargamos los datos de la tabla por debajo
       const nextWorkshops = await workshopService.getWorkshopsByCourseId(courseId);
       setWorkshops(nextWorkshops);
-      setIsCreateWorkshopModalOpen(false);
-      addToast("Taller creado correctamente", "success");
+
+      // 4. Lanzamos la notificación global de éxito
+      addToast("¡Taller creado correctamente!", "success");
+
     } catch (error) {
-      console.error(error);
-      addToast("Error creando el taller", "error");
+      console.error("Error en el flujo de crear taller:", error);
+      setIsCreateWorkshopModalOpen(false); 
+      // Lanzamos la notificación global de error
+      addToast("Error al crear el taller", "error");
     }
-  }
-
-  function handleFilterChange(event) {
-    const { name, value } = event.target;
-    setFilters((current) => ({
-      ...current,
-      [name]: value,
-    }));
-  }
-
-  function handleClearFilters() {
-    setFilters({
-      date: "",
-      workshopId: "",
-    });
   }
 
   const filteredAppointments = appointments.filter((appointment) => {

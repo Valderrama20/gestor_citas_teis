@@ -6,8 +6,6 @@ const workshopService = {
     try {
       const response = await fetch(`${API_BASE_URL}/talleres`);
       if (!response.ok) throw new Error("Error HTTP al cargar talleres");
-      
-      // Spring Boot ya nos devuelve idTaller, nombreTaller, etc.
       return await response.json(); 
     } catch (error) {
       console.error("Error de conexión cargando talleres:", error);
@@ -15,7 +13,7 @@ const workshopService = {
     }
   },
 
-  // Obtener talleres por curso (lo usa el panel de administración)
+  // Obtener talleres por curso
   getWorkshopsByCourseId: async (idCurso) => {
     try {
       const response = await fetch(`${API_BASE_URL}/talleres/curso/${idCurso}`);
@@ -38,26 +36,27 @@ const workshopService = {
     }
   },
 
-  // (Opcional) Crear taller si el panel de admin lo necesita
   createWorkshop: async (datosTaller) => {
     try {
-      const payload = {
-        nombreTaller: datosTaller.title,
-        descripcion: datosTaller.description,
-        icono: datosTaller.iconKey,
-        idCurso: parseInt(datosTaller.courseId, 10) || null,
-      };
-
       const response = await fetch(`${API_BASE_URL}/talleres`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(datosTaller),
       });
 
-      return response.ok;
+      if (!response.ok) {
+        // Si el backend da error (ej. 400 o 500), lanzamos el fallo
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
+
+      // 🛡️ MAGIA AQUÍ: Si llegamos a esta línea, es que el status fue 200 OK.
+      // Simplemente devolvemos true y no intentamos leer el "body" 
+      // para evitar que JSON.parse explote con textos planos.
+      return true;
+
     } catch (error) {
       console.error("Error creando taller:", error);
-      return false;
+      throw error; 
     }
   }
 };

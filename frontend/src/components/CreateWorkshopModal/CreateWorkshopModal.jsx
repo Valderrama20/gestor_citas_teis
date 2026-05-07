@@ -3,9 +3,11 @@ import Modal from "../Modal";
 import styles from "./CreateWorkshopModal.module.css";
 
 const INITIAL_FORM = {
-  title: "",
-  description: "",
-  iconKey: "sparkles",
+  nombreTaller: "",
+  descripcion: "",
+  icono: "sparkles",
+  duracionMinutos: 60,
+  capacidadMaxima: 10,
 };
 
 export default function CreateWorkshopModal({
@@ -37,7 +39,14 @@ export default function CreateWorkshopModal({
     setIsSubmitting(true);
 
     try {
-      await onSubmit(formData);
+      const dataToSend = {
+        ...formData,
+        duracionMinutos: Number(formData.duracionMinutos),
+        capacidadMaxima: Number(formData.capacidadMaxima),
+        tipoTaller: courseName, 
+      };
+      
+      await onSubmit(dataToSend);
     } finally {
       setIsSubmitting(false);
     }
@@ -55,9 +64,7 @@ export default function CreateWorkshopModal({
     >
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="course">
-            Curso asociado
-          </label>
+          <label className={styles.label} htmlFor="course">Curso asociado</label>
           <input
             id="course"
             className={`${styles.input} ${styles.readonlyInput}`}
@@ -68,15 +75,13 @@ export default function CreateWorkshopModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="title">
-            Nombre del taller
-          </label>
+          <label className={styles.label} htmlFor="nombreTaller">Nombre del taller</label>
           <input
-            id="title"
-            name="title"
+            id="nombreTaller"
+            name="nombreTaller"
             type="text"
             className={styles.input}
-            value={formData.title}
+            value={formData.nombreTaller}
             onChange={handleChange}
             placeholder="Ej. Ritual detox facial"
             required
@@ -84,14 +89,12 @@ export default function CreateWorkshopModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="iconKey">
-            Icono
-          </label>
+          <label className={styles.label} htmlFor="icono">Icono</label>
           <select
-            id="iconKey"
-            name="iconKey"
+            id="icono"
+            name="icono"
             className={styles.input}
-            value={formData.iconKey}
+            value={formData.icono}
             onChange={handleChange}
           >
             <option value="sparkles">Sparkles</option>
@@ -104,36 +107,51 @@ export default function CreateWorkshopModal({
           </select>
         </div>
 
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <div className={styles.field} style={{ flex: 1 }}>
+            <label className={styles.label} htmlFor="duracionMinutos">Duración (min)</label>
+            <input
+              id="duracionMinutos"
+              name="duracionMinutos"
+              type="number"
+              className={styles.input}
+              value={formData.duracionMinutos}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className={styles.field} style={{ flex: 1 }}>
+            <label className={styles.label} htmlFor="capacidadMaxima">Capacidad máx.</label>
+            <input
+              id="capacidadMaxima"
+              name="capacidadMaxima"
+              type="number"
+              className={styles.input}
+              value={formData.capacidadMaxima}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="description">
-            Descripcion
-          </label>
+          <label className={styles.label} htmlFor="descripcion">Descripción</label>
           <textarea
-            id="description"
-            name="description"
+            id="descripcion"
+            name="descripcion"
             className={styles.textarea}
             rows="4"
-            value={formData.description}
+            value={formData.descripcion}
             onChange={handleChange}
-            placeholder="Describe brevemente el objetivo o servicio del taller."
             required
           />
         </div>
 
         <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.secondaryButton}
-            onClick={onClose}
-            disabled={isSubmitting}
-          >
+          <button type="button" className={styles.secondaryButton} onClick={onClose} disabled={isSubmitting}>
             Cancelar
           </button>
-          <button
-            type="submit"
-            className={styles.primaryButton}
-            disabled={isSubmitting}
-          >
+          <button type="submit" className={styles.primaryButton} disabled={isSubmitting}>
             {isSubmitting ? "Creando..." : "Crear taller"}
           </button>
         </div>
