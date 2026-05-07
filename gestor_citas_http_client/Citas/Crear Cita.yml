@@ -1,0 +1,29 @@
+info:
+  name: Crear Cita
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:9001/citas
+  body:
+    type: json
+    data: |-
+      {
+          "estado": "PENDIENTE",
+          "fecha": "2026-05-21",
+          "hora": "11:30:00",
+          "cliente": {
+            "nombre": "Eduardo Manostijeras",
+            "email": "edu_tijeras@castillo.com",
+            "notasAlergias": "Sin alergias, pero por favor no me dejéis tocar nada, vengo a que me lo hagan a mí."
+          },
+          "taller": { "idTaller": 3 }
+        }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,11 +1,14 @@
 info:
-  name: Put Cita
+  name: Eliminar Cita
   type: http
-  seq: 3
+  seq: 4
 
 http:
-  method: PUT
-  url: ""
+  method: DELETE
+  url: http://localhost:9001/citas/1
+  body:
+    type: json
+    data: ""
   auth: inherit
 
 settings:

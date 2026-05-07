@@ -1,0 +1,92 @@
+[
+  {
+    "nombreTaller": "Corte 'Recién Levantado' (Mullet Extremo)",
+    "duracionMinutos": 60,
+    "tipoTaller": "Peluquería",
+    "capacidadMaxima": 10,
+    "descripcion": "Para los que quieren volver a los 80 sin necesidad de máquina del tiempo.",
+    "icono": "scissors",
+    "idCurso": 1
+  },
+  {
+    "nombreTaller": "Maquillaje de Camuflaje para Lunes",
+    "duracionMinutos": 45,
+    "tipoTaller": "Estética",
+    "capacidadMaxima": 8,
+    "descripcion": "Oculta tus ojeras post-fin de semana con técnicas ninja avanzadas.",
+    "icono": "sparkles",
+    "idCurso": 2
+  },
+  {
+    "nombreTaller": "Manicura de Titanio",
+    "duracionMinutos": 50,
+    "tipoTaller": "Estética",
+    "capacidadMaxima": 6,
+    "descripcion": "Uñas tan duras que podrás abrir latas de atún y rascar paredes con ellas.",
+    "icono": "hand",
+    "idCurso": 4
+  },
+  {
+    "nombreTaller": "Exorcismo Capilar (Antifrizz)",
+    "duracionMinutos": 90,
+    "tipoTaller": "Peluquería",
+    "capacidadMaxima": 4,
+    "descripcion": "Expulsamos al demonio de la humedad de tu cabello mediante conjuros y keratina.",
+    "icono": "flower",
+    "idCurso": 1
+  },
+  {
+    "nombreTaller": "Depilación 'Lágrimas de Cocodrilo'",
+    "duracionMinutos": 30,
+    "tipoTaller": "Estética",
+    "capacidadMaxima": 2,
+    "descripcion": "Te prometemos que duele menos que pisar una pieza de Lego descalzo.",
+    "icono": "sparkles",
+    "idCurso": 3
+  },
+  {
+    "nombreTaller": "Tinte Sorpresa (Ruleta Rusa Capilar)",
+    "duracionMinutos": 120,
+    "tipoTaller": "Peluquería",
+    "capacidadMaxima": 5,
+    "descripcion": "Cierra los ojos, gira la ruleta y que la suerte decida tu próximo color de pelo.",
+    "icono": "palette",
+    "idCurso": 1
+  },
+  {
+    "nombreTaller": "Masaje 'Descontractura Nivel Dios'",
+    "duracionMinutos": 60,
+    "tipoTaller": "Bienestar",
+    "capacidadMaxima": 3,
+    "descripcion": "Saldrás flotando o no te cobramos (mentira, sí que cobramos).",
+    "icono": "flower",
+    "idCurso": 3
+  },
+  {
+    "nombreTaller": "Diseño de Cejas 'Mirada de Villano'",
+    "duracionMinutos": 20,
+    "tipoTaller": "Estética",
+    "capacidadMaxima": 12,
+    "descripcion": "Para que impongas respeto en las reuniones solo con levantar una ceja.",
+    "icono": "scissors",
+    "idCurso": 2
+  },
+  {
+    "nombreTaller": "Pedicura para Pies Viajeros",
+    "duracionMinutos": 55,
+    "tipoTaller": "Estética",
+    "capacidadMaxima": 5,
+    "descripcion": "Reseteo completo para esos pies que parece que han caminado descalzos por Mordor.",
+    "icono": "hand",
+    "idCurso": 4
+  },
+  {
+    "nombreTaller": "Peinado Antigravedad",
+    "duracionMinutos": 40,
+    "tipoTaller": "Peluquería",
+    "capacidadMaxima": 8,
+    "descripcion": "Uso de laca nivel industrial. Tu peinado soportará huracanes y viajes en moto.",
+    "icono": "scissors",
+    "idCurso": 1
+  }
+]

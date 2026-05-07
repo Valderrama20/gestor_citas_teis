@@ -1,5 +1,5 @@
 info:
-  name: POST Cursos
+  name: Crear Cursos
   type: http
   seq: 2
 

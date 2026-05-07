@@ -1,7 +1,7 @@
 info:
-  name: GET Cursos
+  name: Obtener Curso Por Id
   type: http
-  seq: 1
+  seq: 2
 
 http:
   method: GET

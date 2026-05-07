@@ -41,11 +41,19 @@ const workshopService = {
   // (Opcional) Crear taller si el panel de admin lo necesita
   createWorkshop: async (datosTaller) => {
     try {
+      const payload = {
+        nombreTaller: datosTaller.title,
+        descripcion: datosTaller.description,
+        icono: datosTaller.iconKey,
+        idCurso: parseInt(datosTaller.courseId, 10) || null,
+      };
+
       const response = await fetch(`${API_BASE_URL}/talleres`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datosTaller),
+        body: JSON.stringify(payload),
       });
+
       return response.ok;
     } catch (error) {
       console.error("Error creando taller:", error);

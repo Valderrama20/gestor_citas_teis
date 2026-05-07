@@ -1,11 +1,11 @@
 info:
-  name: Post CIta
+  name: Obtener Cursos
   type: http
   seq: 1
 
 http:
-  method: POST
-  url: http://localhost:9001/cita
+  method: GET
+  url: http://localhost:9001/CursosController
   auth: inherit
 
 settings:

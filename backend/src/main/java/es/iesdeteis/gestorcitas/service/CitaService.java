@@ -71,4 +71,9 @@ public class CitaService implements ICitaService {
     public List<Cita> findByTallerIdTaller(Long idTaller) {
         return citaRepository.findByTallerIdTaller(idTaller);
     }
+
+    @Override
+    public List<Cita> findByCursoId(Long idCurso) {
+        return citaRepository.findByTallerIdCurso(idCurso);
+    }
 }
