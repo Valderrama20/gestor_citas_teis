@@ -40,7 +40,7 @@ export default function Home() {
         <span className={styles.tagline}>Ciclo Formativo de Grado Medio y Superior</span>
         <h1 className={styles.title}>
           Realza tu <span className={styles.titleHighlight}>belleza natural</span>
-          <span className={styles.breakDesktop}> con el talento de nuestros alumnos</span>
+          <span className={styles.breakDesktop}> con el talento de nuestros alumn@s</span>
         </h1>
         <p className={styles.subtitle}>
           Tratamientos profesionales de peluqueria y estetica a precios de

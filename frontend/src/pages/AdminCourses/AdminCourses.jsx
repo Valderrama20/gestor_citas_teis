@@ -135,7 +135,7 @@ export default function AdminCourses() {
 
         <section className={styles.container}>
           <header className={styles.header}>
-            <h1 className={styles.title}>Hola, profesor</h1>
+            <h1 className={styles.title}>Hola, usuari@</h1>
             <p className={styles.subtitle}>
               Selecciona un curso para gestionar sus citas.
             </p>
