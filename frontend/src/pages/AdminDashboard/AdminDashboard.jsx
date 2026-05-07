@@ -15,6 +15,7 @@ import CreateWorkshopModal from "../../components/CreateWorkshopModal";
 import appointmentService from "../../services/appointmentService";
 import courseService from "../../services/courseService";
 import workshopService from "../../services/workshopService";
+import availabilityService from "../../services/availabilityService"; // ⚠️ IMPORTANTE: Añadido para los horarios
 import { useToast } from "../../context/ToastContext";
 import styles from "./AdminDashboard.module.css";
 
@@ -106,27 +107,50 @@ export default function AdminDashboard() {
 
   async function handleCreateWorkshop(workshopData) {
     try {
-      // 1. Enviamos los datos
-      await workshopService.createWorkshop({
-        ...workshopData,
+      // 1. Extraemos los horarios para no enviarlos mezclados con los datos básicos del taller
+      const { horarios, ...datosTaller } = workshopData;
+
+      // 2. Enviamos los datos del taller al backend
+      const tallerCreado = await workshopService.createWorkshop({
+        ...datosTaller,
         idCurso: Number(courseId), 
       });
 
-      // 2. Cerramos la ventana INMEDIATAMENTE
+      console.log("✅ RESPUESTA DEL BACKEND AL CREAR TALLER:", tallerCreado);
+
+      // Buscamos el ID (dependiendo de si Spring Boot devuelve id o idTaller)
+      const nuevoIdTaller = tallerCreado?.idTaller || tallerCreado?.id;
+
+      if (!nuevoIdTaller) {
+         throw new Error("El backend no ha devuelto el ID del taller. Revisa TallerController.");
+      }
+
+      // 3. Si se creó bien, guardamos sus horarios uno por uno
+      if (horarios && horarios.length > 0) {
+        for (const horario of horarios) {
+          await availabilityService.createSlot({
+            diaSemana: horario.diaSemana,
+            horaApertura: horario.horaApertura,
+            horaCierre: horario.horaCierre,
+            idTaller: { idTaller: nuevoIdTaller } // Estructura para el @ManyToOne de Spring Boot
+          });
+        }
+      }
+
+      // 4. Cerramos la ventana INMEDIATAMENTE
       setIsCreateWorkshopModalOpen(false);
 
-      // 3. Recargamos los datos de la tabla por debajo
+      // 5. Recargamos los datos de la tabla por debajo
       const nextWorkshops = await workshopService.getWorkshopsByCourseId(courseId);
       setWorkshops(nextWorkshops);
 
-      // 4. Lanzamos la notificación global de éxito
-      addToast("¡Taller creado correctamente!", "success");
+      // 6. Lanzamos la notificación global de éxito
+      addToast("¡Taller y horarios creados correctamente!", "success");
 
     } catch (error) {
-      console.error("Error en el flujo de crear taller:", error);
+      console.error("❌ Error en el flujo de crear taller:", error);
       setIsCreateWorkshopModalOpen(false); 
-      // Lanzamos la notificación global de error
-      addToast("Error al crear el taller", "error");
+      addToast(error.message || "Error al crear el taller o los horarios", "error");
     }
   }
 

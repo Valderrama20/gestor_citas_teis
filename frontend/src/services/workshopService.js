@@ -45,14 +45,12 @@ const workshopService = {
       });
 
       if (!response.ok) {
-        // Si el backend da error (ej. 400 o 500), lanzamos el fallo
         throw new Error(`Error HTTP: ${response.status}`);
       }
 
-      // 🛡️ MAGIA AQUÍ: Si llegamos a esta línea, es que el status fue 200 OK.
-      // Simplemente devolvemos true y no intentamos leer el "body" 
-      // para evitar que JSON.parse explote con textos planos.
-      return true;
+      // 🛡️ AHORA SÍ LEEMOS EL JSON: Porque Spring Boot ya nos devuelve 
+      // el objeto Taller completo con su idTaller autogenerado.
+      return await response.json(); 
 
     } catch (error) {
       console.error("Error creando taller:", error);
