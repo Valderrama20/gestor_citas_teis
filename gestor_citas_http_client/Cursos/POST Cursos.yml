@@ -6,17 +6,6 @@ info:
 http:
   method: POST
   url: http://localhost:9001/CursosController
-  body:
-    type: json
-    data: |-
-      {
-          "alumnos": 100,
-          "cursoAcademico": "2025/2026",
-          "descripcion": "Prueba.",
-          "icono": "scissors",
-          "nivel": "Grado Medio",
-          "nombreCurso": "Peluquería_Rafa"
-        }
   auth: inherit
 
 settings:
