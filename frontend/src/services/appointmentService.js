@@ -2,8 +2,6 @@ import api from "../config/api";
 import availabilityService from "./availabilityService";
 import workshopService from "./workshopService";
 
-const API_BASE_URL = "http://localhost:9001";
-
 const STATUS_LABELS = {
   PENDIENTE: "Pendiente",
   CONFIRMADA: "Confirmada",
@@ -128,19 +126,14 @@ const appointmentService = {
         };
 
     try {
-      const response = await fetch(`${API_BASE_URL}/citas`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        console.error("Error actualizando estado de la cita:", response.status);
-      }
+      await api.put('/citas', payload);
     } catch (error) {
-      console.error("Error de conexión actualizando cita:", error);
+      const status = error?.response?.status;
+      if (status) {
+        console.error("Error actualizando estado de la cita, código HTTP:", status);
+      } else {
+        console.error("Error de conexión actualizando cita:", error);
+      }
     }
 
     return appointmentService.getAppointmentsByCourseId(courseId);

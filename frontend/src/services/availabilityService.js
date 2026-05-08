@@ -1,15 +1,20 @@
-const API_BASE_URL = "http://localhost:9001";
+import api from '../config/api';
 
 const availabilityService = {
+  createSlot: async (slotData) => {
+    try {
+      const response = await api.post('/horarios-talleres', slotData);
+      return response.data;
+    } catch (error) {
+      console.error("Fallo al guardar horario:", error);
+      throw new Error("Fallo al guardar las horas en la BD");
+    }
+  },
+
   getSlotsByWorkshopId: async (workshopId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/horarios-talleres`);
-      
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
-      }
-
-      const allSlots = await response.json();
+      const response = await api.get('/horarios-talleres');
+      const allSlots = response.data;
 
       // 1. Filtramos buscando el ID dentro del objeto idTaller
       const filteredSlots = allSlots.filter(
@@ -39,9 +44,8 @@ const availabilityService = {
 
   getSlotsByDate: async (date) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/horarios-talleres`);
-      if (!response.ok) throw new Error("Error en la API");
-      const allSlots = await response.json();
+      const response = await api.get('/horarios-talleres');
+      const allSlots = response.data;
       
       return allSlots
         .filter((slot) => slot.diaSemana === String(date))
@@ -59,10 +63,9 @@ const availabilityService = {
 
   getSlotById: async (slotId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/horarios-talleres/${slotId}`);
-      if (!response.ok) return null;
-      
-      const slot = await response.json();
+      const response = await api.get(`/horarios-talleres/${slotId}`);
+      const slot = response.data;
+
       return {
         id: String(slot.idHorario),
         workshopId: String(slot.idTaller.idTaller),

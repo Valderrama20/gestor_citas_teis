@@ -8,9 +8,9 @@ import {
 import styles from "./AdminAppointmentsTable.module.css";
 
 const STATUS_LABELS = {
-  PENDIENTE: "Pendiente",
-  CONFIRMADA: "Confirmada",
-  CANCELADA: "Cancelada",
+  PENDIENTE: "PENDIENTE",
+  CONFIRMADA: "CONFIRMADA",
+  CANCELADA: "CANCELADA",
 };
 
 function getStatusKey(rawStatus) {

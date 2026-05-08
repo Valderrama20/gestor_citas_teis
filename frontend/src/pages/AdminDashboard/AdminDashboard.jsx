@@ -70,7 +70,7 @@ export default function AdminDashboard() {
       courseId,
       appointment,
       appointmentId: appointment.id,
-      estado: "Confirmada",
+      estado: "CONFIRMADA",
     });
 
     setAppointments(updatedAppointments);
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
       courseId,
       appointment,
       appointmentId: appointment.id,
-      estado: "Cancelada",
+      estado: "CANCELADA",
     });
 
     setAppointments(updatedAppointments);
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
          throw new Error("El backend no ha devuelto el ID del taller.");
       }
 
-      // 2. Guardamos los horarios (¡LLAMADA DIRECTA SIN USAR EL SERVICE!)
+// 2. Guardamos los horarios (usando availabilityService)
       if (horarios && horarios.length > 0) {
         for (const horario of horarios) {
           
@@ -134,17 +134,7 @@ export default function AdminDashboard() {
             idTaller: { idTaller: nuevoIdTaller } 
           };
 
-          // ⚠️ Hacemos el POST directamente aquí para saltarnos el error de React
-          const response = await fetch("http://localhost:9001/horarios-talleres", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(slotData),
-          });
-
-          if (!response.ok) {
-            console.error("Fallo al guardar horario:", await response.text());
-            throw new Error("Fallo al guardar las horas en la BD");
-          }
+          await availabilityService.createSlot(slotData);
         }
       }
 
