@@ -11,7 +11,7 @@ public interface ITallerService {
 
     public Taller findById(Long id);
 
-    public void save(Taller taller);
+    public Taller save(Taller taller);
 
     public void deleteById(Long id);
 

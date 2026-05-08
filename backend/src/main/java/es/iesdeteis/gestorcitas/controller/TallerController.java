@@ -33,8 +33,8 @@ public class TallerController {
     }
 
     @PostMapping
-    public void saveTaller(@RequestBody Taller taller) {
-        tallerService.save(taller);
+    public Taller saveTaller(@RequestBody Taller taller) { // ⚠️ Aquí dice Taller
+        return tallerService.save(taller);                 // ⚠️ Aquí hay un return
     }
 
     @DeleteMapping("/{id}")

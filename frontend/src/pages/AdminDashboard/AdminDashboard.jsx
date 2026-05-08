@@ -107,10 +107,9 @@ export default function AdminDashboard() {
 
   async function handleCreateWorkshop(workshopData) {
     try {
-      // 1. Extraemos los horarios para no enviarlos mezclados con los datos básicos del taller
       const { horarios, ...datosTaller } = workshopData;
 
-      // 2. Enviamos los datos del taller al backend
+      // 1. Guardamos el taller
       const tallerCreado = await workshopService.createWorkshop({
         ...datosTaller,
         idCurso: Number(courseId), 
@@ -118,33 +117,43 @@ export default function AdminDashboard() {
 
       console.log("✅ RESPUESTA DEL BACKEND AL CREAR TALLER:", tallerCreado);
 
-      // Buscamos el ID (dependiendo de si Spring Boot devuelve id o idTaller)
       const nuevoIdTaller = tallerCreado?.idTaller || tallerCreado?.id;
 
       if (!nuevoIdTaller) {
-         throw new Error("El backend no ha devuelto el ID del taller. Revisa TallerController.");
+         throw new Error("El backend no ha devuelto el ID del taller.");
       }
 
-      // 3. Si se creó bien, guardamos sus horarios uno por uno
+      // 2. Guardamos los horarios (¡LLAMADA DIRECTA SIN USAR EL SERVICE!)
       if (horarios && horarios.length > 0) {
         for (const horario of horarios) {
-          await availabilityService.createSlot({
+          
+          const slotData = {
             diaSemana: horario.diaSemana,
             horaApertura: horario.horaApertura,
             horaCierre: horario.horaCierre,
-            idTaller: { idTaller: nuevoIdTaller } // Estructura para el @ManyToOne de Spring Boot
+            idTaller: { idTaller: nuevoIdTaller } 
+          };
+
+          // ⚠️ Hacemos el POST directamente aquí para saltarnos el error de React
+          const response = await fetch("http://localhost:9001/horarios-talleres", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(slotData),
           });
+
+          if (!response.ok) {
+            console.error("Fallo al guardar horario:", await response.text());
+            throw new Error("Fallo al guardar las horas en la BD");
+          }
         }
       }
 
-      // 4. Cerramos la ventana INMEDIATAMENTE
+      // 3. Todo OK: Cerramos y actualizamos
       setIsCreateWorkshopModalOpen(false);
 
-      // 5. Recargamos los datos de la tabla por debajo
       const nextWorkshops = await workshopService.getWorkshopsByCourseId(courseId);
       setWorkshops(nextWorkshops);
 
-      // 6. Lanzamos la notificación global de éxito
       addToast("¡Taller y horarios creados correctamente!", "success");
 
     } catch (error) {

@@ -48,9 +48,17 @@ const workshopService = {
         throw new Error(`Error HTTP: ${response.status}`);
       }
 
-      // 🛡️ AHORA SÍ LEEMOS EL JSON: Porque Spring Boot ya nos devuelve 
-      // el objeto Taller completo con su idTaller autogenerado.
-      return await response.json(); 
+      // 🛡️ LECTURA SEGURA: Primero lo leemos como texto bruto
+      const responseText = await response.text();
+      console.log("Respuesta bruta del servidor:", responseText);
+
+      // Si el backend no devuelve nada, avisamos claramente
+      if (!responseText) {
+         throw new Error("El backend devolvió vacío. ¡Spring Boot sigue devolviendo void!");
+      }
+
+      // Si hay texto, lo convertimos a JSON
+      return JSON.parse(responseText);
 
     } catch (error) {
       console.error("Error creando taller:", error);
