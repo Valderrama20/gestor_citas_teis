@@ -1,17 +1,17 @@
 info:
-  name: Obtener Cursos
+  name: POST Login
   type: http
   seq: 1
 
 http:
-  method: GET
-  url: http://localhost:9001/CursosController
+  method: POST
+  url: http://localhost:9001/auth/login
   body:
     type: json
     data: |-
       {
         "correo": "admin@iesteis.es",
-        "contrasena": "admin123"
+        "contrasena": "abc123."
       }
   auth: inherit
 

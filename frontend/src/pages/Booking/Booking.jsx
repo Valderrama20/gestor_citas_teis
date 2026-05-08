@@ -9,21 +9,20 @@ import styles from "./Booking.module.css";
 export default function Booking() {
   const location = useLocation();
   // Mantenemos esto por si vienes desde la pantalla de talleres
-  const initialTallerId = location.state?.selectedWorkshopId ?? ""; 
+  const initialWorkshopId = location.state?.selectedWorkshopId ?? ""; 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Usamos nombres en español
   const [talleres, setTalleres] = useState([]);
   const [horarios, setHorarios] = useState([]);
   
-  // Nuestro estado ahora habla el mismo idioma que Spring Boot
+  // Estado alineado con appointmentService
   const [formData, setFormData] = useState({
-    nombre: "",
+    client: "",
     email: "",
-    idTaller: initialTallerId,
-    idHorario: "",
-    alergias: "",
+    workshopId: initialWorkshopId,
+    slotId: "",
+    allergies: "",
   });
 
   useEffect(() => {
@@ -37,7 +36,7 @@ export default function Booking() {
       setTalleres(nextTalleres);
       setFormData((current) => ({
         ...current,
-        idTaller: current.idTaller || nextTalleres[0]?.idTaller || "",
+        workshopId: current.workshopId || nextTalleres[0]?.idTaller || "",
       }));
     }
 
@@ -50,20 +49,20 @@ export default function Booking() {
     let isMounted = true;
 
     async function loadHorarios() {
-      if (!formData.idTaller) {
+      if (!formData.workshopId) {
         setHorarios([]);
         return;
       }
 
-      const nextHorarios = await availabilityService.getSlotsByWorkshopId(formData.idTaller);
+      const nextHorarios = await availabilityService.getSlotsByWorkshopId(formData.workshopId);
 
       if (!isMounted) return;
 
       setHorarios(nextHorarios);
       setFormData((current) => ({
         ...current,
-        idHorario:
-          nextHorarios.find((horario) => String(horario.id) === String(current.idHorario))?.id ??
+        slotId:
+          nextHorarios.find((horario) => String(horario.id) === String(current.slotId))?.id ??
           nextHorarios[0]?.id ??
           "",
       }));
@@ -72,7 +71,7 @@ export default function Booking() {
     loadHorarios();
 
     return () => { isMounted = false; };
-  }, [formData.idTaller]);
+  }, [formData.workshopId]);
 
  function handleChange(event) {
   const { name, value } = event.target;
@@ -82,8 +81,8 @@ export default function Booking() {
     const nextData = { ...current, [name]: value };
     
     // Lógica de negocio: Si cambio el taller, el horario anterior ya no es válido
-    if (name === "idTaller") {
-      nextData.idHorario = "";
+    if (name === "workshopId") {
+      nextData.slotId = "";
     }
     
     return nextData;
@@ -96,11 +95,11 @@ export default function Booking() {
 
     try {
       await appointmentService.createAppointment({
-        nombre: formData.nombre,
+        client: formData.client,
         email: formData.email,
-        idTaller: formData.idTaller,
-        idHorario: formData.idHorario,
-        alergias: formData.alergias,
+        workshopId: formData.workshopId,
+        slotId: formData.slotId,
+        allergies: formData.allergies,
       });
       setShowSuccessModal(true);
     } catch (error) {
@@ -112,10 +111,10 @@ export default function Booking() {
 
   // Comparamos convirtiendo a String por seguridad
   const tallerSeleccionado = talleres.find(
-    (taller) => String(taller.idTaller) === String(formData.idTaller)
+    (taller) => String(taller.idTaller) === String(formData.workshopId)
   );
   const horarioSeleccionado = horarios.find(
-    (horario) => String(horario.id) === String(formData.idHorario)
+    (horario) => String(horario.id) === String(formData.slotId)
   );
 
   return (
@@ -135,11 +134,11 @@ export default function Booking() {
               </label>
               <input
                 id="nombre"
-                name="nombre"
+                name="client"
                 type="text"
                 className={styles.input}
                 placeholder="Tu nombre completo"
-                value={formData.nombre}
+                value={formData.client}
                 onChange={handleChange}
                 required
               />
@@ -166,10 +165,10 @@ export default function Booking() {
                 Taller
               </label>
               <select
-                id="idTaller"
-                name="idTaller"
+                id="workshopId"
+                name="workshopId"
                 className={styles.select}
-                value={String(formData.idTaller)} // 👈 ¡EL TRUCO ESTÁ AQUÍ!
+                value={String(formData.workshopId)} // 👈 ¡EL TRUCO ESTÁ AQUÍ!
                 onChange={handleChange}
                 required
               >
@@ -186,10 +185,10 @@ export default function Booking() {
                 Día y horario disponible
               </label>
               <select
-                id="idHorario"
-                name="idHorario"
+                id="slotId"
+                name="slotId"
                 className={styles.select}
-                value={formData.idHorario}
+                value={formData.slotId}
                 onChange={handleChange}
                 required
               >
@@ -206,13 +205,13 @@ export default function Booking() {
                 Alergias o contraindicaciones
               </label>
               <textarea
-                id="alergias"
-                name="alergias"
+                id="allergies"
+                name="allergies"
                 className={styles.textarea}
                 // placeholder para darle una pista al usuario
                 placeholder="Indica tus alergias. Si no tienes ninguna, escribe 'Ninguna'."
                 rows="4"
-                value={formData.alergias}
+                value={formData.allergies}
                 onChange={handleChange}
                 required // ¡SE AGREGA ESTO PARA HACERLO OBLIGATORIO!
               />

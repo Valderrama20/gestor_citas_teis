@@ -2,10 +2,12 @@ import { Lock, Mail, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import adminAuthService from "../../services/adminAuthService";
+import { useAuthStore } from "../../store/authStore";
 import styles from "./AdminLogin.module.css";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
+  const setAuthData = useAuthStore((state) => state.login);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -27,11 +29,13 @@ export default function AdminLogin() {
     setErrorMessage("");
 
     try {
-      await adminAuthService.login(credentials);
+      const responseData = await adminAuthService.login(credentials);
+      // Guardamos la respuesta (token y usuario) en el estado global de Zustand
+      setAuthData(responseData);
       navigate("/admin/cursos");
     } catch (error) {
       console.error(error);
-      setErrorMessage("Credenciales invalidas.");
+      setErrorMessage("Credenciales invalidas o error de conexión.");
     } finally {
       setIsSubmitting(false);
     }

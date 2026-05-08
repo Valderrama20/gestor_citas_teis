@@ -8,8 +8,10 @@ import courseService from "../../services/courseService";
 import styles from "./AdminCourses.module.css";
 import { useToast } from "../../context/ToastContext";
 import Modal from "../../components/Modal";
+import { useAuthStore } from "../../store/authStore";
 
 export default function AdminCourses() {
+  const { usuario, logout } = useAuthStore();
   const [courses, setCourses] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -132,17 +134,17 @@ export default function AdminCourses() {
                 <Plus className={styles.primaryButtonIcon} strokeWidth={1.8} />
                 Crear curso
               </button>
-              <Link to="/admin/login" className={styles.textButton}>
+              <button type="button" className={styles.textButton} onClick={logout}>
                 <LogOut className={styles.textButtonIcon} strokeWidth={1.8} />
                 Salir
-              </Link>
+              </button>
             </div>
           }
         />
 
         <section className={styles.container}>
           <header className={styles.header}>
-            <h1 className={styles.title}>Hola, profesor</h1>
+            <h1 className={styles.title}>Hola, {usuario?.nombre || "profesor"}</h1>
             <p className={styles.subtitle}>
               Selecciona un curso para gestionar sus citas.
             </p>
