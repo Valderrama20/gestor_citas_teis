@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import AdminNavbar from "./AdminNavbar";
 
 export default function ProtectedRoute({ allowedRoles }) {
   const { isAuthenticated, usuario } = useAuthStore();
@@ -20,6 +21,11 @@ export default function ProtectedRoute({ allowedRoles }) {
     }
   }
 
-  // Si pasa todas las validaciones, renderizar los componentes hijos (Outlet)
-  return <Outlet />;
+  // Si pasa todas las validaciones, renderizar AdminNavbar y los componentes hijos
+  return (
+    <>
+      <AdminNavbar />
+      <Outlet />
+    </>
+  );
 }
