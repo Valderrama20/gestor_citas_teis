@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${asunto}">Confirmacion de cita</title>
+</head>
+<body style="margin: 0; padding: 24px; background-color: #f5f5f5; font-family: Arial, sans-serif; color: #222222;">
+<table style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; padding: 32px;">
+    <tr>
+        <td>
+            <h1 style="margin-top: 0; color: #111111;">Confirmacion de cita</h1>
+            <p>Hola <strong th:text="${nombreCliente}">Cliente</strong>,</p>
+            <p>
+                Tu cita para el taller
+                <strong th:text="${nombreTaller}">Color y peinado</strong>
+                ha quedado registrada para el dia
+                <strong th:text="${fechaCita}">15/05/2026</strong>
+                a las
+                <strong th:text="${horaCita}">10:30</strong>.
+            </p>
+            <p th:if="${mensajeAdicional != null}" th:text="${mensajeAdicional}">
+                Te esperamos unos minutos antes de la hora reservada.
+            </p>
+            <p style="margin: 24px 0;">
+                <a th:if="${urlGestion != null}"
+                   th:href="${urlGestion}"
+                   style="display: inline-block; padding: 12px 20px; background-color: #111111; color: #ffffff; text-decoration: none; border-radius: 8px;">
+                    Ver detalle de la cita
+                </a>
+            </p>
+            <p style="margin-bottom: 0;">Gracias por confiar en nosotros.</p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
