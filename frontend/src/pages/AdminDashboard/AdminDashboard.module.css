@@ -1,224 +1,159 @@
+/* --- ESTRUCTURA GENERAL DE LA PÁGINA --- */
 .page {
   min-height: 100vh;
-  background: var(--gradient-page), var(--color-background);
+  background-color: var(--color-background, #fffaf9);
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
   width: 100%;
-  max-width: 76rem;
+  max-width: 1100px; /* Centra el contenido y evita que sea muy ancho */
   margin: 0 auto;
-  padding: var(--space-8) var(--space-4) var(--space-9);
+  padding: 2rem;
 }
 
+/* --- CABECERA Y BOTONES --- */
 .headerRow {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-5);
-  margin-bottom: var(--space-6);
+  align-items: center;
+  margin-bottom: 2.5rem;
 }
 
 .title {
-  margin: 0 0 0.5rem;
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3rem);
-  letter-spacing: var(--tracking-title);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
   margin: 0;
-  color: var(--color-text-muted);
-  font-size: 1.02rem;
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  color: var(--color-text);
-  font-family: var(--font-display);
-  font-weight: 700;
-}
-
-.brandIcon,
-.textButtonIcon,
-.secondaryIcon,
-.filterTitleIcon,
-.clearIcon {
-  width: 1rem;
-  height: 1rem;
-}
-
-.brandIcon,
-.filterTitleIcon {
-  color: var(--color-accent);
-}
-
-.textButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: var(--color-text-muted);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.textButton:hover {
-  color: var(--color-text);
-}
-
-.secondaryButton,
-.clearButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  border: 1px solid var(--color-border-field);
-  border-radius: 0.8rem;
-  padding: 0.75rem 1rem;
-  background: var(--color-white);
-  color: var(--color-text);
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .headerActions {
   display: flex;
+  gap: 1rem;
   align-items: center;
-  gap: var(--space-3);
-  flex-wrap: wrap;
 }
 
 .primaryButton {
+  background-color: var(--color-accent); /* Tu color rosa/rojizo */
+  color: var(--color-white);
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  border: 0;
-  border-radius: 0.8rem;
-  padding: 0.75rem 1rem;
-  background: var(--color-accent);
-  color: var(--color-white);
-  font-weight: 700;
-  cursor: pointer;
+  gap: 0.5rem;
+  transition: opacity 0.2s;
 }
 
 .primaryButton:hover {
-  background: var(--color-accent-strong);
+  opacity: 0.85;
 }
 
-.secondaryButton:hover,
-.clearButton:hover {
-  border-color: var(--color-accent);
-}
-
-.filterCard {
-  margin-bottom: var(--space-5);
-  padding: var(--space-5);
-  border: 1px solid var(--color-accent-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-strong);
-  box-shadow: var(--shadow-soft-sm);
-}
-
-.filterHeader {
+/* --- BARRA ESTILO GMAIL (SELECCIÓN MÚLTIPLE) --- */
+.bulkActionsBar {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-4);
-  margin-bottom: var(--space-5);
+  align-items: center;
+  background: var(--color-surface-strong, #ffffff);
+  border: 1px solid rgba(58, 46, 50, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-soft-sm);
+  animation: slideDown 0.3s ease;
 }
 
-.filterTitleGroup {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.filterTitle {
-  margin: 0 0 0.3rem;
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  color: var(--color-text);
-}
-
-.filterSubtitle {
-  margin: 0;
+.bulkText {
   color: var(--color-text-muted);
   font-size: 0.95rem;
 }
 
-.filterGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
+.bulkText strong {
+  color: var(--color-text);
+  font-size: 1.1rem;
 }
 
-.filterField {
+.bulkButtons {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.8rem;
 }
 
-.filterLabel {
-  color: var(--color-text);
-  font-weight: 600;
-}
-
-.filterInput {
-  width: 100%;
-  border: 1px solid var(--color-border-field);
-  border-radius: var(--radius-md);
-  background: var(--color-white);
-  color: var(--color-text);
-  padding: 0.95rem 1rem;
-  outline: none;
-  transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-.filterInput:focus {
-  border-color: var(--color-accent);
-  box-shadow: var(--shadow-focus);
-}
-
-.filterResult {
-  margin: 0 0 var(--space-4);
-  color: var(--color-text-muted);
-  font-weight: 600;
-}
-
-.emptyState {
-  width: min(100%, 36rem);
-  margin: var(--space-9) auto;
-  padding: var(--space-8);
-  border-radius: var(--radius-xl);
-  background: var(--color-surface-strong);
-  box-shadow: var(--shadow-soft);
-  text-align: center;
-}
-
-.backButton {
+.bulkBtn {
   display: inline-flex;
-  margin-top: var(--space-5);
-  border-radius: var(--radius-full);
-  padding: 0.85rem 1.35rem;
-  background: var(--color-accent);
-  color: var(--color-white);
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bulkConfirm {
+  background: #e6fffa;
+  color: #2c7a7b;
+  border: 1px solid #b2f5ea;
+}
+
+.bulkConfirm:hover { background: #b2f5ea; }
+
+.bulkCancel {
+  background: #fdecec;
+  color: #b83232;
+  border: 1px solid #fed7d7;
+}
+
+.bulkCancel:hover { background: #fed7d7; }
+
+.bulkUndo {
+  background: #fff4e5;
+  color: #b7791f;
+  border: 1px solid #feebc8;
+}
+
+.bulkUndo:hover { background: #feebc8; }
+
+.bulkDelete {
+  background: transparent;
+  color: #e53e3e;
+  border: 1px solid #e53e3e;
+}
+
+.bulkDelete:hover {
+  background: #e53e3e;
+  color: white;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* TOPBAR UTILS */
+.textButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text);
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 500;
 }
-
-.backButton:hover {
-  background: var(--color-accent-strong);
-}
-
-@media (max-width: 767px) {
-  .headerRow,
-  .filterHeader {
-    flex-direction: column;
-  }
-
-  .filterGrid {
-    grid-template-columns: 1fr;
-  }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
 }
