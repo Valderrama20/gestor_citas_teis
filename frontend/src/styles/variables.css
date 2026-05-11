@@ -1,8 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 :root {
-    --font-body: "Inter", sans-serif;
-    --font-display: "Manrope", sans-serif;
+    --font-display: 'Nunito Sans', sans-serif;
+    --font-body: 'Nunito', sans-serif;
 
     --color-background: #fcf9f8;
     --color-background-soft: rgba(255, 248, 246, 0.95);

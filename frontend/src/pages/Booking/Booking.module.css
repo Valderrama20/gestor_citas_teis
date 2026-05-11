@@ -1,139 +1,287 @@
+/* Booking.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+/* Base y Layout - Mobile First */
 .main {
   width: 100%;
-  max-width: var(--layout-max-narrow);
+  max-width: var(--layout-max-text);
   margin: 0 auto;
-  padding: var(--layout-padding-page);
-  position: relative;
-  z-index: 2;
+  padding: 8rem 1rem 5rem; /* Margen superior amplio para la cabecera fixed */
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-background-soft);
+  color: var(--color-text);
 }
 
 .card {
   background: var(--color-surface);
-  border: 1px solid var(--color-surface-strong);
   border-radius: var(--radius-xl);
   padding: var(--layout-padding-card);
-  text-align: center;
   box-shadow: var(--shadow-soft);
+  border: 1px solid var(--color-border-soft);
+  width: 100%;
+}
+
+/* Tipografía y Header */
+.header {
+  text-align: center;
+  margin-bottom: var(--space-7);
 }
 
 .eyebrow {
   display: inline-block;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-2);
   color: var(--color-accent);
   text-transform: uppercase;
   letter-spacing: var(--tracking-eyebrow);
   font-size: var(--size-eyebrow);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2rem, 4vw, 2.5rem);
   letter-spacing: var(--tracking-title);
   color: var(--color-text);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-2);
 }
 
 .description {
   color: var(--color-text-muted);
-  max-width: 36rem;
-  margin: 0 auto;
+  max-width: var(--layout-max-text);
+  font-size: var(--size-copy);
   line-height: 1.6;
+  margin: 0 auto;
 }
 
+/* Sistema de Grid para el Formulario */
 .form {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-5);
-  margin-top: var(--space-7);
-  text-align: left;
+  gap: var(--grid-gap);
 }
 
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+/* Inputs y Labels */
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: var(--space-2);
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 .label {
   color: var(--color-text);
+  font-size: var(--size-copy);
+  letter-spacing: var(--tracking-label);
+  font-weight: 700;
+}
+
+.labelSmall {
+  color: var(--color-text-soft);
+  font-size: var(--size-copy);
   font-weight: 600;
 }
 
+.helperText {
+  font-size: var(--size-copy);
+  color: var(--color-text-muted);
+  margin: -0.25rem 0 var(--space-2) 0;
+}
+
 .input,
-.select,
-.textarea {
+.select {
   width: 100%;
   border: 1px solid var(--color-border-field);
   border-radius: var(--radius-md);
-  background: var(--color-surface-strong);
+  background: var(--color-white); /* Forzamos blanco puro */
   color: var(--color-text);
-  padding: 0.95rem 1rem;
-  outline: none;
-  transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
+  font-family: inherit;
+  font-size: var(--size-copy);
+  transition: all var(--transition-fast);
+  padding: 0.75rem var(--space-4);
+  min-height: 48px; /* Touch target accesible */
 }
 
-.input::placeholder,
-.textarea::placeholder {
-  color: var(--color-text-muted);
+.input::placeholder {
+  color: var(--color-text-faint);
 }
 
 .input:focus,
-.select:focus,
-.textarea:focus {
+.select:focus {
+  outline: none;
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
+  background-color: var(--color-surface);
 }
 
-.textarea {
-  min-height: 8rem;
-  resize: vertical;
+.errorMessage {
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 0.75rem var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--size-copy);
+  font-weight: 600;
+  text-align: left;
+  border-left: 4px solid #d32f2f;
+}
+
+/* --- Alergias UI --- */
+/* Progressive Disclosure (Alergias) */
+.allergiesSection {
+  background: var(--color-background-soft);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-divider);
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-4);
+  gap: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .radioGroup {
+    flex-direction: row;
+  }
+}
+
+.radioLabel,
+.checkboxLabel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-white);
+  border: 1px solid var(--color-border-field);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text);
+  font-size: var(--size-copy);
+  transition: all var(--transition-fast);
+}
+
+.radioLabel:hover,
+.checkboxLabel:hover {
+  border-color: var(--color-accent-soft);
+}
+
+.radioLabel:has(input:checked),
+.checkboxLabel:has(input:checked) {
+  border-color: var(--color-accent);
+  background: var(--color-accent-wash);
+}
+
+.radioLabel input[type="radio"],
+.checkboxLabel input[type="checkbox"] {
+  accent-color: var(--color-accent);
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+}
+
+.allergiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--space-4);
+  background: var(--color-white);
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-field);
+  margin-top: var(--space-2);
+}
+
+.otherAllergyGroup {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+/* --- Bottom Section & Buttons --- */
+.bottomSection {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-divider);
+}
+
+@media (min-width: 640px) {
+  .bottomSection {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .summary {
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
   background: var(--color-accent-wash);
   border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  text-align: left;
+  flex: 1;
 }
 
 .summaryTitle {
   margin: 0 0 var(--space-3);
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: var(--size-card-title);
   color: var(--color-text);
 }
 
 .summaryText {
-  margin: 0;
-  color: var(--color-text-muted);
-  line-height: 1.7;
+  margin: var(--space-1) 0;
+  color: var(--color-text-soft);
+  font-size: var(--size-copy);
 }
 
-.button {
-  border: 0;
-  border-radius: var(--radius-full);
-  padding: 0.95rem 1.4rem;
-  background: var(--color-text);
+.buttonPrimary {
+  background: var(--color-accent);
   color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: var(--space-4) var(--space-7);
+  font-size: var(--size-copy-lg);
   font-weight: 700;
   cursor: pointer;
-  justify-self: start;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: var(--shadow-button);
+  width: 100%;
 }
 
-.button:hover {
+@media (min-width: 640px) {
+  .buttonPrimary {
+    width: auto;
+  }
+}
+
+.buttonPrimary:hover:not(:disabled) {
   background: var(--color-accent-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft-hover);
 }
 
-.button:disabled {
+.buttonPrimary:disabled {
+  background: var(--color-accent-soft);
   cursor: not-allowed;
+  box-shadow: none;
   opacity: 0.7;
-}
-
-.fullWidth {
-  grid-column: 1 / -1;
 }
 
 @media (min-width: 768px) {
