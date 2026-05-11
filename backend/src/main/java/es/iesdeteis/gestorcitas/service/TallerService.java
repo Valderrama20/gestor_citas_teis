@@ -26,8 +26,9 @@ public class TallerService implements ITallerService {
     }
 
     @Override
-    public void save(Taller taller) {
-        tallerRepository.save(taller);
+    public Taller save(Taller taller) {
+        // El repositorio .save() ya te devuelve el objeto con el ID
+        return tallerRepository.save(taller);
     }
 
     @Override

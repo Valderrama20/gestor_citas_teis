@@ -15,6 +15,7 @@ import CreateWorkshopModal from "../../components/CreateWorkshopModal";
 import appointmentService from "../../services/appointmentService";
 import courseService from "../../services/courseService";
 import workshopService from "../../services/workshopService";
+import availabilityService from "../../services/availabilityService"; // ⚠️ IMPORTANTE: Añadido para los horarios
 import { useToast } from "../../context/ToastContext";
 import styles from "./AdminDashboard.module.css";
 
@@ -30,6 +31,8 @@ export default function AdminDashboard() {
     date: "",
     workshopId: "",
   });
+
+  const { addToast } = useToast();
 
   useEffect(() => {
     let isMounted = true;
@@ -62,14 +65,12 @@ export default function AdminDashboard() {
     };
   }, [courseId]);
 
-  const { addToast } = useToast();
-
   async function handleConfirmAppointment(appointment) {
     const updatedAppointments = await appointmentService.updateAppointmentStatus({
       courseId,
       appointment,
       appointmentId: appointment.id,
-      estado: "Confirmada",
+      estado: "CONFIRMADA",
     });
 
     setAppointments(updatedAppointments);
@@ -97,7 +98,7 @@ export default function AdminDashboard() {
       courseId,
       appointment,
       appointmentId: appointment.id,
-      estado: "Cancelada",
+      estado: "CANCELADA",
     });
 
     setAppointments(updatedAppointments);
@@ -106,45 +107,50 @@ export default function AdminDashboard() {
 
   async function handleCreateWorkshop(workshopData) {
     try {
-      // Guardamos la respuesta del servicio en una variable
-      const exito = await workshopService.createWorkshop({
-        ...workshopData,
-        courseId,
+      const { horarios, ...datosTaller } = workshopData;
+
+      // 1. Guardamos el taller
+      const tallerCreado = await workshopService.createWorkshop({
+        ...datosTaller,
+        idCurso: Number(courseId), 
       });
 
-      if (!exito) {
-        // Si falló, lanzamos error y no cerramos el modal
-        addToast("Error: El servidor rechazó el taller", "error");
-        return;
+      console.log("✅ RESPUESTA DEL BACKEND AL CREAR TALLER:", tallerCreado);
+
+      const nuevoIdTaller = tallerCreado?.idTaller || tallerCreado?.id;
+
+      if (!nuevoIdTaller) {
+         throw new Error("El backend no ha devuelto el ID del taller.");
       }
-      await workshopService.createWorkshop({
-        ...workshopData,
-        courseId,
-      });
+
+// 2. Guardamos los horarios (usando availabilityService)
+      if (horarios && horarios.length > 0) {
+        for (const horario of horarios) {
+          
+          const slotData = {
+            diaSemana: horario.diaSemana,
+            horaApertura: horario.horaApertura,
+            horaCierre: horario.horaCierre,
+            idTaller: { idTaller: nuevoIdTaller } 
+          };
+
+          await availabilityService.createSlot(slotData);
+        }
+      }
+
+      // 3. Todo OK: Cerramos y actualizamos
+      setIsCreateWorkshopModalOpen(false);
 
       const nextWorkshops = await workshopService.getWorkshopsByCourseId(courseId);
       setWorkshops(nextWorkshops);
-      setIsCreateWorkshopModalOpen(false);
-      addToast("Taller creado correctamente", "success");
+
+      addToast("¡Taller y horarios creados correctamente!", "success");
+
     } catch (error) {
-      console.error(error);
-      addToast("Error creando el taller", "error");
+      console.error("❌ Error en el flujo de crear taller:", error);
+      setIsCreateWorkshopModalOpen(false); 
+      addToast(error.message || "Error al crear el taller o los horarios", "error");
     }
-  }
-
-  function handleFilterChange(event) {
-    const { name, value } = event.target;
-    setFilters((current) => ({
-      ...current,
-      [name]: value,
-    }));
-  }
-
-  function handleClearFilters() {
-    setFilters({
-      date: "",
-      workshopId: "",
-    });
   }
 
   const filteredAppointments = appointments.filter((appointment) => {

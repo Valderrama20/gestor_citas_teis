@@ -7,6 +7,7 @@ import Booking from "./pages/Booking";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Talleres from "./pages/Talleres";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -27,12 +28,18 @@ const router = createBrowserRouter([
     element: <AdminLogin />,
   },
   {
-    path: "/admin/cursos",
-    element: <AdminCourses />,
-  },
-  {
-    path: "/admin/cursos/:courseId",
-    element: <AdminDashboard />,
+    // Agrupamos las rutas protegidas bajo nuestro componente de seguridad
+    element: <ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_PROFESOR"]} />,
+    children: [
+      {
+        path: "/admin/cursos",
+        element: <AdminCourses />,
+      },
+      {
+        path: "/admin/cursos/:courseId",
+        element: <AdminDashboard />,
+      },
+    ],
   },
   {
     path: "*",
