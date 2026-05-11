@@ -4,6 +4,9 @@ import {
   Clock3,
   RotateCcw,
   XCircle,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown
 } from "lucide-react";
 import styles from "./AdminAppointmentsTable.module.css";
 
@@ -33,19 +36,61 @@ function formatTime(rawTime) {
 export default function AdminAppointmentsTable({
   appointments,
   onConfirm,
-  onComplete,
   onCancel,
+  onUndo,
+  selectedIds = [],
+  onToggleSelect,
+  onToggleSelectAll,
+  requestSort, // 🆕 Prop para manejar el clic en cabeceras
+  sortConfig,  // 🆕 Prop para saber qué columna está ordenada
 }) {
+  const isAllSelected = appointments.length > 0 && selectedIds.length === appointments.length;
+
+  // Función para renderizar el icono de ordenación según el estado
+  const renderSortIcon = (key) => {
+    if (sortConfig.key !== key) {
+      return <ArrowUpDown size={14} className={styles.sortIconPlaceholder} />;
+    }
+    return sortConfig.direction === 'asc' 
+      ? <ArrowUp size={14} className={styles.sortIconActive} /> 
+      : <ArrowDown size={14} className={styles.sortIconActive} />;
+  };
+
   return (
     <div className={styles.wrapper}>
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Cliente</th>
-            <th>Taller</th>
-            <th>Fecha / Hora</th>
-            <th>Estado</th>
-            <th>Accion</th>
+            <th className={styles.checkboxCell}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={isAllSelected}
+                onChange={(e) => onToggleSelectAll(e.target.checked)}
+              />
+            </th>
+            {/* Cabeceras clicables para ordenar */}
+            <th onClick={() => requestSort('cliente')} className={styles.sortableHeader}>
+              <div className={styles.headerContent}>
+                Cliente {renderSortIcon('cliente')}
+              </div>
+            </th>
+            <th onClick={() => requestSort('taller')} className={styles.sortableHeader}>
+              <div className={styles.headerContent}>
+                Taller {renderSortIcon('taller')}
+              </div>
+            </th>
+            <th onClick={() => requestSort('fecha')} className={styles.sortableHeader}>
+              <div className={styles.headerContent}>
+                Fecha / Hora {renderSortIcon('fecha')}
+              </div>
+            </th>
+            <th onClick={() => requestSort('estado')} className={styles.sortableHeader}>
+              <div className={styles.headerContent}>
+                Estado {renderSortIcon('estado')}
+              </div>
+            </th>
+            <th>Acción</th>
           </tr>
         </thead>
         <tbody>
@@ -53,115 +98,94 @@ export default function AdminAppointmentsTable({
             const cliente = appointment.cliente ?? {};
             const taller = appointment.taller ?? {};
 
-            const statusKey = getStatusKey(
-              appointment.estado ?? appointment.status,
-            );
-            const statusLabel = getStatusLabel(
-              appointment.estado ?? appointment.status,
-            );
-            const clientName =
-              cliente.nombre ||
-              appointment.client ||
-              cliente.email ||
-              "Cliente desconocido";
-            const workshopTitle =
-              taller.nombreTaller ||
-              appointment.workshopTitle ||
-              "Taller no encontrado";
+            const statusKey = getStatusKey(appointment.estado ?? appointment.status);
+            const statusLabel = getStatusLabel(appointment.estado ?? appointment.status);
+            
+            const clientName = cliente.nombre || appointment.client || cliente.email || "Cliente desconocido";
+            const workshopTitle = taller.nombreTaller || appointment.workshopTitle || "Taller no encontrado";
             const date = appointment.fecha ?? appointment.date ?? "";
             const time = formatTime(appointment.hora ?? appointment.time);
-            const rowId =
-              appointment.idCita ??
-              appointment.id ??
-              `${clientName}-${date}-${time}`;
+            
+            const rowId = appointment.idCita ?? appointment.id ?? `${clientName}-${date}-${time}`;
+            const isSelected = selectedIds.includes(rowId);
 
             const actionPayload = {
               ...appointment,
               id: appointment.id ?? appointment.idCita,
-              client: appointment.client ?? clientName,
-              workshopTitle: appointment.workshopTitle ?? workshopTitle,
+              client: clientName,
+              workshopTitle: workshopTitle,
               date,
               time,
               status: statusLabel,
-              workshopId:
-                appointment.workshopId ??
-                (taller.idTaller != null ? String(taller.idTaller) : ""),
-              idTaller:
-                appointment.idTaller ??
-                (taller.idTaller != null ? String(taller.idTaller) : ""),
-              idCurso:
-                appointment.idCurso ??
-                (taller.idCurso != null ? String(taller.idCurso) : ""),
-              original: appointment.original ?? appointment,
             };
 
             return (
-              <tr key={rowId}>
+              <tr key={rowId} className={isSelected ? styles.selectedRow : ""}>
+                <td className={styles.checkboxCell}>
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    checked={isSelected}
+                    onChange={() => onToggleSelect(rowId)}
+                  />
+                </td>
                 <td>
                   <strong>{clientName}</strong>
                 </td>
                 <td>{workshopTitle}</td>
                 <td>
                   <div className={styles.dateTime}>
-                    <span>
-                      <Calendar className={styles.inlineIcon} strokeWidth={1.8} />
-                      {date}
-                    </span>
-                    <span>
-                      <Clock3 className={styles.inlineIcon} strokeWidth={1.8} />
-                      {time}
-                    </span>
+                    <span><Calendar size={14} strokeWidth={1.8} /> {date}</span>
+                    <span><Clock3 size={14} strokeWidth={1.8} /> {time}</span>
                   </div>
                 </td>
                 <td>
-                  <span
-                    className={[
-                      styles.badge,
-                      statusKey === "PENDIENTE"
-                        ? styles.pending
-                        : statusKey === "CONFIRMADA"
-                          ? styles.confirmed
-                          : styles.cancelled,
-                    ].join(" ")}
-                  >
+                  <span className={`${styles.badge} ${styles[statusKey.toLowerCase()]}`}>
                     {statusLabel}
                   </span>
                 </td>
                 <td>
-                  {statusKey === "PENDIENTE" && (
-                    <button
-                      type="button"
-                      className={`${styles.actionButton} ${styles.confirmButton}`}
-                      onClick={() => onConfirm(actionPayload)}
-                    >
-                      <CheckCheck
-                        className={styles.actionIcon}
-                        strokeWidth={1.8}
-                      />
-                      Confirmar cita
-                    </button>
-                  )}
+                  <div className={styles.actionGroup}>
+                    {statusKey === "PENDIENTE" && (
+                      <button
+                        type="button"
+                        className={`${styles.actionButton} ${styles.confirmButton}`}
+                        onClick={() => onConfirm(actionPayload)}
+                      >
+                        <CheckCheck size={14} strokeWidth={1.8} /> Confirmar
+                      </button>
+                    )}
 
-                  {statusKey === "CONFIRMADA" && (
-                    <button
-                      type="button"
-                      className={`${styles.actionButton} ${styles.cancelButton}`}
-                      onClick={() => onCancel(actionPayload)}
-                    >
-                      <XCircle className={styles.actionIcon} strokeWidth={1.8} />
-                      Cancelar cita
-                    </button>
-                  )}
+                    {statusKey === "CONFIRMADA" && (
+                      <>
+                        <button
+                          type="button"
+                          className={`${styles.actionButton} ${styles.cancelButton}`}
+                          onClick={() => onCancel(actionPayload)}
+                        >
+                          <XCircle size={14} strokeWidth={1.8} /> Cancelar
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.actionButton} ${styles.undoButton}`}
+                          onClick={() => onUndo(actionPayload)}
+                          title="Volver a pendiente"
+                        >
+                          <RotateCcw size={14} strokeWidth={1.8} />
+                        </button>
+                      </>
+                    )}
 
-                  {statusKey === "CANCELADA" && (
-                    <span className={styles.completedText}>
-                      <RotateCcw
-                        className={styles.completedIcon}
-                        strokeWidth={1.8}
-                      />
-                      Sin acciones
-                    </span>
-                  )}
+                    {statusKey === "CANCELADA" && (
+                      <button
+                        type="button"
+                        className={`${styles.actionButton} ${styles.undoButton}`}
+                        onClick={() => onUndo(actionPayload)}
+                      >
+                        <RotateCcw size={14} strokeWidth={1.8} /> Deshacer
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             );
