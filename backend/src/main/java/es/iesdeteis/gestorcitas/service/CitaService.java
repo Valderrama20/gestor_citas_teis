@@ -5,17 +5,22 @@ import es.iesdeteis.gestorcitas.model.PerfilCliente;
 import es.iesdeteis.gestorcitas.model.Rol;
 import es.iesdeteis.gestorcitas.model.Usuario;
 import es.iesdeteis.gestorcitas.enums.EstadoCita;
+import es.iesdeteis.gestorcitas.dto.CancelacionCitaResponse;
 import es.iesdeteis.gestorcitas.repository.CitaRepository;
 import es.iesdeteis.gestorcitas.repository.PerfilClienteRepository;
 import es.iesdeteis.gestorcitas.repository.RolRepository;
 import es.iesdeteis.gestorcitas.repository.TallerRepository;
 import es.iesdeteis.gestorcitas.repository.UsuarioRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +47,8 @@ public class CitaService implements ICitaService {
     private ICorreoService correoService;
     @Autowired
     private TallerRepository tallerRepository;
+    @Autowired
+    private CitaCancelacionTokenService cancelacionTokenService;
 
     private static final String PLANTILLA_CITA_PENDIENTE = "correo/cita-pendiente-confirmacion";
     private static final String ASUNTO_CITA_PENDIENTE = "Cita pendiente de confirmacion";
@@ -52,6 +59,11 @@ public class CitaService implements ICitaService {
     private static final String PLANTILLA_CITA_CANCELADA = "correo/cita-cancelada";
     private static final String ASUNTO_CITA_CANCELADA = "Cita cancelada";
     private static final String MENSAJE_CITA_CANCELADA = "Si necesitas reprogramar, puedes reservar una nueva cita cuando quieras.";
+    private static final String CANCELACION_OK = "Cita cancelada correctamente.";
+    private static final String CANCELACION_YA = "La cita ya estaba cancelada.";
+    private static final String CANCELACION_NO_ENCONTRADA = "No se encontro la cita solicitada.";
+    private static final String CANCELACION_EXPIRADA = "El enlace de cancelacion ha expirado.";
+    private static final String CANCELACION_TOKEN_INVALIDO = "El token de cancelacion no es valido.";
     private static final DateTimeFormatter FECHA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter HORA_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -333,6 +345,50 @@ public class CitaService implements ICitaService {
     @Override
     public void deleteById(Long id) {
         citaRepository.deleteById(id);
+    }
+
+    @Override
+    public CancelacionCitaResponse cancelarPorToken(String token) {
+        if (token == null || token.trim().isEmpty()) {
+            return new CancelacionCitaResponse("TOKEN_INVALIDO", CANCELACION_TOKEN_INVALIDO);
+        }
+
+        Long idCita;
+        try {
+            idCita = cancelacionTokenService.extraerIdCita(token);
+        } catch (ExpiredJwtException e) {
+            return new CancelacionCitaResponse("TOKEN_EXPIRADO", CANCELACION_EXPIRADA);
+        } catch (JwtException | IllegalArgumentException e) {
+            return new CancelacionCitaResponse("TOKEN_INVALIDO", CANCELACION_TOKEN_INVALIDO);
+        }
+
+        if (idCita == null) {
+            return new CancelacionCitaResponse("TOKEN_INVALIDO", CANCELACION_TOKEN_INVALIDO);
+        }
+
+        Cita cita = citaRepository.findById(idCita).orElse(null);
+        if (cita == null) {
+            return new CancelacionCitaResponse("NO_ENCONTRADA", CANCELACION_NO_ENCONTRADA);
+        }
+
+        if (EstadoCita.CANCELADA.equals(cita.getEstado())) {
+            return new CancelacionCitaResponse("YA_CANCELADA", CANCELACION_YA);
+        }
+
+        if (cita.getFecha() == null || cita.getHora() == null) {
+            return new CancelacionCitaResponse("TOKEN_INVALIDO", CANCELACION_TOKEN_INVALIDO);
+        }
+
+        LocalDateTime fechaHora = LocalDateTime.of(cita.getFecha(), cita.getHora());
+        LocalDateTime ahora = LocalDateTime.now(ZoneId.systemDefault());
+        if (!fechaHora.isAfter(ahora)) {
+            return new CancelacionCitaResponse("TOKEN_EXPIRADO", CANCELACION_EXPIRADA);
+        }
+
+        cita.setEstado(EstadoCita.CANCELADA);
+        save(cita);
+
+        return new CancelacionCitaResponse("CANCELADA", CANCELACION_OK);
     }
 
     @Override
