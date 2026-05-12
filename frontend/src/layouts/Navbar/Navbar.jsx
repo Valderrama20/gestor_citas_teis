@@ -10,7 +10,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { label: "Sobre nosotros", path: "#about" },
+    { label: "Sobre nosotros", path: "/sobre-nosotros" },
     { label: "Contacto", path: "#contact" },
   ];
 
@@ -30,9 +30,15 @@ export default function Navbar() {
         {/* Menú Desktop */}
         <div className={styles.menuDesktop}>
           {navItems.map((item) => (
-            <a key={item.path} href={item.path} className={styles.navLink}>
-              {item.label}
-            </a>
+            item.path.startsWith("#") ? (
+              <a key={item.path} href={item.path} className={styles.navLink}>
+                {item.label}
+              </a>
+            ) : (
+              <Link key={item.path} to={item.path} className={styles.navLink}>
+                {item.label}
+              </Link>
+            )
           ))}
           <div className={styles.divider} />
           <Link to="/reservar" className={styles.btnReservePrimary}>

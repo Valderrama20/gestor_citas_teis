@@ -24,14 +24,25 @@ export default function MobileMenu({ isOpen, onClose, menuItems = [], onLogout =
                 {/* Menu Items */}
                 <nav className={styles.nav}>
                     {menuItems.map((item) => (
-                        <Link
-                            key={item.path}
-                            to={item.path}
-                            className={styles.menuItem}
-                            onClick={onClose}
-                        >
-                            {item.label}
-                        </Link>
+                        item.path.startsWith("#") ? (
+                            <a
+                                key={item.path}
+                                href={item.path}
+                                className={styles.menuItem}
+                                onClick={onClose}
+                            >
+                                {item.label}
+                            </a>
+                        ) : (
+                            <Link
+                                key={item.path}
+                                to={item.path}
+                                className={styles.menuItem}
+                                onClick={onClose}
+                            >
+                                {item.label}
+                            </Link>
+                        )
                     ))}
                 </nav>
 

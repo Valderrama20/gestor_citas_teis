@@ -240,6 +240,13 @@ a.infoValue:hover {
   box-shadow: var(--shadow-focus);
 }
 
+.inputGroup input:disabled, .inputGroup textarea:disabled {
+  background-color: var(--color-surface-strong);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .submitBtn {
   background-color: var(--color-text);
   color: var(--color-white);
@@ -260,6 +267,13 @@ a.infoValue:hover {
   background-color: var(--color-text-muted);
   transform: translateY(-2px);
   box-shadow: var(--shadow-soft-sm);
+}
+
+.submitBtn:disabled {
+  background-color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
 }
 
 /* --- BLOQUE INFERIOR: COPYRIGHT Y REDES --- */

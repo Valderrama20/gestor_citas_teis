@@ -1,4 +1,5 @@
 import styles from './Footer.module.css';
+import { useState, useRef } from 'react';
 import {
   SiInstagram,
   SiFacebook,
@@ -6,6 +7,9 @@ import {
   SiYoutube
 } from '@icons-pack/react-simple-icons';
 import { ChevronDown } from 'lucide-react';
+import contactService from '../../services/contactService';
+import { useContext } from 'react';
+import { ToastContext } from '../../context/ToastContext';
 
 const faqs = [
   { q: "¿Quién realiza los tratamientos?", a: "Todos los servicios son realizados por nuestros alumnos en formación, siempre bajo la supervisión directa de profesores cualificados." },
@@ -21,6 +25,58 @@ const faqs = [
 ];
 
 export default function Footer() {
+  const { addToast } = useContext(ToastContext);
+  const [formData, setFormData] = useState({
+    nombre: '',
+    email: '',
+    mensaje: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef(null);
+
+  const handleContactChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validación
+    if (!formData.nombre.trim()) {
+      addToast('Por favor, ingresa tu nombre', 'error');
+      return;
+    }
+    if (!formData.email.trim()) {
+      addToast('Por favor, ingresa tu correo electrónico', 'error');
+      return;
+    }
+    if (!formData.mensaje.trim()) {
+      addToast('Por favor, escribe un mensaje', 'error');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await contactService.sendContactMessage({
+        nombre: formData.nombre,
+        email: formData.email,
+        mensaje: formData.mensaje,
+      });
+
+      addToast('¡Mensaje enviado correctamente! Nos pondremos en contacto pronto.', 'success');
+      setFormData({ nombre: '', email: '', mensaje: '' });
+    } catch (error) {
+      addToast('Error al enviar el mensaje. Por favor, intenta de nuevo.', 'error');
+      console.error('Error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
@@ -54,7 +110,7 @@ export default function Footer() {
         </div>
 
         {/* --- BLOQUE CONTACTO Y FORMULARIO (NUEVO) --- */}
-        <div className={styles.contactFormBlock}>
+        <div className={styles.contactFormBlock} id="contact">
 
           {/* Izquierda: Info de contacto */}
           <div className={styles.contactInfoSide}>
@@ -87,22 +143,49 @@ export default function Footer() {
 
           {/* Derecha: Formulario */}
           <div className={styles.contactFormSide}>
-            <form className={styles.contactForm}>
+            <form className={styles.contactForm} onSubmit={handleContactSubmit} ref={formRef}>
               <div className={styles.formRow}>
                 <div className={styles.inputGroup}>
                   <label>Tu Nombre</label>
-                  <input type="text" placeholder="Tu nombre completo" />
+                  <input
+                    type="text"
+                    name="nombre"
+                    placeholder="Tu nombre completo"
+                    value={formData.nombre}
+                    onChange={handleContactChange}
+                    disabled={isSubmitting}
+                  />
                 </div>
                 <div className={styles.inputGroup}>
                   <label>Correo electrónico</label>
-                  <input type="email" placeholder="Tu correo electrónico" />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Tu correo electrónico"
+                    value={formData.email}
+                    onChange={handleContactChange}
+                    disabled={isSubmitting}
+                  />
                 </div>
               </div>
               <div className={styles.inputGroup}>
                 <label>Mensaje</label>
-                <textarea placeholder="Escribe algo..." rows="5"></textarea>
+                <textarea
+                  name="mensaje"
+                  placeholder="Escribe algo..."
+                  rows="5"
+                  value={formData.mensaje}
+                  onChange={handleContactChange}
+                  disabled={isSubmitting}
+                ></textarea>
               </div>
-              <button type="button" className={styles.submitBtn}>Enviar Mensaje</button>
+              <button
+                type="submit"
+                className={styles.submitBtn}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
+              </button>
             </form>
           </div>
         </div>

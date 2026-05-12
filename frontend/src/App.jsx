@@ -3,6 +3,7 @@ import MainLayout from "./layouts/MainLayout";
 import AdminCourses from "./pages/AdminCourses";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
+import AboutUs from "./pages/AboutUs";
 import Booking from "./pages/Booking";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { index: true, element: <Home /> },
+      { path: "sobre-nosotros", element: <AboutUs /> },
       { path: "reservar", element: <Booking /> },
       { path: "curso/:courseId/talleres", element: <Talleres /> },
     ],

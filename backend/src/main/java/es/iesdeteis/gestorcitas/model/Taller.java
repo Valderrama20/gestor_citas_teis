@@ -46,7 +46,8 @@ public class Taller {
     public Taller() {
     }
 
-    public Taller(String nombreTaller, Integer duracionMinutos, String tipoTaller, Integer capacidadMaxima, String descripcion, String icono, Long idCurso) {
+    public Taller(String nombreTaller, Integer duracionMinutos, String tipoTaller, Integer capacidadMaxima,
+            String descripcion, String icono, Long idCurso) {
         this.nombreTaller = nombreTaller;
         this.duracionMinutos = duracionMinutos;
         this.tipoTaller = tipoTaller;
@@ -122,11 +123,11 @@ public class Taller {
     }
 
     // public List<HorarioTaller> getHorarios() {
-    //     return horarios;
+    // return horarios;
     // }
 
     // public void setHorarios(List<HorarioTaller> horarios) {
-    //     this.horarios = horarios;
+    // this.horarios = horarios;
     // }
 
     // --- OVERRIDES DE OBJECT ---
