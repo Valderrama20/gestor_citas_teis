@@ -33,6 +33,8 @@ services:
       dockerfile: Dockerfile
     container_name: gestor_citas_backend_container
     restart: always
+    env_file:
+      - .env
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/gestor_citas_db
       SPRING_DATASOURCE_USERNAME: admin
