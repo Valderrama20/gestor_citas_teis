@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/talleres/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/horarios-talleres/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/citas/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/contacto/**").permitAll()
                 // Reglas según Roles. Asumiendo nombres exactos mapeados a ROLE_ADMIN y ROLE_PROFESOR
                 .requestMatchers("/administradores/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/talleres/**").hasAnyRole("ADMIN", "PROFESOR")

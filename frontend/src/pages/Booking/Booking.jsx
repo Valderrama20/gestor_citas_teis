@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { ShieldCheck, AlertTriangle, Droplet, Sparkles, Magnet, Brush, Flower } from "lucide-react";
 import Modal from "../../components/Modal";
 import appointmentService from "../../services/appointmentService";
 import availabilityService from "../../services/availabilityService";
@@ -24,7 +25,13 @@ export default function Booking() {
     otherAllergies: ""
   });
 
-  const commonAllergies = ["Látex", "Cosméticos", "Níquel", "Acrílicos", "Piel Atópica"];
+  const commonAllergies = [
+    { id: "Látex", label: "Látex", icon: Droplet },
+    { id: "Cosméticos", label: "Cosméticos", icon: Sparkles },
+    { id: "Níquel", label: "Níquel", icon: Magnet },
+    { id: "Acrílicos", label: "Acrílicos", icon: Brush },
+    { id: "Piel Atópica", label: "Piel Atópica", icon: Flower }
+  ];
 
   const [formData, setFormData] = useState({
     client: "",
@@ -81,11 +88,11 @@ export default function Booking() {
     if (name === "email" || name === "phone") setContactError("");
   }
 
-  function handleAllergyChange(e) {
+  function handleAllergyToggle(value) {
     setAllergyError("");
-    const { value, checked } = e.target;
     setUiState(prev => {
-      if (checked) return { ...prev, selectedAllergies: [...prev.selectedAllergies, value] };
+      const isSelected = prev.selectedAllergies.includes(value);
+      if (!isSelected) return { ...prev, selectedAllergies: [...prev.selectedAllergies, value] };
       return { ...prev, selectedAllergies: prev.selectedAllergies.filter(item => item !== value) };
     });
   }
@@ -214,43 +221,44 @@ export default function Booking() {
               <label className={styles.label}>Alergias o contraindicaciones importantes</label>
               <p className={styles.helperText}>Selecciona si tienes alguna sensibilidad que debamos conocer.</p>
 
-              <div className={styles.radioGroup}>
-                <label className={styles.radioLabel}>
-                  <input
-                    type="radio" name="hasAllergies" value="no"
-                    checked={uiState.hasAllergies === "no"}
-                    onChange={(e) => {
-                      setAllergyError("");
-                      setUiState({ ...uiState, hasAllergies: e.target.value });
-                    }}
-                  />
+              <div className={styles.cardSelector}>
+                <button
+                  type="button"
+                  className={`${styles.cardButton} ${uiState.hasAllergies === "no" ? styles.cardButtonActive : ""}`}
+                  onClick={() => {
+                    setAllergyError("");
+                    setUiState({ ...uiState, hasAllergies: "no" });
+                  }}
+                >
                   <span>No tengo alergias conocidas</span>
-                </label>
-                <label className={styles.radioLabel}>
-                  <input
-                    type="radio" name="hasAllergies" value="yes"
-                    checked={uiState.hasAllergies === "yes"}
-                    onChange={(e) => {
-                      setAllergyError("");
-                      setUiState({ ...uiState, hasAllergies: e.target.value });
-                    }}
-                  />
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.cardButton} ${uiState.hasAllergies === "yes" ? styles.cardButtonActive : ""}`}
+                  onClick={() => {
+                    setAllergyError("");
+                    setUiState({ ...uiState, hasAllergies: "yes" });
+                  }}
+                >
                   <span>Sí, tengo alguna alergia</span>
-                </label>
+                </button>
               </div>
 
               {uiState.hasAllergies === "yes" && (
                 <div className={styles.allergiesGrid}>
-                  {commonAllergies.map(allergy => (
-                    <label key={allergy} className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox" value={allergy}
-                        checked={uiState.selectedAllergies.includes(allergy)}
-                        onChange={handleAllergyChange}
-                      />
-                      <span>{allergy}</span>
-                    </label>
-                  ))}
+                  <div className={styles.cardSelector} style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>
+                    {commonAllergies.map(({ id, label, icon: Icon }) => (
+                      <button
+                        key={id}
+                        type="button"
+                        className={`${styles.cardButton} ${uiState.selectedAllergies.includes(id) ? styles.cardButtonActive : ""}`}
+                        onClick={() => handleAllergyToggle(id)}
+                      >
+                        <Icon size={18} strokeWidth={1.8} />
+                        <span>{label}</span>
+                      </button>
+                    ))}
+                  </div>
                   <div className={styles.otherAllergyGroup}>
                     <label htmlFor="otherAllergies" className={styles.labelSmall}>Otro (especificar):</label>
                     <input

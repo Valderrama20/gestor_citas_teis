@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Sparkles, Scissors, Flower, Hand } from "lucide-react";
 import Modal from "../Modal";
 import styles from "./CreateCourseModal.module.css";
 
@@ -131,23 +132,30 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
               required
             />
           </div>
+        </div>
 
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="icono">
-              Icono
-            </label>
-            <select
-              id="icono"
-              name="icono"
-              className={styles.input}
-              value={formData.icono}
-              onChange={handleChange}
-            >
-              <option value="sparkles">Sparkles</option>
-              <option value="scissors">Scissors</option>
-              <option value="flower">Flower</option>
-              <option value="hand">Hand</option>
-            </select>
+        <div className={styles.field}>
+          <label className={styles.label}>
+            Icono representativo
+          </label>
+          <div className={styles.iconSelector}>
+            {[
+              { id: "sparkles", label: "Estética", icon: Sparkles },
+              { id: "scissors", label: "Peluquería", icon: Scissors },
+              { id: "flower", label: "Bienestar", icon: Flower },
+              { id: "hand", label: "Cuidado", icon: Hand },
+            ].map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                type="button"
+                className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
+                onClick={() => setFormData((current) => ({ ...current, icono: id }))}
+                aria-label={`Seleccionar icono ${id}`}
+              >
+                <Icon size={18} strokeWidth={1.8} />
+                <span>{label}</span>
+              </button>
+            ))}
           </div>
         </div>
 

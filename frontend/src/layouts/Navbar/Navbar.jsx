@@ -31,7 +31,20 @@ export default function Navbar() {
         <div className={styles.menuDesktop}>
           {navItems.map((item) => (
             item.path.startsWith("#") ? (
-              <a key={item.path} href={item.path} className={styles.navLink}>
+              <a
+                key={item.path}
+                href={item.path}
+                className={styles.navLink}
+                onClick={(e) => {
+                  if (item.path === "#contact") {
+                    e.preventDefault();
+                    window.scrollTo({
+                      top: document.documentElement.scrollHeight,
+                      behavior: "smooth"
+                    });
+                  }
+                }}
+              >
                 {item.label}
               </a>
             ) : (

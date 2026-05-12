@@ -110,7 +110,7 @@ export default function Footer() {
         </div>
 
         {/* --- BLOQUE CONTACTO Y FORMULARIO (NUEVO) --- */}
-        <div className={styles.contactFormBlock} id="contact">
+        <div className={styles.contactFormBlock}>
 
           {/* Izquierda: Info de contacto */}
           <div className={styles.contactInfoSide}>
@@ -219,6 +219,6 @@ export default function Footer() {
         </div>
       </div>
 
-    </footer >
+    </footer>
   );
 }

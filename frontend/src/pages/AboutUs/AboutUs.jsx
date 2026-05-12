@@ -62,7 +62,7 @@ export default function AboutUs() {
 
             {/* Servicios */}
             <section className={styles.services}>
-                <h2 className={styles.sectionTitle}>Nuestros Servicios</h2>
+                <h2 className={styles.sectionTitle}>Servicios</h2>
                 <div className={styles.servicesGrid}>
                     {services.map((service) => {
                         const IconComponent = service.icon;

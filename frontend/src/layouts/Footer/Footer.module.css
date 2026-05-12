@@ -5,6 +5,7 @@
   color: var(--color-text);
   font-family: var(--font-body);
   backdrop-filter: blur(1px);
+  scroll-margin-top: 80px;
 }
 
 .container {
