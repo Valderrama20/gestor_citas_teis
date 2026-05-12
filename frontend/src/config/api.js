@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
-// Creamos la instancia base. Apuntamos al 8080 (puerto estándar de Spring Boot)
+// Creamos la instancia base. Apuntamos al 9001 (el de tu contenedor Docker)
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:9001', 
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 10 segundos antes de cancelar la petición
+  timeout: 10000,
 });
 
 // Interceptor de Peticiones: Añade el Token JWT automáticamente
