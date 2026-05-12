@@ -4,6 +4,7 @@ import es.iesdeteis.gestorcitas.model.Cita;
 import es.iesdeteis.gestorcitas.model.PerfilCliente;
 import es.iesdeteis.gestorcitas.model.Rol;
 import es.iesdeteis.gestorcitas.model.Usuario;
+import es.iesdeteis.gestorcitas.enums.EstadoCita;
 import es.iesdeteis.gestorcitas.repository.CitaRepository;
 import es.iesdeteis.gestorcitas.repository.PerfilClienteRepository;
 import es.iesdeteis.gestorcitas.repository.RolRepository;
@@ -44,6 +45,10 @@ public class CitaService implements ICitaService {
 
     private static final String PLANTILLA_CITA_PENDIENTE = "correo/cita-pendiente-confirmacion";
     private static final String ASUNTO_CITA_PENDIENTE = "Cita pendiente de confirmacion";
+    private static final String MENSAJE_CITA_PENDIENTE = "Te avisaremos en cuanto la confirmacion este lista.";
+    private static final String PLANTILLA_CITA_CONFIRMADA = "correo/cita-confirmacion";
+    private static final String ASUNTO_CITA_CONFIRMADA = "Confirmacion de cita";
+    private static final String MENSAJE_CITA_CONFIRMADA = "Te esperamos unos minutos antes de la hora reservada.";
     private static final DateTimeFormatter FECHA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter HORA_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -60,6 +65,13 @@ public class CitaService implements ICitaService {
     @Override
     public void save(Cita cita) {
         boolean esNuevaCita = (cita.getIdCita() == null);
+        EstadoCita estadoAnterior = null;
+        if (!esNuevaCita) {
+            Cita citaExistente = citaRepository.findById(cita.getIdCita()).orElse(null);
+            if (citaExistente != null) {
+                estadoAnterior = citaExistente.getEstado();
+            }
+        }
         Usuario usuarioRequest = cita.getCliente();
 
         if (usuarioRequest != null && usuarioRequest.getEmail() != null) {
@@ -79,6 +91,10 @@ public class CitaService implements ICitaService {
 
         if (esNuevaCita) {
             enviarCorreoCitaPendiente(citaGuardada);
+        } else if (estadoAnterior != null
+                && estadoAnterior != EstadoCita.CONFIRMADA
+                && EstadoCita.CONFIRMADA.equals(citaGuardada.getEstado())) {
+            enviarCorreoCitaConfirmada(citaGuardada);
         }
     }
 
@@ -142,9 +158,51 @@ public class CitaService implements ICitaService {
             variables.put("horaCita", cita.getHora().format(HORA_FORMATTER));
         }
 
-        variables.put("mensajeAdicional", "Te avisaremos en cuanto la confirmacion este lista.");
+        variables.put("mensajeAdicional", MENSAJE_CITA_PENDIENTE);
 
         correoService.enviarCorreoHtml(destinatario, ASUNTO_CITA_PENDIENTE, PLANTILLA_CITA_PENDIENTE, variables);
+    }
+
+    private void enviarCorreoCitaConfirmada(Cita cita) {
+        if (cita == null) {
+            return;
+        }
+
+        Usuario cliente = cita.getCliente();
+        if (cliente == null || cliente.getEmail() == null) {
+            return;
+        }
+
+        String destinatario = cliente.getEmail().trim();
+        if (destinatario.isEmpty()) {
+            return;
+        }
+
+        String nombreCliente = resolverNombre(cliente.getNombre(), destinatario);
+        String nombreTaller = "Taller";
+
+        if (cita.getTaller() != null) {
+            String nombre = cita.getTaller().getNombreTaller();
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                nombreTaller = nombre.trim();
+            }
+        }
+
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("asunto", ASUNTO_CITA_CONFIRMADA);
+        variables.put("nombreCliente", nombreCliente);
+        variables.put("nombreTaller", nombreTaller);
+
+        if (cita.getFecha() != null) {
+            variables.put("fechaCita", cita.getFecha().format(FECHA_FORMATTER));
+        }
+        if (cita.getHora() != null) {
+            variables.put("horaCita", cita.getHora().format(HORA_FORMATTER));
+        }
+
+        variables.put("mensajeAdicional", MENSAJE_CITA_CONFIRMADA);
+
+        correoService.enviarCorreoHtml(destinatario, ASUNTO_CITA_CONFIRMADA, PLANTILLA_CITA_CONFIRMADA, variables);
     }
 
     private Usuario procesarNuevoUsuario(Usuario usuarioRequest, String emailNormalizado) {
