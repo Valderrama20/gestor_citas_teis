@@ -13,8 +13,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -33,6 +36,13 @@ public class CitaService implements ICitaService {
     private RolRepository rolRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ICorreoService correoService;
+
+    private static final String PLANTILLA_CITA_PENDIENTE = "correo/cita-pendiente-confirmacion";
+    private static final String ASUNTO_CITA_PENDIENTE = "Cita pendiente de confirmacion";
+    private static final DateTimeFormatter FECHA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter HORA_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     @Override
     public List<Cita> findAll() {
@@ -46,6 +56,7 @@ public class CitaService implements ICitaService {
 
     @Override
     public void save(Cita cita) {
+        boolean esNuevaCita = (cita.getIdCita() == null);
         Usuario usuarioRequest = cita.getCliente();
 
         if (usuarioRequest != null && usuarioRequest.getEmail() != null) {
@@ -59,7 +70,11 @@ public class CitaService implements ICitaService {
             cita.setCliente(usuarioFinal);
         }
 
-        citaRepository.save(cita);
+        Cita citaGuardada = citaRepository.save(cita);
+
+        if (esNuevaCita) {
+            enviarCorreoCitaPendiente(citaGuardada);
+        }
     }
 
     // --- MÉTODOS PRIVADOS DE LÓGICA DE NEGOCIO ---
@@ -70,6 +85,48 @@ public class CitaService implements ICitaService {
         // No es estrictamente necesario hacer un .save() aquí porque @Transactional 
         // aplica un dirty-checking y guarda los cambios al terminar, pero es buena práctica.
         return usuarioRepository.save(usuarioDB); 
+    }
+
+    private void enviarCorreoCitaPendiente(Cita cita) {
+        if (cita == null) {
+            return;
+        }
+
+        Usuario cliente = cita.getCliente();
+        if (cliente == null || cliente.getEmail() == null) {
+            return;
+        }
+
+        String destinatario = cliente.getEmail().trim();
+        if (destinatario.isEmpty()) {
+            return;
+        }
+
+        String nombreCliente = resolverNombre(cliente.getNombre(), destinatario);
+        String nombreTaller = "Taller";
+
+        if (cita.getTaller() != null) {
+            String nombre = cita.getTaller().getNombreTaller();
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                nombreTaller = nombre.trim();
+            }
+        }
+
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("asunto", ASUNTO_CITA_PENDIENTE);
+        variables.put("nombreCliente", nombreCliente);
+        variables.put("nombreTaller", nombreTaller);
+
+        if (cita.getFecha() != null) {
+            variables.put("fechaCita", cita.getFecha().format(FECHA_FORMATTER));
+        }
+        if (cita.getHora() != null) {
+            variables.put("horaCita", cita.getHora().format(HORA_FORMATTER));
+        }
+
+        variables.put("mensajeAdicional", "Te avisaremos en cuanto la confirmacion este lista.");
+
+        correoService.enviarCorreoHtml(destinatario, ASUNTO_CITA_PENDIENTE, PLANTILLA_CITA_PENDIENTE, variables);
     }
 
     private Usuario procesarNuevoUsuario(Usuario usuarioRequest, String emailNormalizado) {
