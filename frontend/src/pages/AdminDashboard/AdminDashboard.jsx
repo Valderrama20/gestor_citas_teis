@@ -1,13 +1,16 @@
 import {
   ChevronLeft,
+  ChevronRight,
   Plus,
   Settings,
   CheckCheck,
   XCircle,
   Clock,
   Trash2,
+  CalendarDays,
+  CalendarX // Añadido para el estado vacío
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import AdminAppointmentsTable from "../../components/AdminAppointmentsTable";
 import AdminTopbar from "../../components/AdminTopbar";
@@ -30,9 +33,10 @@ export default function AdminDashboard() {
   const [isCreateWorkshopModalOpen, setIsCreateWorkshopModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  // ESTADOS DE SELECCIÓN Y ORDENACIÓN
+  // ESTADOS DE SELECCIÓN, ORDENACIÓN Y FECHA
   const [selectedIds, setSelectedIds] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: 'fecha', direction: 'asc' });
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const { addToast } = useToast();
 
@@ -62,7 +66,32 @@ export default function AdminDashboard() {
     return () => { isMounted = false; };
   }, [courseId]);
 
-  // --- LÓGICA DE ORDENACIÓN (SORTING) ---
+  // --- LÓGICA DE FILTRO SEMANAL ---
+  const weekRange = useMemo(() => {
+    const date = new Date(currentDate);
+    const day = date.getDay();
+    const diff = date.getDate() - (day === 0 ? 6 : day - 1);
+    const monday = new Date(date.setDate(diff));
+    monday.setHours(0, 0, 0, 0);
+
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23, 59, 59, 999);
+
+    return { monday, sunday };
+  }, [currentDate]);
+
+  const filteredAppointments = useMemo(() => {
+    return appointments.filter(app => {
+      // Revisa 'fecha' o 'date' según cómo venga de tu backend
+      const rawDate = app.fecha || app.date;
+      if (!rawDate) return false;
+      const appDate = new Date(rawDate);
+      return appDate >= weekRange.monday && appDate <= weekRange.sunday;
+    });
+  }, [appointments, weekRange]);
+
+  // --- LÓGICA DE ORDENACIÓN (APLICADA SOBRE LAS FILTRADAS) ---
   const handleSort = (key) => {
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -71,7 +100,7 @@ export default function AdminDashboard() {
     setSortConfig({ key, direction });
   };
 
-  const sortedAppointments = [...appointments].sort((a, b) => {
+  const sortedAppointments = [...filteredAppointments].sort((a, b) => {
     let aValue, bValue;
 
     switch (sortConfig.key) {
@@ -84,8 +113,8 @@ export default function AdminDashboard() {
         bValue = (b.taller?.nombreTaller || b.workshopTitle || "").toLowerCase();
         break;
       case 'fecha':
-        aValue = `${a.fecha || ''} ${a.hora || ''}`;
-        bValue = `${b.fecha || ''} ${b.hora || ''}`;
+        aValue = `${a.fecha || a.date || ''} ${a.hora || a.time || ''}`;
+        bValue = `${b.fecha || b.date || ''} ${b.hora || b.time || ''}`;
         break;
       case 'estado':
         aValue = (a.estado || "").toLowerCase();
@@ -100,13 +129,28 @@ export default function AdminDashboard() {
     return 0;
   });
 
+  // --- NAVEGACIÓN DE SEMANAS ---
+  const handlePrevWeek = () => {
+    const d = new Date(currentDate);
+    d.setDate(d.getDate() - 7);
+    setCurrentDate(d);
+    setSelectedIds([]); // Limpiar selección al cambiar de semana
+  };
+
+  const handleNextWeek = () => {
+    const d = new Date(currentDate);
+    d.setDate(d.getDate() + 7);
+    setCurrentDate(d);
+    setSelectedIds([]);
+  };
+
   // --- ACCIONES INDIVIDUALES ---
   async function handleConfirmAppointment(appointment) {
     const updatedAppointments = await appointmentService.updateAppointmentStatus({
       courseId, appointment, appointmentId: appointment.id, estado: "CONFIRMADA",
     });
     setAppointments(updatedAppointments);
-    addToast("Cita confirmada correctamente", "success");
+    addToast("Cita confirmada", "success");
   }
 
   async function handleCancelAppointment(appointment) {
@@ -114,7 +158,7 @@ export default function AdminDashboard() {
       courseId, appointment, appointmentId: appointment.id, estado: "CANCELADA",
     });
     setAppointments(updatedAppointments);
-    addToast("Cita cancelada correctamente", "success");
+    addToast("Cita cancelada", "success");
   }
 
   async function handleUndoAppointment(appointment) {
@@ -134,6 +178,7 @@ export default function AdminDashboard() {
 
   function handleToggleSelectAll(isChecked) {
     if (isChecked) {
+      // Seleccionar solo las de la semana visible
       const allIds = sortedAppointments.map((app) => app.idCita ?? app.id ?? `${app.client}-${app.date}-${app.time}`);
       setSelectedIds(allIds);
     } else {
@@ -235,9 +280,26 @@ export default function AdminDashboard() {
 
       <section className={styles.container}>
         <header className={styles.headerRow}>
-          <div>
+          <div className={styles.titleSection}>
             <h1 className={styles.title}>Citas de {course.nombreCurso}</h1>
             <p className={styles.subtitle}>Gestiona el estado de cada cita de forma eficiente.</p>
+            
+            {/* NUEVO: SELECTOR SEMANAL */}
+            <div className={styles.weekPicker}>
+              <button onClick={() => setCurrentDate(new Date())} className={styles.todayBtn}>Hoy</button>
+              <div className={styles.navButtons}>
+                <button onClick={handlePrevWeek} className={styles.navBtn}><ChevronLeft size={20} /></button>
+                <div className={styles.currentRange}>
+                  <CalendarDays size={16} />
+                  <span>
+                    {weekRange.monday.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })} 
+                    {" - "} 
+                    {weekRange.sunday.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+                </div>
+                <button onClick={handleNextWeek} className={styles.navBtn}><ChevronRight size={20} /></button>
+              </div>
+            </div>
           </div>
 
           <div className={styles.headerActions}>
@@ -250,7 +312,6 @@ export default function AdminDashboard() {
           </div>
         </header>
 
-        {/* BARRA DE ACCIONES EN LOTE (TIPO GMAIL) */}
         {selectedIds.length > 0 && (
           <div className={styles.bulkActionsBar}>
             <span className={styles.bulkText}>
@@ -273,23 +334,33 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        <AdminAppointmentsTable
-          appointments={sortedAppointments}
-          onConfirm={handleConfirmAppointment}
-          onCancel={handleCancelAppointment}
-          onUndo={handleUndoAppointment}
-          selectedIds={selectedIds}
-          onToggleSelect={handleToggleSelect}
-          onToggleSelectAll={handleToggleSelectAll}
-          requestSort={handleSort}
-          sortConfig={sortConfig}
-        />
+        {/* NUEVO: RENDERIZADO CONDICIONAL DE LA TABLA O MENSAJE VACÍO */}
+        {sortedAppointments.length > 0 ? (
+          <AdminAppointmentsTable
+            appointments={sortedAppointments}
+            onConfirm={handleConfirmAppointment}
+            onCancel={handleCancelAppointment}
+            onUndo={handleUndoAppointment}
+            selectedIds={selectedIds}
+            onToggleSelect={handleToggleSelect}
+            onToggleSelectAll={handleToggleSelectAll}
+            requestSort={handleSort}
+            sortConfig={sortConfig}
+          />
+        ) : (
+          <div className={styles.noDataContainer}>
+            <CalendarX size={48} className={styles.noDataIcon} />
+            <h3 className={styles.noDataTitle}>Sin citas para esta semana</h3>
+            <button type="button" className={styles.primaryButton} onClick={() => setIsCreateAppointmentModalOpen(true)}>
+              <Plus size={18} /> Agendar cita
+            </button>
+          </div>
+        )}
       </section>
 
       <CreateWorkshopModal isOpen={isCreateWorkshopModalOpen} onClose={() => setIsCreateWorkshopModalOpen(false)} onSubmit={handleCreateWorkshop} courseName={course?.nombreCurso} />
       <CreateAppointmentModal isOpen={isCreateAppointmentModalOpen} onClose={() => setIsCreateAppointmentModalOpen(false)} onSubmit={handleCreateAppointment} courseName={course?.nombreCurso} workshops={workshops} />
 
-      {/* MODAL PERSONALIZADO DE BORRADO */}
       {isDeleteDialogOpen && (
         <div className={styles.overlay}>
           <div className={styles.confirmModal}>

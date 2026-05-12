@@ -157,3 +157,99 @@
   font-weight: 600;
   color: var(--color-text-muted);
 }
+
+.titleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.weekPicker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--color-surface-strong, #ffffff);
+  padding: 0.5rem 1rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(58, 46, 50, 0.08);
+  width: fit-content;
+  margin-top: 1rem;
+  box-shadow: var(--shadow-soft-sm, 0 2px 4px rgba(0,0,0,0.02));
+}
+
+.todayBtn {
+  background: #fdf2f2;
+  color: var(--color-accent, #c07a7a);
+  border: 1px solid #f9dada;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.todayBtn:hover {
+  background: #fae4e4;
+}
+
+.navButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.currentRange {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  color: var(--color-text);
+  min-width: 190px;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.navBtn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.navBtn:hover {
+  background: rgba(0,0,0,0.05);
+  color: var(--color-text);
+}
+
+/* --- NUEVOS ESTILOS: ESTADO VACÍO (NO HAY CITAS) --- */
+.noDataContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  text-align: center;
+  background: var(--color-surface-strong, #ffffff);
+  border-radius: var(--radius-lg, 1rem);
+  border: 1px solid rgba(58, 46, 50, 0.05);
+  box-shadow: var(--shadow-soft-sm);
+}
+
+.noDataIcon {
+  color: #f9dada;
+  margin-bottom: 1rem;
+}
+
+.noDataTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+}
