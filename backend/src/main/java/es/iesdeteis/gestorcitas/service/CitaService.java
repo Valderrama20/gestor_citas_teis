@@ -14,10 +14,14 @@ import es.iesdeteis.gestorcitas.repository.UsuarioRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.ZoneId;
@@ -49,6 +53,9 @@ public class CitaService implements ICitaService {
     private TallerRepository tallerRepository;
     @Autowired
     private CitaCancelacionTokenService cancelacionTokenService;
+
+    @Value("${citas.cancelacion.frontend-url:}")
+    private String cancelacionFrontendUrl;
 
     private static final String PLANTILLA_CITA_PENDIENTE = "correo/cita-pendiente-confirmacion";
     private static final String ASUNTO_CITA_PENDIENTE = "Cita pendiente de confirmacion";
@@ -186,6 +193,7 @@ public class CitaService implements ICitaService {
         }
 
         variables.put("mensajeAdicional", MENSAJE_CITA_PENDIENTE);
+        variables.put("urlCancelacion", construirUrlCancelacion(cita));
 
         correoService.enviarCorreoHtml(destinatario, ASUNTO_CITA_PENDIENTE, PLANTILLA_CITA_PENDIENTE, variables);
     }
@@ -228,6 +236,7 @@ public class CitaService implements ICitaService {
         }
 
         variables.put("mensajeAdicional", MENSAJE_CITA_CONFIRMADA);
+        variables.put("urlCancelacion", construirUrlCancelacion(cita));
 
         correoService.enviarCorreoHtml(destinatario, ASUNTO_CITA_CONFIRMADA, PLANTILLA_CITA_CONFIRMADA, variables);
     }
@@ -272,6 +281,31 @@ public class CitaService implements ICitaService {
         variables.put("mensajeAdicional", MENSAJE_CITA_CANCELADA);
 
         correoService.enviarCorreoHtml(destinatario, ASUNTO_CITA_CANCELADA, PLANTILLA_CITA_CANCELADA, variables);
+    }
+
+    private String construirUrlCancelacion(Cita cita) {
+        if (cita == null || cita.getIdCita() == null) {
+            return null;
+        }
+
+        if (cancelacionFrontendUrl == null || cancelacionFrontendUrl.trim().isEmpty()) {
+            return null;
+        }
+
+        if (cita.getFecha() == null || cita.getHora() == null) {
+            return null;
+        }
+
+        LocalDateTime fechaHora = LocalDateTime.of(cita.getFecha(), cita.getHora());
+        Instant expiracion = fechaHora.atZone(ZoneId.systemDefault()).toInstant();
+        String token = cancelacionTokenService.generarToken(cita.getIdCita(), expiracion);
+        if (token == null || token.isEmpty()) {
+            return null;
+        }
+
+        String encoded = URLEncoder.encode(token, StandardCharsets.UTF_8);
+        String separador = cancelacionFrontendUrl.contains("?") ? "&" : "?";
+        return cancelacionFrontendUrl.trim() + separador + "token=" + encoded;
     }
 
     private Usuario procesarNuevoUsuario(Usuario usuarioRequest, String emailNormalizado) {

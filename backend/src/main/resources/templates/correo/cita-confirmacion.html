@@ -49,6 +49,13 @@
                                 Ver detalle de la cita
                             </a>
                         </p>
+                        <p style="margin: 0 0 16px;">
+                            <a th:if="${urlCancelacion != null}"
+                               th:href="${urlCancelacion}"
+                               style="display: inline-block; padding: 10px 20px; background-color: #b83232; color: #ffffff; text-decoration: none; border-radius: 999px; font-weight: 700; letter-spacing: 0.02em;">
+                                Cancelar cita
+                            </a>
+                        </p>
                         <p style="margin: 0; color: #6f6668; font-size: 13px;">Gracias por confiar en nosotros.</p>
                     </td>
                 </tr>
