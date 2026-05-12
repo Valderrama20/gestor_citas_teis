@@ -7,6 +7,7 @@ import es.iesdeteis.gestorcitas.model.Usuario;
 import es.iesdeteis.gestorcitas.repository.CitaRepository;
 import es.iesdeteis.gestorcitas.repository.PerfilClienteRepository;
 import es.iesdeteis.gestorcitas.repository.RolRepository;
+import es.iesdeteis.gestorcitas.repository.TallerRepository;
 import es.iesdeteis.gestorcitas.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,6 +39,8 @@ public class CitaService implements ICitaService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private ICorreoService correoService;
+    @Autowired
+    private TallerRepository tallerRepository;
 
     private static final String PLANTILLA_CITA_PENDIENTE = "correo/cita-pendiente-confirmacion";
     private static final String ASUNTO_CITA_PENDIENTE = "Cita pendiente de confirmacion";
@@ -70,6 +73,8 @@ public class CitaService implements ICitaService {
             cita.setCliente(usuarioFinal);
         }
 
+        resolverTaller(cita);
+
         Cita citaGuardada = citaRepository.save(cita);
 
         if (esNuevaCita) {
@@ -85,6 +90,19 @@ public class CitaService implements ICitaService {
         // No es estrictamente necesario hacer un .save() aquí porque @Transactional 
         // aplica un dirty-checking y guarda los cambios al terminar, pero es buena práctica.
         return usuarioRepository.save(usuarioDB); 
+    }
+
+    private void resolverTaller(Cita cita) {
+        if (cita == null || cita.getTaller() == null) {
+            return;
+        }
+
+        Long idTaller = cita.getTaller().getIdTaller();
+        if (idTaller == null) {
+            return;
+        }
+
+        tallerRepository.findById(idTaller).ifPresent(cita::setTaller);
     }
 
     private void enviarCorreoCitaPendiente(Cita cita) {
