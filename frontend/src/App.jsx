@@ -4,6 +4,7 @@ import AdminCourses from "./pages/AdminCourses";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import Booking from "./pages/Booking";
+import CancelAppointment from "./pages/CancelAppointment";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Talleres from "./pages/Talleres";
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "reservar", element: <Booking /> },
+      { path: "citas/cancelar", element: <CancelAppointment /> },
       { path: "curso/:courseId/talleres", element: <Talleres /> },
     ],
   },

@@ -237,6 +237,15 @@ const appointmentService = {
       tablaCitas.find((cita) => cita.id === idCita) ?? null,
     );
   },
+
+  cancelAppointmentByToken: async (token) => {
+    if (!token) {
+      return { status: "TOKEN_INVALIDO", message: "Token de cancelacion no valido." };
+    }
+
+    const { data } = await api.post("/citas/cancelar", { token });
+    return data;
+  },
 };
 
 export default appointmentService;
