@@ -9,7 +9,7 @@ import {
 import { ChevronDown } from 'lucide-react';
 import contactService from '../../services/contactService';
 import { useContext } from 'react';
-import { ToastContext } from '../../context/ToastContext';
+import { useToast } from '../../context/ToastContext';
 
 const faqs = [
   { q: "¿Quién realiza los tratamientos?", a: "Todos los servicios son realizados por nuestros alumnos en formación, siempre bajo la supervisión directa de profesores cualificados." },
@@ -25,7 +25,7 @@ const faqs = [
 ];
 
 export default function Footer() {
-  const { addToast } = useContext(ToastContext);
+  const { addToast } = useToast();
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
