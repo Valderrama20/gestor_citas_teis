@@ -112,7 +112,7 @@ export default function AdminCourses() {
       <main className={styles.page}>
         <AdminTopbar
           startContent={
-            <div className={styles.brand}>
+            <div className={styles.textButton}>
               <Settings className={styles.brandIcon} strokeWidth={1.8} />
               <span>Panel administrativo</span>
             </div>

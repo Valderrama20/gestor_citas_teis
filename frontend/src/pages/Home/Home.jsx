@@ -2,6 +2,7 @@ import { Flower2, Hand, Scissors, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import ServiceCard from "../../components/ServiceCard";
 import courseService from "../../services/courseService";
+import FAQSection from "../../components/FAQSection";
 import styles from "./Home.module.css";
 
 const courseIconMap = {
@@ -59,6 +60,8 @@ export default function Home() {
           />
         ))}
       </div>
+
+      <FAQSection />
     </section>
   );
 }

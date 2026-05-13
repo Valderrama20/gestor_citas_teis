@@ -1,35 +1,53 @@
 .modal {
-  width: min(100%, 40rem);
+  width: min(100%, var(--layout-max-text));
 }
 
 .content {
   margin-bottom: 0;
 }
 
-.form {
+/* Sistema de Grid para el Formulario */
+.gridForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
   text-align: left;
 }
 
-.field {
+@media (min-width: 768px) {
+  .gridForm {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  margin-bottom: var(--space-4);
+  gap: var(--space-2);
 }
 
 .label {
   color: var(--color-text);
-  font-weight: 600;
+  font-size: var(--size-copy);
+  letter-spacing: var(--tracking-label);
+  font-weight: 700;
 }
 
 .input,
-.textarea {
+.select {
   width: 100%;
   border: 1px solid var(--color-border-field);
   border-radius: var(--radius-md);
   background: var(--color-white);
   color: var(--color-text);
-  padding: 0.95rem 1rem;
+  font-family: inherit;
+  font-size: var(--size-copy);
+  padding: 0.75rem var(--space-4);
+  min-height: 48px;
   outline: none;
   transition:
     border-color var(--transition-fast),
@@ -37,14 +55,9 @@
 }
 
 .input:focus,
-.textarea:focus {
+.select:focus {
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
-}
-
-.textarea {
-  resize: vertical;
-  min-height: 6rem;
 }
 
 .readonlyInput {
@@ -52,20 +65,156 @@
   color: var(--color-text-muted);
 }
 
+.cardSelector {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cardButton {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: auto;
+  padding: 0 0.5rem;
+  height: 3rem;
+  border: 1px solid var(--color-border-field);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.cardButton:hover {
+  border-color: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.cardButtonActive {
+  border-color: var(--color-accent);
+  color: var(--color-accent-strong);
+  background: var(--color-accent-wash);
+  box-shadow: var(--shadow-focus);
+}
+
+.errorMessage {
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 0.75rem var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--size-copy);
+  font-weight: 600;
+  text-align: left;
+  border-left: 4px solid #d32f2f;
+  margin-bottom: var(--space-4);
+}
+
+.helperText {
+  font-size: var(--size-copy);
+  color: var(--color-text-muted);
+  margin: -0.25rem 0 var(--space-2) 0;
+}
+
+.allergiesSection {
+  background: var(--color-background-soft);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-divider);
+}
+
+.allergiesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-white);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-field);
+  margin-top: var(--space-2);
+}
+
+.allergiesGrid .cardButton {
+  max-width: calc(50% - 0.25rem);
+}
+
+.otherAllergyGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.labelSmall {
+  color: var(--color-text-soft);
+  font-size: var(--size-copy);
+  font-weight: 600;
+}
+
+/* --- Bottom Section & Summary --- */
+.bottomSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-top: var(--space-4);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-divider);
+  width: 100%;
+}
+
+.summary {
+  background: var(--color-accent-wash);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  width: 100%;
+}
+
+.summaryTitle {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--size-card-title);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.summaryText {
+  margin: var(--space-1) 0;
+  color: var(--color-text-soft);
+  font-size: var(--size-copy);
+}
+
 .actions {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
   gap: var(--space-3);
-  margin-top: var(--space-5);
+  margin-top: var(--space-2);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 0;
+    width: 100%;
+    align-self: flex-end;
+  }
 }
 
 .secondaryButton,
-.primaryButton {
+.buttonPrimary {
   border: 0;
   border-radius: var(--radius-full);
-  padding: 0.9rem 1.35rem;
+  padding: 0.8rem 1.35rem;
+  font-size: var(--size-copy-lg);
   font-weight: 700;
   cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .secondaryButton {
@@ -77,23 +226,21 @@
   background: rgba(58, 46, 50, 0.12);
 }
 
-.primaryButton {
+.buttonPrimary {
   background: var(--color-accent);
   color: var(--color-white);
+  box-shadow: var(--shadow-button);
 }
 
-.primaryButton:hover {
+.buttonPrimary:hover:not(:disabled) {
   background: var(--color-accent-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft-hover);
 }
 
 .secondaryButton:disabled,
-.primaryButton:disabled {
+.buttonPrimary:disabled {
   cursor: not-allowed;
   opacity: 0.6;
-}
-
-@media (max-width: 767px) {
-  .actions {
-    flex-direction: column;
-  }
+  box-shadow: none;
 }

@@ -261,11 +261,13 @@ export default function Booking() {
                   </div>
                   <div className={styles.otherAllergyGroup}>
                     <label htmlFor="otherAllergies" className={styles.labelSmall}>Otro (especificar):</label>
-                    <input
-                      id="otherAllergies" type="text" className={styles.input}
+                    <textarea
+                      id="otherAllergies" className={styles.input}
                       placeholder="Ej. Piel rosácea..."
                       value={uiState.otherAllergies}
                       onChange={(e) => setUiState({ ...uiState, otherAllergies: e.target.value })}
+                      rows="2"
+                      style={{ resize: "vertical" }}
                     />
                   </div>
                 </div>
@@ -280,12 +282,23 @@ export default function Booking() {
                   Taller: <strong>{tallerSeleccionado?.nombreTaller || "Sin seleccionar"}</strong>
                 </p>
                 <p className={styles.summaryText}>
-                  Horario: <strong>{horarioSeleccionado?.label || "Sin disponibilidad"}</strong>
+                  Correo electrónico: <strong>{formData.email || "No especificado"}</strong>
+                </p>
+                <p className={styles.summaryText}>
+                  Teléfono: <strong>{formData.phone || "No especificado"}</strong>
+                </p>
+                <p className={styles.summaryText}>
+                  Día y horario: <strong>{horarioSeleccionado?.label || "Sin disponibilidad"}</strong>
+                </p>
+                <p className={styles.summaryText}>
+                  Alergias: <strong>
+                    {uiState.hasAllergies === "no" ? "Ninguna" : ([...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).length > 0 ? [...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).join(", ") : "No especificadas")}
+                  </strong>
                 </p>
               </div>
 
               <button type="submit" className={styles.buttonPrimary} disabled={isSubmitting}>
-                {isSubmitting ? "Procesando..." : "Confirmar solicitud"}
+                {isSubmitting ? "Procesando..." : "Confirmar"}
               </button>
             </div>
           </form>

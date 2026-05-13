@@ -10,6 +10,7 @@
   background-color: var(--color-white);
   box-shadow: var(--shadow-soft-md);
   gap: var(--space-4);
+    border-bottom: 1px solid var(--color-accent-border); 
 }
 
 .logoGroup {
