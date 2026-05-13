@@ -3,12 +3,8 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-<<<<<<< HEAD
 RUN npm install
 
-=======
-    RUN npm install
->>>>>>> origin/rafael
 COPY . .
 
 ARG VITE_API_URL
