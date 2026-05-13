@@ -7,7 +7,7 @@
   justify-content: center;
   padding: var(--space-5);
   overflow-y: auto;
-  z-index: 20;
+  z-index: 1000;
 }
 
 .modal {

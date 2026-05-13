@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Sparkles, Scissors, Droplets, Waves, Brush, Flower, Hand } from "lucide-react";
 import Modal from "../Modal";
 import styles from "./CreateWorkshopModal.module.css";
 
@@ -63,14 +63,14 @@ export default function CreateWorkshopModal({
         ...formData,
         duracionMinutos: Number(formData.duracionMinutos),
         capacidadMaxima: Number(formData.capacidadMaxima),
-        tipoTaller: courseName, 
+        tipoTaller: courseName,
         horarios: horarios.map(h => ({
           ...h,
           horaApertura: h.horaApertura.length === 5 ? `${h.horaApertura}:00` : h.horaApertura,
           horaCierre: h.horaCierre.length === 5 ? `${h.horaCierre}:00` : h.horaCierre,
         }))
       };
-      
+
       await onSubmit(dataToSend);
     } finally {
       setIsSubmitting(false);
@@ -88,7 +88,7 @@ export default function CreateWorkshopModal({
       contentClassName={styles.content}
     >
       <form className={styles.form} onSubmit={handleSubmit}>
-        
+
         {/* CAMPOS BÁSICOS DEL TALLER */}
         <div className={styles.field}>
           <label className={styles.label} htmlFor="nombreTaller">Nombre del taller</label>
@@ -100,19 +100,29 @@ export default function CreateWorkshopModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="icono">Icono</label>
-          <select
-            id="icono" name="icono" className={styles.input}
-            value={formData.icono} onChange={handleChange}
-          >
-            <option value="sparkles">Sparkles</option>
-            <option value="scissors">Scissors</option>
-            <option value="droplets">Droplets</option>
-            <option value="waves">Waves</option>
-            <option value="brush">Brush</option>
-            <option value="flower">Flower</option>
-            <option value="hand">Hand</option>
-          </select>
+          <label className={styles.label}>Icono representativo</label>
+          <div className={styles.iconSelector}>
+            {[
+              { id: "sparkles", label: "Estética", icon: Sparkles },
+              { id: "scissors", label: "Peluquería", icon: Scissors },
+              { id: "droplets", label: "Lavado", icon: Droplets },
+              { id: "waves", label: "Tratamientos", icon: Waves },
+              { id: "brush", label: "Maquillaje", icon: Brush },
+              { id: "flower", label: "Bienestar", icon: Flower },
+              { id: "hand", label: "Manos", icon: Hand },
+            ].map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                type="button"
+                className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
+                onClick={() => setFormData((current) => ({ ...current, icono: id }))}
+                aria-label={`Seleccionar icono ${id}`}
+              >
+                <Icon size={18} strokeWidth={1.8} />
+                <span>{label}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div style={{ display: 'flex', gap: '1rem' }}>
@@ -147,11 +157,11 @@ export default function CreateWorkshopModal({
         {/* ZONA DE HORARIOS DINÁMICOS */}
         <div className={styles.field}>
           <label className={styles.label}>Disponibilidad Semanal</label>
-          
+
           {horarios.map((horario, index) => (
             <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
-              
-              <select 
+
+              <select
                 className={styles.input} style={{ flex: 1.5 }}
                 value={horario.diaSemana}
                 onChange={(e) => handleHorarioChange(index, "diaSemana", e.target.value)}
@@ -161,22 +171,22 @@ export default function CreateWorkshopModal({
                 ))}
               </select>
 
-              <input 
+              <input
                 type="time" className={styles.input} style={{ flex: 1 }}
                 value={horario.horaApertura}
                 onChange={(e) => handleHorarioChange(index, "horaApertura", e.target.value)} required
               />
-              
+
               <span style={{ color: 'var(--color-text-muted)' }}>a</span>
 
-              <input 
+              <input
                 type="time" className={styles.input} style={{ flex: 1 }}
                 value={horario.horaCierre}
                 onChange={(e) => handleHorarioChange(index, "horaCierre", e.target.value)} required
               />
 
               {horarios.length > 1 && (
-                <button 
+                <button
                   type="button" onClick={() => handleRemoveHorario(index)}
                   style={{ background: 'transparent', border: 'none', color: '#e74c3c', cursor: 'pointer', padding: '0.5rem' }}
                 >
@@ -186,7 +196,7 @@ export default function CreateWorkshopModal({
             </div>
           ))}
 
-          <button 
+          <button
             type="button" onClick={handleAddHorario}
             style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'transparent', border: 'none', color: 'var(--color-accent)', fontWeight: '600', cursor: 'pointer', marginTop: '0.5rem' }}
           >

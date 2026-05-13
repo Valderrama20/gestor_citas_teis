@@ -1,0 +1,241 @@
+.nav {
+  width: 100%;
+  padding: var(--layout-nav-mobile);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 50;
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-soft-md);
+  gap: var(--space-4);
+}
+
+.logoGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logoIconBox {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-soft));
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-soft-sm);
+}
+
+.logoGroup:hover .logoIconBox {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(196, 139, 139, 0.25);
+}
+
+.logoIcon {
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--color-white);
+}
+
+.logoText {
+  font-family: var(--font-display);
+  font-size: var(--size-logo);
+  font-weight: 800;
+  letter-spacing: var(--tracking-title);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.logoHighlight {
+  font-weight: 500;
+  color: var(--color-accent);
+}
+
+/* USER MENU */
+.userMenuWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.userMenuBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-surface-strong);
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.userMenuBtn:hover {
+  background: var(--color-accent-wash);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent-strong);
+}
+
+.userIcon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.userName {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chevron {
+  width: 1rem;
+  height: 1rem;
+  transition: transform var(--transition-fast);
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+/* DROPDOWN */
+.dropdownOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  min-width: 280px;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 40px rgba(58, 46, 50, 0.15);
+  border: 1px solid var(--color-border-soft);
+  padding: 1rem;
+  z-index: 100;
+  animation: slideDownFade var(--transition-base);
+}
+
+@keyframes slideDownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-wash);
+}
+
+.userAvatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-soft));
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.avatarIcon {
+  width: 1.2rem;
+  height: 1.2rem;
+  color: var(--color-white);
+}
+
+.userFullName {
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userEmail {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0.25rem 0 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.divider {
+  height: 1px;
+  background: var(--color-divider);
+  margin: var(--space-3) 0;
+}
+
+.menuItem,
+.logoutItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem var(--space-3);
+  border-radius: var(--radius-md);
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 0.9rem;
+}
+
+.menuItem:hover,
+.logoutItem:hover {
+  background: var(--color-accent-wash);
+  color: var(--color-accent-strong);
+}
+
+.logoutItem {
+  color: var(--color-text-muted);
+}
+
+.logoutItem:hover {
+  background: rgba(179, 115, 115, 0.1);
+  color: var(--color-accent-strong);
+}
+
+.menuIcon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* RESPONSIVE */
+@media (min-width: 768px) {
+  .nav {
+    padding: var(--layout-nav-desktop);
+  }
+
+  .logoText {
+    font-size: 1.3rem;
+  }
+
+  .userName {
+    max-width: 150px;
+  }
+}

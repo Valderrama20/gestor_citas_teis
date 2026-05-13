@@ -1,9 +1,8 @@
 /* --- ESTRUCTURA GENERAL DE LA PÁGINA --- */
 .page {
   min-height: 100vh;
-  background-color: var(--color-background, #fffaf9);
-  display: flex;
-  flex-direction: column;
+  background: var(--gradient-page), var(--color-background);
+  padding-top: 60px;
 }
 
 .container {

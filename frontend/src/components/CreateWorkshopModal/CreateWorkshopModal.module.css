@@ -51,6 +51,43 @@
   resize: vertical;
 }
 
+.iconSelector {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.iconButton {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: auto;
+  padding: 0 1rem;
+  height: 3rem;
+  border: 1px solid var(--color-border-field);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.iconButton:hover {
+  border-color: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.iconButtonActive {
+  border-color: var(--color-accent);
+  color: var(--color-accent-strong);
+  background: var(--color-accent-wash);
+  box-shadow: var(--shadow-focus);
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;

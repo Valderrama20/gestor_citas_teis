@@ -75,7 +75,7 @@ export default function CreateAppointmentModal({
       isMounted = false;
     };
 
-    
+
   }, [formData.workshopId]);
 
   function handleChange(event) {
@@ -179,24 +179,25 @@ export default function CreateAppointmentModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="workshopId">
+          <label className={styles.label}>
             Taller
           </label>
-          <select
-            id="workshopId"
-            name="workshopId"
-            className={styles.input}
-            value={formData.workshopId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Selecciona un taller</option>
-            {workshops.map((workshop) => (
-              <option key={workshop.id || workshop.idTaller} value={workshop.id || workshop.idTaller}>
-                {workshop.title || workshop.nombreTaller}
-              </option>
-            ))}
-          </select>
+          <div className={styles.cardSelector}>
+            {workshops.map((workshop) => {
+              const wId = workshop.id || workshop.idTaller;
+              const wTitle = workshop.title || workshop.nombreTaller;
+              return (
+                <button
+                  key={wId}
+                  type="button"
+                  className={`${styles.cardButton} ${formData.workshopId === String(wId) ? styles.cardButtonActive : ""}`}
+                  onClick={() => handleChange({ target: { name: "workshopId", value: String(wId) } })}
+                >
+                  <span>{wTitle}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className={styles.field}>
