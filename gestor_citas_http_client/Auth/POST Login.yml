@@ -10,8 +10,8 @@ http:
     type: json
     data: |-
       {
-        "correo": "admin@iesteis.es",
-        "contrasena": "abc123."
+        "email": "admin@iesteis.es",
+        "password": "abc123."
       }
   auth: inherit
 

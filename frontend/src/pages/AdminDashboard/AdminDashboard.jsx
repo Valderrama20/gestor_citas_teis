@@ -1,12 +1,16 @@
 import {
   ChevronLeft,
-  Filter,
+  ChevronRight,
   Plus,
   Settings,
-  SlidersHorizontal,
-  X,
+  CheckCheck,
+  XCircle,
+  Clock,
+  Trash2,
+  CalendarDays,
+  CalendarX // Añadido para el estado vacío
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import AdminAppointmentsTable from "../../components/AdminAppointmentsTable";
 import AdminTopbar from "../../components/AdminTopbar";
@@ -15,7 +19,7 @@ import CreateWorkshopModal from "../../components/CreateWorkshopModal";
 import appointmentService from "../../services/appointmentService";
 import courseService from "../../services/courseService";
 import workshopService from "../../services/workshopService";
-import availabilityService from "../../services/availabilityService"; // ⚠️ IMPORTANTE: Añadido para los horarios
+import availabilityService from "../../services/availabilityService";
 import { useToast } from "../../context/ToastContext";
 import styles from "./AdminDashboard.module.css";
 
@@ -24,13 +28,15 @@ export default function AdminDashboard() {
   const [course, setCourse] = useState(undefined);
   const [appointments, setAppointments] = useState([]);
   const [workshops, setWorkshops] = useState([]);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  
   const [isCreateAppointmentModalOpen, setIsCreateAppointmentModalOpen] = useState(false);
   const [isCreateWorkshopModalOpen, setIsCreateWorkshopModalOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    date: "",
-    workshopId: "",
-  });
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  // ESTADOS DE SELECCIÓN, ORDENACIÓN Y FECHA
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: 'fecha', direction: 'asc' });
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const { addToast } = useToast();
 
@@ -38,312 +44,337 @@ export default function AdminDashboard() {
     let isMounted = true;
 
     async function loadDashboardData() {
-      const [nextCourse, nextAppointments, nextWorkshops] = await Promise.all([
-        courseService.getCourseById(courseId),
-        appointmentService.getAppointmentsByCourseId(courseId),
-        workshopService.getWorkshopsByCourseId(courseId),
-      ]);
+      try {
+        const [nextCourse, nextAppointments, nextWorkshops] = await Promise.all([
+          courseService.getCourseById(courseId),
+          appointmentService.getAppointmentsByCourseId(courseId),
+          workshopService.getWorkshopsByCourseId(courseId),
+        ]);
 
-      if (!isMounted) {
-        return;
+        if (!isMounted) return;
+
+        setCourse(nextCourse);
+        setAppointments(nextAppointments);
+        setWorkshops(nextWorkshops);
+        setSelectedIds([]);
+      } catch (error) {
+        console.error("Error cargando datos:", error);
       }
-
-      setCourse(nextCourse);
-      setAppointments(nextAppointments);
-      setWorkshops(nextWorkshops);
-      setFilters({
-        date: "",
-        workshopId: "",
-      });
-      setIsFilterOpen(false);
     }
 
     loadDashboardData();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [courseId]);
 
+  // --- LÓGICA DE FILTRO SEMANAL ---
+  const weekRange = useMemo(() => {
+    const date = new Date(currentDate);
+    const day = date.getDay();
+    const diff = date.getDate() - (day === 0 ? 6 : day - 1);
+    const monday = new Date(date.setDate(diff));
+    monday.setHours(0, 0, 0, 0);
+
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23, 59, 59, 999);
+
+    return { monday, sunday };
+  }, [currentDate]);
+
+  const filteredAppointments = useMemo(() => {
+    return appointments.filter(app => {
+      // Revisa 'fecha' o 'date' según cómo venga de tu backend
+      const rawDate = app.fecha || app.date;
+      if (!rawDate) return false;
+      const appDate = new Date(rawDate);
+      return appDate >= weekRange.monday && appDate <= weekRange.sunday;
+    });
+  }, [appointments, weekRange]);
+
+  // --- LÓGICA DE ORDENACIÓN (APLICADA SOBRE LAS FILTRADAS) ---
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedAppointments = [...filteredAppointments].sort((a, b) => {
+    let aValue, bValue;
+
+    switch (sortConfig.key) {
+      case 'cliente':
+        aValue = (a.cliente?.nombre || a.client || "").toLowerCase();
+        bValue = (b.cliente?.nombre || b.client || "").toLowerCase();
+        break;
+      case 'taller':
+        aValue = (a.taller?.nombreTaller || a.workshopTitle || "").toLowerCase();
+        bValue = (b.taller?.nombreTaller || b.workshopTitle || "").toLowerCase();
+        break;
+      case 'fecha':
+        aValue = `${a.fecha || a.date || ''} ${a.hora || a.time || ''}`;
+        bValue = `${b.fecha || b.date || ''} ${b.hora || b.time || ''}`;
+        break;
+      case 'estado':
+        aValue = (a.estado || "").toLowerCase();
+        bValue = (b.estado || "").toLowerCase();
+        break;
+      default:
+        return 0;
+    }
+
+    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  // --- NAVEGACIÓN DE SEMANAS ---
+  const handlePrevWeek = () => {
+    const d = new Date(currentDate);
+    d.setDate(d.getDate() - 7);
+    setCurrentDate(d);
+    setSelectedIds([]); // Limpiar selección al cambiar de semana
+  };
+
+  const handleNextWeek = () => {
+    const d = new Date(currentDate);
+    d.setDate(d.getDate() + 7);
+    setCurrentDate(d);
+    setSelectedIds([]);
+  };
+
+  // --- ACCIONES INDIVIDUALES ---
   async function handleConfirmAppointment(appointment) {
     const updatedAppointments = await appointmentService.updateAppointmentStatus({
-      courseId,
-      appointment,
-      appointmentId: appointment.id,
-      estado: "CONFIRMADA",
+      courseId, appointment, appointmentId: appointment.id, estado: "CONFIRMADA",
     });
-
     setAppointments(updatedAppointments);
-    addToast("Cita confirmada correctamente", "success");
-  }
-
-  async function handleCreateAppointment(appointmentData) {
-    try {
-      await appointmentService.createAppointment({
-        ...appointmentData,
-        courseId,
-      });
-      const nextAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
-      setAppointments(nextAppointments);
-      setIsCreateAppointmentModalOpen(false);
-      addToast("Cita creada correctamente", "success");
-    } catch (error) {
-      console.error(error);
-      addToast("Error creando la cita", "error");
-    }
+    addToast("Cita confirmada", "success");
   }
 
   async function handleCancelAppointment(appointment) {
     const updatedAppointments = await appointmentService.updateAppointmentStatus({
-      courseId,
-      appointment,
-      appointmentId: appointment.id,
-      estado: "CANCELADA",
+      courseId, appointment, appointmentId: appointment.id, estado: "CANCELADA",
     });
-
     setAppointments(updatedAppointments);
-    addToast("Cita cancelada correctamente", "success");
+    addToast("Cita cancelada", "success");
+  }
+
+  async function handleUndoAppointment(appointment) {
+    const updatedAppointments = await appointmentService.updateAppointmentStatus({
+      courseId, appointment, appointmentId: appointment.id, estado: "PENDIENTE",
+    });
+    setAppointments(updatedAppointments);
+    addToast("Cita restaurada a pendiente", "success");
+  }
+
+  // --- ACCIONES EN LOTE (BULK ACTIONS) ---
+  function handleToggleSelect(rowId) {
+    setSelectedIds((prev) =>
+      prev.includes(rowId) ? prev.filter((id) => id !== rowId) : [...prev, rowId]
+    );
+  }
+
+  function handleToggleSelectAll(isChecked) {
+    if (isChecked) {
+      // Seleccionar solo las de la semana visible
+      const allIds = sortedAppointments.map((app) => app.idCita ?? app.id ?? `${app.client}-${app.date}-${app.time}`);
+      setSelectedIds(allIds);
+    } else {
+      setSelectedIds([]);
+    }
+  }
+
+  async function handleBulkAction(nuevoEstado) {
+    if (selectedIds.length === 0) return;
+    try {
+      const appointmentsToUpdate = appointments.filter((app) => {
+        const rowId = app.idCita ?? app.id ?? `${app.client}-${app.date}-${app.time}`;
+        return selectedIds.includes(rowId);
+      });
+
+      for (const appointment of appointmentsToUpdate) {
+        await appointmentService.updateAppointmentStatus({
+          courseId, appointment, appointmentId: appointment.id, estado: nuevoEstado,
+        });
+      }
+
+      const nextAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
+      setAppointments(nextAppointments);
+      setSelectedIds([]);
+      addToast(`${appointmentsToUpdate.length} citas actualizadas`, "success");
+    } catch (error) {
+      addToast("Error al actualizar citas", "error");
+    }
+  }
+
+  async function confirmBulkDelete() {
+    try {
+      const appointmentsToDelete = appointments.filter((app) => {
+        const rowId = app.idCita ?? app.id ?? `${app.client}-${app.date}-${app.time}`;
+        return selectedIds.includes(rowId);
+      });
+
+      for (const appointment of appointmentsToDelete) {
+        await appointmentService.deleteAppointment(appointment.id ?? appointment.idCita);
+      }
+
+      const nextAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
+      setAppointments(nextAppointments);
+      setSelectedIds([]);
+      setIsDeleteDialogOpen(false);
+      addToast(`${appointmentsToDelete.length} citas eliminadas`, "success");
+    } catch (error) {
+      setIsDeleteDialogOpen(false);
+      addToast("Error al eliminar citas", "error");
+    }
+  }
+
+  // --- CREACIÓN ---
+  async function handleCreateAppointment(appointmentData) {
+    try {
+      await appointmentService.createAppointment({ ...appointmentData, courseId });
+      const nextAppointments = await appointmentService.getAppointmentsByCourseId(courseId);
+      setAppointments(nextAppointments);
+      setIsCreateAppointmentModalOpen(false);
+      addToast("Cita creada", "success");
+    } catch (error) {
+      addToast("Error creando cita", "error");
+    }
   }
 
   async function handleCreateWorkshop(workshopData) {
     try {
       const { horarios, ...datosTaller } = workshopData;
-
-      // 1. Guardamos el taller
       const tallerCreado = await workshopService.createWorkshop({
-        ...datosTaller,
-        idCurso: Number(courseId), 
+        ...datosTaller, idCurso: Number(courseId), 
       });
 
-      console.log("✅ RESPUESTA DEL BACKEND AL CREAR TALLER:", tallerCreado);
-
       const nuevoIdTaller = tallerCreado?.idTaller || tallerCreado?.id;
-
-      if (!nuevoIdTaller) {
-         throw new Error("El backend no ha devuelto el ID del taller.");
-      }
-
-// 2. Guardamos los horarios (usando availabilityService)
       if (horarios && horarios.length > 0) {
         for (const horario of horarios) {
-          
-          const slotData = {
-            diaSemana: horario.diaSemana,
-            horaApertura: horario.horaApertura,
-            horaCierre: horario.horaCierre,
-            idTaller: { idTaller: nuevoIdTaller } 
-          };
-
-          await availabilityService.createSlot(slotData);
+          await availabilityService.createSlot({
+            ...horario, idTaller: { idTaller: nuevoIdTaller } 
+          });
         }
       }
 
-      // 3. Todo OK: Cerramos y actualizamos
       setIsCreateWorkshopModalOpen(false);
-
       const nextWorkshops = await workshopService.getWorkshopsByCourseId(courseId);
       setWorkshops(nextWorkshops);
-
-      addToast("¡Taller y horarios creados correctamente!", "success");
-
+      addToast("Taller creado con éxito", "success");
     } catch (error) {
-      console.error("❌ Error en el flujo de crear taller:", error);
-      setIsCreateWorkshopModalOpen(false); 
-      addToast(error.message || "Error al crear el taller o los horarios", "error");
+      addToast("Error al crear taller", "error");
     }
   }
 
-  const filteredAppointments = appointments.filter((appointment) => {
-    const matchesDate = !filters.date || appointment.date === filters.date;
-    const matchesWorkshop =
-      !filters.workshopId || appointment.workshopId === filters.workshopId;
-
-    return matchesDate && matchesWorkshop;
-  });
-
-  const hasActiveFilters = Boolean(filters.date || filters.workshopId);
-
-  if (course === undefined) {
-    return (
-      <main className={styles.page}>
-        <section className={styles.container}>
-          <div className={styles.emptyState}>
-            <h1 className={styles.title}>Cargando panel...</h1>
-          </div>
-        </section>
-      </main>
-    );
-  }
-
-  if (!course) {
-    return (
-      <main className={styles.page}>
-        <section className={styles.container}>
-          <div className={styles.emptyState}>
-            <h1 className={styles.title}>Curso no encontrado</h1>
-            <p className={styles.subtitle}>
-              La ruta solicitada no coincide con ningun curso administrativo.
-            </p>
-            <Link to="/admin/cursos" className={styles.backButton}>
-              Volver a cursos
-            </Link>
-          </div>
-        </section>
-      </main>
-    );
-  }
+  if (!course) return null;
 
   return (
     <main className={styles.page}>
       <AdminTopbar
-        startContent={
-          <Link to="/admin/cursos" className={styles.textButton}>
-            <ChevronLeft className={styles.textButtonIcon} strokeWidth={1.8} />
-            Volver a cursos
-          </Link>
-        }
-        endContent={
-          <div className={styles.brand}>
-            <Settings className={styles.brandIcon} strokeWidth={1.8} />
-            <span>IES TEIS | {course.nombreCurso}</span>
-          </div>
-        }
+        startContent={<Link to="/admin/cursos" className={styles.textButton}><ChevronLeft size={18} /> Volver a cursos</Link>}
+        endContent={<div className={styles.brand}><Settings size={18} /> <span>IES TEIS | {course.nombreCurso}</span></div>}
       />
 
       <section className={styles.container}>
         <header className={styles.headerRow}>
-          <div>
+          <div className={styles.titleSection}>
             <h1 className={styles.title}>Citas de {course.nombreCurso}</h1>
-            <p className={styles.subtitle}>
-              Gestiona el estado de cada cita: pendiente, confirmada o cancelada.
-            </p>
+            <p className={styles.subtitle}>Gestiona el estado de cada cita de forma eficiente.</p>
+            
+            {/* NUEVO: SELECTOR SEMANAL */}
+            <div className={styles.weekPicker}>
+              <button onClick={() => setCurrentDate(new Date())} className={styles.todayBtn}>Hoy</button>
+              <div className={styles.navButtons}>
+                <button onClick={handlePrevWeek} className={styles.navBtn}><ChevronLeft size={20} /></button>
+                <div className={styles.currentRange}>
+                  <CalendarDays size={16} />
+                  <span>
+                    {weekRange.monday.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })} 
+                    {" - "} 
+                    {weekRange.sunday.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+                </div>
+                <button onClick={handleNextWeek} className={styles.navBtn}><ChevronRight size={20} /></button>
+              </div>
+            </div>
           </div>
 
           <div className={styles.headerActions}>
-            <button
-              type="button"
-              className={styles.primaryButton}
-              onClick={() => setIsCreateAppointmentModalOpen(true)}
-            >
-              <Plus className={styles.secondaryIcon} strokeWidth={1.8} />
-              Nueva cita
+            <button type="button" className={styles.primaryButton} onClick={() => setIsCreateAppointmentModalOpen(true)}>
+              <Plus size={18} /> Nueva cita
             </button>
-            <button
-              type="button"
-              className={styles.primaryButton}
-              onClick={() => setIsCreateWorkshopModalOpen(true)}
-            >
-              <Plus className={styles.secondaryIcon} strokeWidth={1.8} />
-              Crear taller
-            </button>
-            <button
-              type="button"
-              className={styles.secondaryButton}
-              onClick={() => setIsFilterOpen((current) => !current)}
-            >
-              <Filter className={styles.secondaryIcon} strokeWidth={1.8} />
-              {isFilterOpen ? "Ocultar filtros" : "Filtrar"}
+            <button type="button" className={styles.primaryButton} onClick={() => setIsCreateWorkshopModalOpen(true)}>
+              <Plus size={18} /> Crear taller
             </button>
           </div>
         </header>
 
-        {isFilterOpen && (
-          <section className={styles.filterCard}>
-            <div className={styles.filterHeader}>
-              <div className={styles.filterTitleGroup}>
-                <SlidersHorizontal
-                  className={styles.filterTitleIcon}
-                  strokeWidth={1.8}
-                />
-                <div>
-                  <h2 className={styles.filterTitle}>Filtros de citas</h2>
-                  <p className={styles.filterSubtitle}>
-                    Filtra por fecha concreta y por taller del curso.
-                  </p>
-                </div>
-              </div>
-
-              {hasActiveFilters && (
-                <button
-                  type="button"
-                  className={styles.clearButton}
-                  onClick={handleClearFilters}
-                >
-                  <X className={styles.clearIcon} strokeWidth={1.8} />
-                  Limpiar
-                </button>
-              )}
+        {selectedIds.length > 0 && (
+          <div className={styles.bulkActionsBar}>
+            <span className={styles.bulkText}>
+              <strong>{selectedIds.length}</strong> {selectedIds.length === 1 ? 'seleccionada' : 'seleccionadas'}
+            </span>
+            <div className={styles.bulkButtons}>
+              <button onClick={() => handleBulkAction("CONFIRMADA")} className={`${styles.bulkBtn} ${styles.bulkConfirm}`}>
+                <CheckCheck size={16} /> Confirmar
+              </button>
+              <button onClick={() => handleBulkAction("CANCELADA")} className={`${styles.bulkBtn} ${styles.bulkCancel}`}>
+                <XCircle size={16} /> Cancelar
+              </button>
+              <button onClick={() => handleBulkAction("PENDIENTE")} className={`${styles.bulkBtn} ${styles.bulkUndo}`}>
+                <Clock size={16} /> Pendiente
+              </button>
+              <button onClick={() => setIsDeleteDialogOpen(true)} className={`${styles.bulkBtn} ${styles.bulkDelete}`}>
+                <Trash2 size={16} /> Eliminar
+              </button>
             </div>
-
-            <div className={styles.filterGrid}>
-              <div className={styles.filterField}>
-                <label className={styles.filterLabel} htmlFor="date">
-                  Fecha
-                </label>
-                <input
-                  id="date"
-                  name="date"
-                  type="date"
-                  className={styles.filterInput}
-                  value={filters.date}
-                  onChange={handleFilterChange}
-                />
-              </div>
-
-              <div className={styles.filterField}>
-                <label className={styles.filterLabel} htmlFor="workshopId">
-                  Taller
-                </label>
-                <select
-                  id="workshopId"
-                  name="workshopId"
-                  className={styles.filterInput}
-                  value={filters.workshopId}
-                  onChange={handleFilterChange}
-                >
-                  <option value="">Todos los talleres</option>
-                  {workshops.map((workshop) => (
-                    <option
-                      key={workshop.idTaller ?? workshop.id}
-                      value={String(workshop.idTaller ?? workshop.id)}
-                    >
-                      {workshop.nombreTaller ?? workshop.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </section>
+          </div>
         )}
 
-        {hasActiveFilters && (
-          <p className={styles.filterResult}>
-            Mostrando {filteredAppointments.length} cita
-            {filteredAppointments.length === 1 ? "" : "s"} con los filtros
-            aplicados.
-          </p>
+        {/* NUEVO: RENDERIZADO CONDICIONAL DE LA TABLA O MENSAJE VACÍO */}
+        {sortedAppointments.length > 0 ? (
+          <AdminAppointmentsTable
+            appointments={sortedAppointments}
+            onConfirm={handleConfirmAppointment}
+            onCancel={handleCancelAppointment}
+            onUndo={handleUndoAppointment}
+            selectedIds={selectedIds}
+            onToggleSelect={handleToggleSelect}
+            onToggleSelectAll={handleToggleSelectAll}
+            requestSort={handleSort}
+            sortConfig={sortConfig}
+          />
+        ) : (
+          <div className={styles.noDataContainer}>
+            <CalendarX size={48} className={styles.noDataIcon} />
+            <h3 className={styles.noDataTitle}>Sin citas para esta semana</h3>
+            <button type="button" className={styles.primaryButton} onClick={() => setIsCreateAppointmentModalOpen(true)}>
+              <Plus size={18} /> Agendar cita
+            </button>
+          </div>
         )}
-
-        <AdminAppointmentsTable
-          appointments={filteredAppointments}
-          onConfirm={handleConfirmAppointment}
-          onCancel={handleCancelAppointment}
-        />
       </section>
 
-      <CreateWorkshopModal
-        isOpen={isCreateWorkshopModalOpen}
-        onClose={() => setIsCreateWorkshopModalOpen(false)}
-        onSubmit={handleCreateWorkshop}
-        courseName={course.nombreCurso}
-      />
-      <CreateAppointmentModal
-        isOpen={isCreateAppointmentModalOpen}
-        onClose={() => setIsCreateAppointmentModalOpen(false)}
-        onSubmit={handleCreateAppointment}
-        courseName={course.nombreCurso}
-        workshops={workshops}
-      />
+      <CreateWorkshopModal isOpen={isCreateWorkshopModalOpen} onClose={() => setIsCreateWorkshopModalOpen(false)} onSubmit={handleCreateWorkshop} courseName={course?.nombreCurso} />
+      <CreateAppointmentModal isOpen={isCreateAppointmentModalOpen} onClose={() => setIsCreateAppointmentModalOpen(false)} onSubmit={handleCreateAppointment} courseName={course?.nombreCurso} workshops={workshops} />
+
+      {isDeleteDialogOpen && (
+        <div className={styles.overlay}>
+          <div className={styles.confirmModal}>
+            <h2 className={styles.confirmTitle}>Eliminar citas</h2>
+            <p className={styles.confirmText}>
+              ¿Deseas eliminar <strong>{selectedIds.length}</strong> cita{selectedIds.length > 1 ? 's' : ''} permanentemente?
+            </p>
+            <div className={styles.confirmActions}>
+              <button type="button" className={styles.bulkBtn} onClick={() => setIsDeleteDialogOpen(false)}>Cancelar</button>
+              <button type="button" className={styles.dangerButton} onClick={confirmBulkDelete}>Eliminar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

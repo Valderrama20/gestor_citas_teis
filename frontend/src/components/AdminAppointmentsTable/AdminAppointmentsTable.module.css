@@ -97,6 +97,7 @@
   color: var(--color-white);
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .confirmButton {
@@ -139,6 +140,38 @@
 .completedIcon {
   width: 0.9rem;
   height: 0.9rem;
+}
+
+/* --- NUEVOS ESTILOS PARA SELECCIÓN MÚLTIPLE Y DESHACER --- */
+
+.checkboxCell {
+  width: 40px;
+  text-align: center;
+  padding-left: 1.5rem !important;
+}
+
+.checkbox {
+  width: 1.15rem;
+  height: 1.15rem;
+  cursor: pointer;
+  accent-color: var(--color-accent);
+  border-radius: 4px;
+}
+
+.selectedRow {
+  background-color: rgba(255, 243, 241, 0.4);
+  transition: background-color 0.2s ease;
+}
+
+.undoButton {
+  background: var(--color-surface-strong);
+  color: var(--color-text-muted);
+  border: 1px solid rgba(58, 46, 50, 0.15);
+}
+
+.undoButton:hover {
+  background: #e2e8f0;
+  color: var(--color-text);
 }
 
 @media (max-width: 900px) {

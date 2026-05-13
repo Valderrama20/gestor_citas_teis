@@ -1,94 +1,107 @@
-# 💇‍♀️ Gestor de Citas TEIS (Frontend)
+# 💇‍♀️ Gestor de Citas y Cursos TEIS (Frontend)
 
-¡Hola! Este proyecto es la **parte frontal (Frontend)** de nuestra aplicación para gestionar citas en una peluquería. Aquí usamos React y Vite para construir la interfaz visual con la que interactúan los clientes.
+¡Hola! Este proyecto es la **parte frontal (Frontend)** de nuestra aplicación diseñada para la gestión de citas, talleres y cursos. Está construida utilizando herramientas modernas de desarrollo web para ofrecer una interfaz rápida, interactiva y fácil de usar tanto para los clientes como para los administradores.
 
-A continuación, explicamos de forma sencilla y directa cómo está organizado el código y cómo trabajar con él.
+A continuación, explicamos de forma sencilla y directa cómo está organizado el código, las tecnologías que utilizamos y cómo puedes trabajar con él.
+
+---
+
+## 🛠️ Tecnologías Principales
+
+- **React 19**: Biblioteca principal para construir la interfaz de usuario.
+- **Vite 8**: Empaquetador y servidor de desarrollo ultrarrápido.
+- **Zustand**: Gestor de estado global (utilizado para la sesión y autenticación en `authStore.js`).
+- **React Router DOM 7**: Encargado del enrutamiento y la navegación entre páginas.
+- **Axios**: Cliente HTTP para realizar peticiones al servidor (Backend).
+- **Lucide React**: Biblioteca de iconos modernos.
+- **Docker & Nginx**: Configurado para contenerización y despliegue a producción.
 
 ---
 
 ## 🗺️ Arquitectura y Flujo Principal
 
-¿Cómo funciona nuestra aplicación por dentro?
+La aplicación está dividida en dos grandes secciones:
+1. **Área Pública**: Donde los usuarios pueden ver los servicios, explorar talleres y solicitar citas.
+2. **Área de Administración**: Un panel protegido (mediante `ProtectedRoute.jsx`) para que los administradores gestionen las citas, cursos y talleres.
+
+**Flujo de la App:**
 1. **La Puerta de Entrada (`index.html`)**: Es el primer archivo que carga el navegador de los usuarios.
 2. **El Inicializador (`main.jsx`)**: Toma nuestra aplicación de React y la "dibuja" dentro del HTML.
-3. **El Enrutador (`App.jsx`)**: Funciona como un mapa; decide a qué pantalla (página) debes ir dependiendo de la URL (por ejemplo, si vas a `/reservar`, muestra el componente que se encarga de las reservas).
-4. **Las Páginas (`Home.jsx` y `Booking.jsx`)**: Son las pantallas principales de la aplicación.
-5. **Los Servicios (`services/`)**: Cuando una página necesita pedir datos de citas o guardar una reserva, usa estos archivos (a través de la herramienta Axios) para comunicarse con el servidor (Backend).
-
----
-
-## 🛠️ Requisitos del Sistema
-
-Para poder ejecutar y modificar este proyecto, necesitas tener instalado:
-- **Node.js** (El entorno necesario para ejecutar herramientas de desarrollo en JavaScript).
-- **npm** (El gestor de paquetes para descargar librerías).
-
----
-
-## 🚀 Instalación y Ejecución
-
-Abre tu terminal, ve a la carpeta principal del proyecto y ejecuta los siguientes comandos:
-
-```bash
-npm install   # (Descarga todas las herramientas y librerías necesarias)
-npm run dev   # (Inicia el servidor de desarrollo para ver la app en tu navegador)
-```
+3. **El Enrutador (`App.jsx`)**: Funciona como un mapa; decide a qué pantalla (página) debes ir dependiendo de la URL.
+4. **Las Páginas (`pages/`)**: Son las pantallas principales (ej. `Home`, `Booking`, `AdminDashboard`).
+5. **Los Servicios (`services/`)**: Centralizan las llamadas a la API (Backend). Se separan por lógica (citas, cursos, estudiantes, etc.).
 
 ---
 
 ## 📁 Estructura del Proyecto
 
-El proyecto está organizado de esta manera para mantener el orden a medida que crece:
+El proyecto sigue una estructura modular para escalar de forma limpia:
 
 ```text
 .
-├─ public/        👉 Archivos estáticos como iconos o imágenes que se acceden directamente.
-├─ src/           👉 Carpeta principal donde está todo el código fuente de la app.
-│  ├─ assets/     👉 Imágenes, fuentes y archivos multimedia que serán optimizados por Vite.
-│  ├─ components/ 👉 Componentes reutilizables (ej. botones, tarjetas, modales de alerta).
-│  ├─ config/     👉 Configuraciones globales (ej. conexión base a la API).
-│  ├─ layouts/    👉 Estructuras de diseño compartidas (ej. cabecera o pie de página).
-│  ├─ pages/      👉 Pantallas completas de la aplicación.
-│  ├─ services/   👉 Lógica y funciones para conectarse con el Backend.
-│  ├─ styles/     👉 Archivos CSS y variables globales de diseño.
-│  └─ utils/      👉 Funciones auxiliares o "helpers" (ej. formateo de fechas).
-├─ index.html     👉 Plantilla HTML principal.
-├─ package.json   👉 Lista de dependencias (librerías) y comandos del proyecto.
-└─ vite.config.js 👉 Configuración de nuestra herramienta de construcción (Vite).
+├─ public/        👉 Archivos estáticos como el favicon e iconos que se acceden directamente.
+├─ src/           👉 Todo el código fuente de la app.
+│  ├─ components/ 👉 Componentes reutilizables (Tarjetas, Modales, Tablas, Toasts).
+│  ├─ config/     👉 Configuraciones globales (ej. configuración base de Axios en api.js).
+│  ├─ context/    👉 Contextos de React (ej. ToastContext para notificaciones).
+│  ├─ layouts/    👉 Estructuras de diseño compartidas (Navbar, Footer, MainLayout).
+│  ├─ pages/      👉 Pantallas completas (Admin, Home, Booking, Talleres).
+│  ├─ services/   👉 Funciones para conectarse con el Backend (auth, appointments, courses...).
+│  ├─ store/      👉 Estado global de la aplicación (authStore.js con Zustand).
+│  └─ styles/     👉 Archivos CSS y variables globales de diseño (variables.css).
+├─ Dockerfile     👉 Instrucciones para empaquetar la app en un contenedor Docker.
+├─ nginx.conf     👉 Configuración del servidor Nginx para servir la aplicación en producción.
+├─ package.json   👉 Lista de dependencias y comandos del proyecto.
+└─ vite.config.js 👉 Configuración del empaquetador Vite.
 ```
 
 ---
 
-## 🏗️ ¿Cómo agregar nuevos elementos?
+## 🚀 Instalación y Ejecución Local
 
-En lugar de programar todo junto, separamos las cosas. Así es como debes crear elementos nuevos:
+Para poder ejecutar y modificar este proyecto en tu entorno de desarrollo, necesitas tener instalado **Node.js** y **npm**.
 
-### 1. ¿Cómo crear un Nuevo Componente?
-Si quieres crear un botón reutilizable que usarás en varias partes de la web:
-1. Ve a la carpeta `src/components/`.
-2. Crea una nueva subcarpeta llamada `Button/`.
-3. Dentro, crea el archivo `Button.jsx` con el código del botón en React.
-4. (Opcional) Crea un archivo `index.js` en esa misma carpeta con la línea `export { default } from './Button'` (esto hace más limpias las importaciones en otros archivos).
-5. (Opcional) Si necesita estilos propios, crea un `Button.module.css` e impórtalo en tu `.jsx`.
+Abre tu terminal, ve a la carpeta principal del proyecto y ejecuta:
 
-### 2. ¿Cómo crear una Nueva Página?
-Si el cliente necesita un apartado de "Sobre Nosotros":
-1. Ve a `src/pages/` y crea la carpeta `About/`.
-2. Crea el archivo `About.jsx` con todo el contenido de la pantalla.
-3. Ve a `src/App.jsx` e importa tu nueva página.
-4. Añade una nueva ruta en el mapa del router: `{ path: "/nosotros", element: <About /> }`.
+```bash
+# 1. Instala todas las dependencias
+npm install
 
-### 3. ¿Cómo crear un Nuevo Servicio?
-Si necesitas obtener el listado de barberos disponibles desde el servidor:
-1. Ve a `src/services/` y crea un archivo llamado `barberService.js`.
-2. Importa la configuración de axios (`api.js`) y utilízala para crear funciones como `getBarbers()`.
-3. Exporta esas funciones para que cualquier página (como `Home.jsx` o `Booking.jsx`) las pueda usar para nutrirse de información.
+# 2. Inicia el servidor de desarrollo
+npm run dev
+```
+
+La aplicación estará disponible típicamente en `http://localhost:5173`.
 
 ---
 
-## 🔍 Detalle de Archivos Clave
+## 🏗️ Guía Rápida para Desarrolladores
 
-- **`package.json`**: Guarda el registro de todas las herramientas externas de las que dependemos (`react`, `react-router-dom`, `axios`, etc.).
-- **`vite.config.js`**: Es la instrucción para nuestro empaquetador Vite, indicándole que estamos trabajando con React para que traduzca el código de la manera más rápida posible.
-- **`src/styles/variables.css`**: ¡Nuestro centro de control visual! Aquí hay variables como `--primary-gold`. Si un día se decide cambiar el dorado a otro color corporativo, se cambia aquí y afectará a toda la web automáticamente.
-- **`src/config/api.js`**: El archivo que configura cómo se conecta Axios al servidor. Define cosas como la dirección base (`http://localhost:3000/api`) y puede "atrapar" errores generales para que no ocurran en silencio.
+### 1. Variables de Entorno
+Asegúrate de copiar el archivo `.env.example` y renombrarlo a `.env`. Ahí debes definir las variables necesarias, como la URL base del Backend a la que se conectará la aplicación.
+
+### 2. Autenticación y Estado
+El estado de sesión del administrador se maneja mediante Zustand en `src/store/authStore.js`. Las rutas de administración están envueltas por el componente `ProtectedRoute.jsx` para garantizar que solo usuarios autenticados puedan acceder a páginas como `/admin/dashboard` o `/admin/courses`.
+
+### 3. Peticiones a la API (Axios)
+Todas las llamadas al servidor están modularizadas en `src/services/`. Si necesitas añadir una nueva llamada a la API, debes:
+1. Identificar a qué dominio pertenece (ej. si es sobre talleres, usa `workshopService.js`).
+2. Utilizar la instancia configurada de Axios desde `src/config/api.js` para asegurar que todas las peticiones lleven la configuración correcta (como interceptores o tokens).
+
+### 4. Estilos y Diseño
+El proyecto utiliza módulos CSS (`.module.css`) para los componentes, asegurando que los estilos no colisionen entre sí. Los colores, fuentes y espaciados principales están centralizados en `src/styles/variables.css`. Si necesitas cambiar un color corporativo, hazlo ahí.
+
+---
+
+## 🐳 Despliegue con Docker
+
+El proyecto está preparado para desplegarse fácilmente utilizando Docker y Nginx.
+
+```bash
+# Construir la imagen Docker
+docker build -t frontend-citas .
+
+# Ejecutar el contenedor
+docker run -p 80:80 frontend-citas
+```
+Esto creará una versión optimizada para producción (`npm run build`) y la servirá mediante Nginx utilizando la configuración definida en `nginx.conf`.
