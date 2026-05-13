@@ -20,11 +20,11 @@ export default function AdminNavbar() {
         <nav className={styles.nav}>
             {/* Logo */}
             <Link to="/admin/cursos" className={styles.logoGroup}>
-                <div className={styles.logoIconBox}>
-                    <Sparkles className={styles.logoIcon} strokeWidth={1.8} />
-                </div>
+                {/* <div className={styles.logoIconBox}>
+            <Sparkles className={styles.logoIcon} strokeWidth={1.8} />
+          </div> */}
                 <span className={styles.logoText}>
-                    IES TEIS <span className={styles.logoHighlight}>Estetica</span>
+                    IES TEIS | <span className={styles.logoHighlight}>Imagen Personal</span>
                 </span>
             </Link>
 

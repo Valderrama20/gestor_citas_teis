@@ -1,4 +1,5 @@
 import { Phone, Scissors, Sparkles, Wind, Zap } from "lucide-react";
+import FAQSection from "../../components/FAQSection";
 import styles from "./AboutUs.module.css";
 
 export default function AboutUs() {
@@ -124,6 +125,8 @@ export default function AboutUs() {
                     Reservar Ahora
                 </a>
             </section>
+
+            <FAQSection />
         </main>
     );
 }

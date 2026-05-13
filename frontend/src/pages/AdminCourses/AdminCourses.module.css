@@ -35,10 +35,13 @@
   font-weight: 600;
   border: none;
   background-color: transparent;
+}
+
+button.textButton {
   cursor: pointer;
 }
 
-.textButton:hover {
+button.textButton:hover {
   color: var(--color-text);
 }
 

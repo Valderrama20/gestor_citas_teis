@@ -19,11 +19,11 @@ export default function Navbar() {
       <nav className={styles.nav}>
         {/* Logo */}
         <Link to="/" className={styles.logoGroup}>
-          <div className={styles.logoIconBox}>
+          {/* <div className={styles.logoIconBox}>
             <Sparkles className={styles.logoIcon} strokeWidth={1.8} />
-          </div>
+          </div> */}
           <span className={styles.logoText}>
-            IES TEIS <span className={styles.logoHighlight}>Estetica</span>
+            IES TEIS | <span className={styles.logoHighlight}>Imagen Personal</span>
           </span>
         </Link>
 
