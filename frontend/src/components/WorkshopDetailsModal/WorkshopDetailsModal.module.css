@@ -1,0 +1,18 @@
+.form { text-align: left; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 1.5rem; }
+.label { color: var(--color-text); font-weight: 600; }
+.readonlyInput {
+  width: 100%;
+  border: 1px solid var(--color-border-field, #e2e8f0);
+  border-radius: var(--radius-md, 0.5rem);
+  background: rgba(58, 46, 50, 0.05);
+  color: var(--color-text-muted, #7d6d72);
+  padding: 0.95rem 1rem;
+  outline: none;
+  resize: vertical;
+}
+.actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+.primaryButton { border: 0; border-radius: 2rem; padding: 0.9rem 1.35rem; font-weight: 700; cursor: pointer; background: var(--color-accent, #c07a7a); color: white; }
+.primaryButton:hover { background: #a86262; }
+@media (max-width: 767px) { .grid { grid-template-columns: 1fr; } }

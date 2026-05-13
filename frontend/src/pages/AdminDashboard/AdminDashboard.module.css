@@ -1,13 +1,14 @@
 /* --- ESTRUCTURA GENERAL DE LA PÁGINA --- */
 .page {
   min-height: 100vh;
-  background: var(--gradient-page), var(--color-background);
-  padding-top: 60px;
+  background-color: var(--color-background, #fffaf9);
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
   width: 100%;
-  max-width: 1100px; /* Centra el contenido y evita que sea muy ancho */
+  max-width: 1100px;
   margin: 0 auto;
   padding: 2rem;
 }
@@ -16,20 +17,26 @@
 .headerRow {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2.5rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.titleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--color-text);
-  margin: 0 0 0.5rem 0;
+  color: var(--color-text, #3a2e32);
+  margin: 0;
   letter-spacing: -0.02em;
 }
 
 .subtitle {
-  color: var(--color-text-muted);
+  color: var(--color-text-muted, #7d6d72);
   font-size: 1.05rem;
   margin: 0;
 }
@@ -41,8 +48,8 @@
 }
 
 .primaryButton {
-  background-color: var(--color-accent); /* Tu color rosa/rojizo */
-  color: var(--color-white);
+  background-color: var(--color-accent, #c07a7a);
+  color: var(--color-white, #ffffff);
   border: none;
   padding: 0.7rem 1.2rem;
   border-radius: 0.5rem;
@@ -53,114 +60,62 @@
   align-items: center;
   gap: 0.5rem;
   transition: opacity 0.2s;
+  box-shadow: 0 4px 12px rgba(192, 122, 122, 0.2);
 }
 
 .primaryButton:hover {
   opacity: 0.85;
 }
 
-/* --- BARRA ESTILO GMAIL (SELECCIÓN MÚLTIPLE) --- */
-.bulkActionsBar {
+/* --- PESTAÑAS (TABS) --- */
+.tabsContainer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--color-surface-strong, #ffffff);
-  border: 1px solid rgba(58, 46, 50, 0.1);
-  border-radius: var(--radius-lg);
-  padding: 1rem 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: var(--shadow-soft-sm);
-  animation: slideDown 0.3s ease;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba(58, 46, 50, 0.05);
 }
 
-.bulkText {
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-}
-
-.bulkText strong {
-  color: var(--color-text);
-  font-size: 1.1rem;
-}
-
-.bulkButtons {
+.tabBtn {
   display: flex;
-  gap: 0.8rem;
-}
-
-.bulkBtn {
-  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 0.9rem;
-  border-radius: 0.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.bulkConfirm {
-  background: #e6fffa;
-  color: #2c7a7b;
-  border: 1px solid #b2f5ea;
-}
-
-.bulkConfirm:hover { background: #b2f5ea; }
-
-.bulkCancel {
-  background: #fdecec;
-  color: #b83232;
-  border: 1px solid #fed7d7;
-}
-
-.bulkCancel:hover { background: #fed7d7; }
-
-.bulkUndo {
-  background: #fff4e5;
-  color: #b7791f;
-  border: 1px solid #feebc8;
-}
-
-.bulkUndo:hover { background: #feebc8; }
-
-.bulkDelete {
+  gap: 0.6rem;
   background: transparent;
-  color: #e53e3e;
-  border: 1px solid #e53e3e;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-muted, #7d6d72);
+  padding: 0.8rem 0.5rem;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  margin-bottom: -2px; /* Se solapa con el borde inferior */
 }
 
-.bulkDelete:hover {
-  background: #e53e3e;
-  color: white;
+.tabBtn:hover {
+  color: var(--color-text, #3a2e32);
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
+.activeTab {
+  color: var(--color-accent, #c07a7a);
+  border-bottom-color: var(--color-accent, #c07a7a);
+}
+
+.tabContent {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* TOPBAR UTILS */
-.textButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-text-muted);
-  text-decoration: none;
-  font-weight: 500;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-}
-
-.titleSection {
+/* --- FILTROS Y SELECTOR SEMANAL --- */
+.filtersBar {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .weekPicker {
@@ -172,7 +127,6 @@
   border-radius: 0.8rem;
   border: 1px solid rgba(58, 46, 50, 0.08);
   width: fit-content;
-  margin-top: 1rem;
   box-shadow: var(--shadow-soft-sm, 0 2px 4px rgba(0,0,0,0.02));
 }
 
@@ -203,7 +157,7 @@
   align-items: center;
   gap: 0.6rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--color-text, #3a2e32);
   min-width: 190px;
   justify-content: center;
   font-size: 0.9rem;
@@ -212,7 +166,7 @@
 .navBtn {
   background: none;
   border: none;
-  color: var(--color-text-muted);
+  color: var(--color-text-muted, #7d6d72);
   cursor: pointer;
   padding: 0.4rem;
   border-radius: 50%;
@@ -224,10 +178,31 @@
 
 .navBtn:hover {
   background: rgba(0,0,0,0.05);
-  color: var(--color-text);
+  color: var(--color-text, #3a2e32);
 }
 
-/* --- NUEVOS ESTILOS: ESTADO VACÍO (NO HAY CITAS) --- */
+/* NUEVO: Botón para limpiar filtro de taller */
+.clearFilterBtn {
+  background: #fdf2f2;
+  color: var(--color-accent, #c07a7a);
+  border: 1px solid #f9dada;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clearFilterBtn:hover {
+  background: var(--color-accent, #c07a7a);
+  color: white;
+}
+
+/* --- ESTADO VACÍO (NO HAY DATOS) --- */
 .noDataContainer {
   display: flex;
   flex-direction: column;
@@ -238,7 +213,7 @@
   background: var(--color-surface-strong, #ffffff);
   border-radius: var(--radius-lg, 1rem);
   border: 1px solid rgba(58, 46, 50, 0.05);
-  box-shadow: var(--shadow-soft-sm);
+  box-shadow: var(--shadow-soft-sm, 0 4px 12px rgba(0,0,0,0.05));
 }
 
 .noDataIcon {
@@ -249,6 +224,256 @@
 .noDataTitle {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--color-text, #3a2e32);
   margin-bottom: 1.5rem;
+}
+
+.noDataSubtitle {
+  color: var(--color-text-muted, #7d6d72);
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+}
+
+/* --- TARJETAS DE TALLERES --- */
+.workshopsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.workshopCard {
+  background: var(--color-surface-strong, #ffffff);
+  border: 1px solid rgba(58, 46, 50, 0.08);
+  border-radius: 1.2rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft-sm, 0 4px 12px rgba(0,0,0,0.02));
+  transition: all 0.2s ease; /* Transición suave */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  cursor: pointer; /* Hace que parezca clickeable */
+}
+
+/* Efecto al pasar el ratón por la tarjeta */
+.workshopCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(192, 122, 122, 0.15);
+  border-color: rgba(192, 122, 122, 0.4);
+}
+
+.workshopHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.workshopIconWrapper {
+  background: #fdf2f2;
+  color: var(--color-accent, #c07a7a);
+  padding: 0.8rem;
+  border-radius: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.workshopTitle {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text, #3a2e32);
+}
+
+.workshopInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted, #7d6d72);
+}
+
+.infoIcon {
+  color: var(--color-accent, #c07a7a);
+  opacity: 0.8;
+}
+
+.infoItem strong {
+  color: var(--color-text, #3a2e32);
+}
+
+.workshopDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(58, 46, 50, 0.1);
+}
+
+/* Botón de texto simple ("Ver citas agendadas") */
+.linkTextBtn {
+  background: transparent;
+  border: none;
+  color: var(--color-accent, #c07a7a);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.linkTextBtn:hover {
+  color: #a86262;
+}
+
+.editBtn {
+  background: #f1f5f9;
+  border: none;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.editBtn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+/* --- BARRA ESTILO GMAIL (SELECCIÓN MÚLTIPLE) --- */
+.bulkActionsBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-surface-strong, #ffffff);
+  border: 1px solid rgba(58, 46, 50, 0.1);
+  border-radius: var(--radius-lg, 1rem);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-soft-sm, 0 2px 8px rgba(0,0,0,0.05));
+  animation: slideDown 0.3s ease;
+}
+
+.bulkText {
+  color: var(--color-text-muted, #7d6d72);
+  font-size: 0.95rem;
+}
+
+.bulkText strong {
+  color: var(--color-text, #3a2e32);
+  font-size: 1.1rem;
+}
+
+.bulkButtons {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.bulkBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bulkConfirm { background: #e6fffa; color: #2c7a7b; border: 1px solid #b2f5ea; }
+.bulkConfirm:hover { background: #b2f5ea; }
+
+.bulkCancel { background: #fdecec; color: #b83232; border: 1px solid #fed7d7; }
+.bulkCancel:hover { background: #fed7d7; }
+
+.bulkUndo { background: #fff4e5; color: #b7791f; border: 1px solid #feebc8; }
+.bulkUndo:hover { background: #feebc8; }
+
+.bulkDelete { background: transparent; color: #e53e3e; border: 1px solid #e53e3e; }
+.bulkDelete:hover { background: #e53e3e; color: white; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- TOPBAR UTILS --- */
+.textButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text, #3a2e32);
+  text-decoration: none;
+  font-weight: 500;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--color-text-muted, #7d6d72);
+}
+
+/* --- MODAL DE BORRADO --- */
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(58, 46, 50, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.confirmModal {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.confirmTitle {
+  margin-top: 0;
+  color: var(--color-text, #3a2e32);
+}
+
+.confirmText {
+  color: var(--color-text-muted, #7d6d72);
+  margin-bottom: 1.5rem;
+}
+
+.dangerButton {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.dangerButton:hover {
+  opacity: 0.85;
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }

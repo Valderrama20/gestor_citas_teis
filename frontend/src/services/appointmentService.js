@@ -18,7 +18,7 @@ function normalizeBackendCita(cita) {
   const taller = cita.taller ?? {};
   const cliente = cita.cliente ?? {};
 
-  const date = cita.fecha ?? "";
+  const date = cita.fecha ?? "";  
   const time = cita.hora ? String(cita.hora).slice(0, 5) : "";
   const status = formatAppointmentStatus(cita.estado);
 
@@ -29,9 +29,12 @@ function normalizeBackendCita(cita) {
     date,
     time,
     status,
-    workshopId: String(taller.idTaller ?? cita.idTaller ?? ""),
-    idTaller: String(taller.idTaller ?? cita.idTaller ?? ""),
-    idCurso: String(taller.idCurso ?? cita.idCurso ?? ""),
+    // IMPORTANTE: Extraemos el idTaller del objeto taller que viene de Java
+    workshopId: String(taller.idTaller || ""), 
+    idTaller: String(taller.idTaller || ""),
+    idCurso: String(taller.idCurso || cita.idCurso || ""),
+    // Guardamos el objeto taller completo para que el Dashboard pueda leerlo
+    taller: taller, 
     original: cita,
   };
 }
