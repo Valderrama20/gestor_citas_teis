@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Plus, Trash2, Sparkles, Scissors, Droplets, Waves, Brush, Flower, Hand } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { Plus, Trash2, Sparkles, Scissors, Droplets, Waves, Brush, Flower, Hand, Paintbrush, Palette, Gem, Heart, Smile, Wind, Sun, Moon, Star, Gift, Award, Feather, Leaf, ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react";
 import Modal from "../Modal";
 import styles from "./CreateWorkshopModal.module.css";
 
@@ -13,6 +13,30 @@ const INITIAL_FORM = {
 
 const DEFAULT_HORARIO = { diaSemana: "Lunes", horaApertura: "09:00", horaCierre: "14:00" };
 
+const ALL_ICONS = [
+  { id: "sparkles", label: "Estética", icon: Sparkles },
+  { id: "scissors", label: "Peluquería", icon: Scissors },
+  { id: "brush", label: "Maquillaje", icon: Brush },
+  { id: "droplets", label: "Lavado", icon: Droplets },
+  { id: "waves", label: "Tratamientos", icon: Waves },
+  { id: "hand", label: "Manos", icon: Hand },
+  { id: "flower", label: "Bienestar", icon: Flower },
+  { id: "leaf", label: "Natural", icon: Leaf },
+  { id: "gem", label: "Joyas", icon: Gem },
+  { id: "heart", label: "Favorito", icon: Heart },
+  { id: "star", label: "Estrella", icon: Star },
+  { id: "award", label: "Premio", icon: Award },
+  { id: "gift", label: "Regalo", icon: Gift },
+  { id: "palette", label: "Color", icon: Palette },
+  { id: "paintbrush", label: "Pintura", icon: Paintbrush },
+  { id: "shopping-bag", label: "Venta", icon: ShoppingBag },
+  { id: "sun", label: "Día", icon: Sun },
+  { id: "moon", label: "Noche", icon: Moon },
+  { id: "wind", label: "Aire", icon: Wind },
+  { id: "smile", label: "Facial", icon: Smile },
+  { id: "feather", label: "Ligero", icon: Feather },
+];
+
 export default function CreateWorkshopModal({
   isOpen,
   onClose,
@@ -22,6 +46,7 @@ export default function CreateWorkshopModal({
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [horarios, setHorarios] = useState([{ ...DEFAULT_HORARIO }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const iconContainerRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -53,6 +78,16 @@ export default function CreateWorkshopModal({
     nuevosHorarios[index][field] = value;
     setHorarios(nuevosHorarios);
   }
+
+  const scrollIcons = (direction) => {
+    if (iconContainerRef.current) {
+      const scrollAmount = 250;
+      iconContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -101,27 +136,37 @@ export default function CreateWorkshopModal({
 
         <div className={styles.field}>
           <label className={styles.label}>Icono representativo</label>
-          <div className={styles.iconSelector}>
-            {[
-              { id: "sparkles", label: "Estética", icon: Sparkles },
-              { id: "scissors", label: "Peluquería", icon: Scissors },
-              { id: "droplets", label: "Lavado", icon: Droplets },
-              { id: "waves", label: "Tratamientos", icon: Waves },
-              { id: "brush", label: "Maquillaje", icon: Brush },
-              { id: "flower", label: "Bienestar", icon: Flower },
-              { id: "hand", label: "Manos", icon: Hand },
-            ].map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                type="button"
-                className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
-                onClick={() => setFormData((current) => ({ ...current, icono: id }))}
-                aria-label={`Seleccionar icono ${id}`}
-              >
-                <Icon size={18} strokeWidth={1.8} />
-                <span>{label}</span>
-              </button>
-            ))}
+          <div className={styles.iconCarousel}>
+            <button
+              type="button"
+              className={styles.carouselButton}
+              onClick={() => scrollIcons('left')}
+              aria-label="Desplazar a la izquierda"
+            >
+              <ChevronLeft size={20} strokeWidth={2} />
+            </button>
+            <div className={styles.iconSelector} ref={iconContainerRef}>
+              {ALL_ICONS.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  type="button"
+                  className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
+                  onClick={() => setFormData((current) => ({ ...current, icono: id }))}
+                  aria-label={`Seleccionar icono ${label}`}
+                >
+                  <Icon size={18} strokeWidth={1.8} />
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className={styles.carouselButton}
+              onClick={() => scrollIcons('right')}
+              aria-label="Desplazar a la derecha"
+            >
+              <ChevronRight size={20} strokeWidth={2} />
+            </button>
           </div>
         </div>
 

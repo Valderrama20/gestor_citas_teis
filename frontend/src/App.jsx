@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Talleres from "./pages/Talleres";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminProfile from "./pages/AdminProfile/AdminProfile";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/cursos/:courseId",
         element: <AdminDashboard />,
+      },
+      {
+        path: "/admin/perfil",
+        element: <AdminProfile />,
       },
     ],
   },

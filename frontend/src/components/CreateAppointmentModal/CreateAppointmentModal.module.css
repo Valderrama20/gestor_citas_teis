@@ -174,18 +174,20 @@
   width: 100%;
 }
 
-.summaryTitle {
+.summary p.summaryTitle {
   margin: 0 0 var(--space-3);
   font-family: var(--font-display);
   font-size: var(--size-card-title);
   font-weight: 700;
   color: var(--color-text);
+  line-height: normal;
 }
 
-.summaryText {
+.summary p.summaryText {
   margin: var(--space-1) 0;
   color: var(--color-text-soft);
   font-size: var(--size-copy);
+  line-height: 1.5;
 }
 
 .actions {

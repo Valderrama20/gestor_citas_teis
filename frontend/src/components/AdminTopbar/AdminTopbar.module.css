@@ -16,6 +16,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
+  min-height: 72px;
 }
 
 .start,
@@ -29,10 +30,13 @@
   .inner {
     flex-direction: column;
     align-items: stretch;
+    justify-content: center;
+    min-height: 115px;
   }
 
   .start,
   .end {
     justify-content: space-between;
+    min-height: 28px;
   }
 }

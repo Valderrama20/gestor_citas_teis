@@ -319,7 +319,7 @@ export default function CreateAppointmentModal({
               </div>
               <div className={styles.otherAllergyGroup}>
                 <label htmlFor="otherAllergies" className={styles.labelSmall}>Otro (especificar):</label>
-                <input
+                <textarea
                   id="otherAllergies" type="text" className={styles.input}
                   placeholder="Ej. Piel rosácea..."
                   value={uiState.otherAllergies}
