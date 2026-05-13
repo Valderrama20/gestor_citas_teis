@@ -1,16 +1,18 @@
 package es.iesdeteis.gestorcitas.service;
 
-import com.resend.Resend;
-import com.resend.services.emails.model.CreateEmailOptions;
+import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
@@ -21,12 +23,12 @@ public class CorreoService implements ICorreoService {
 
     // --- ATRIBUTOS ---
     @Autowired
-    private Resend resend;
+    private JavaMailSender mailSender;
 
     @Autowired
     private TemplateEngine templateEngine;
 
-    @Value("${resend.from-email}")
+    @Value("${mail.from:}")
     private String fromEmail;
 
     // --- METODOS HEREDADOS ---
@@ -39,14 +41,23 @@ public class CorreoService implements ICorreoService {
 
             String html = templateEngine.process(nombrePlantilla, context);
 
-            CreateEmailOptions email = CreateEmailOptions.builder()
-                    .from(fromEmail)
-                    .to(destinatario)
-                    .subject(asunto)
-                    .html(html)
-                    .build();
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    message,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name()
+            );
 
-            resend.emails().send(email);
+            String from = fromEmail != null ? fromEmail.trim() : "";
+            if (!from.isEmpty()) {
+                helper.setFrom(from);
+            }
+
+            helper.setTo(destinatario);
+            helper.setSubject(asunto);
+            helper.setText(html, true);
+
+            mailSender.send(message);
         } catch (Exception e) {
             logger.error("No se pudo enviar el correo HTML a {}", destinatario, e);
         }
