@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Sparkles, Scissors, Flower, Hand } from "lucide-react";
+import { Sparkles, Scissors, Flower, Hand, AlertCircle } from "lucide-react";
 import Modal from "../Modal";
 import styles from "./CreateCourseModal.module.css";
 
@@ -15,6 +15,8 @@ const INITIAL_FORM = {
 export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToEdit }) {
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const [showConfirmClose, setShowConfirmClose] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -25,18 +27,33 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
           nivel: courseToEdit.nivel,
           cursoAcademico: courseToEdit.cursoAcademico,
           alumnos: courseToEdit.alumnos,
-          icono: courseToEdit.icono,
+          icono: courseToEdit.icono || "sparkles",
           descripcion: courseToEdit.descripcion,
         });
       } else {
         setFormData(INITIAL_FORM);
       }
       setIsSubmitting(false);
+      setIsDirty(false);
     }
   }, [isOpen, courseToEdit]);
 
+  const handleClose = () => {
+    if (isDirty) {
+      setShowConfirmClose(true);
+    } else {
+      onClose();
+    }
+  };
+
+  const confirmClose = () => {
+    setShowConfirmClose(false);
+    onClose();
+  };
+
   function handleChange(event) {
     const { name, value } = event.target;
+    setIsDirty(true);
     setFormData((current) => ({
       ...current,
       [name]: value,
@@ -58,9 +75,10 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
   }
 
   return (
+    <>
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       eyebrow="Panel administrativo"
       title={courseToEdit ? "Editar curso" : "Crear nuevo curso"}
       showAction={false}
@@ -149,7 +167,10 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
                 key={id}
                 type="button"
                 className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
-                onClick={() => setFormData((current) => ({ ...current, icono: id }))}
+                onClick={() => {
+                  setIsDirty(true);
+                  setFormData((current) => ({ ...current, icono: id }));
+                }}
                 aria-label={`Seleccionar icono ${id}`}
               >
                 <Icon size={18} strokeWidth={1.8} />
@@ -179,7 +200,7 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
           <button
             type="button"
             className={styles.secondaryButton}
-            onClick={onClose}
+            onClick={handleClose}
             disabled={isSubmitting}
           >
             Cancelar
@@ -194,5 +215,33 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
         </div>
       </form>
     </Modal>
+
+    <Modal
+      isOpen={showConfirmClose}
+      onClose={() => setShowConfirmClose(false)}
+      title="Descartar cambios"
+      showAction={false}
+    >
+      <div className={styles.confirmWrapper}>
+        <div className={styles.dangerIconBox}>
+          <AlertCircle size={48} color="var(--color-accent)" strokeWidth={1.5} />
+        </div>
+
+        <div className={styles.confirmTextGroup}>
+          <p className={styles.confirmQuestion}>Tienes cambios sin guardar</p>
+          <h3 className={styles.confirmTargetName}>¿Seguro que quieres salir?</h3>
+        </div>
+
+        <div className={styles.modalActionsVertical}>
+          <button type="button" className={styles.confirmButton} onClick={confirmClose}>
+            Salir y perder cambios
+          </button>
+          <button type="button" className={styles.secondaryButton} onClick={() => setShowConfirmClose(false)}>
+            Continuar editando
+          </button>
+        </div>
+      </div>
+    </Modal>
+    </>
   );
 }

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { X } from "lucide-react";
 import styles from "./Modal.module.css";
 
 export default function Modal({
@@ -11,6 +13,16 @@ export default function Modal({
   modalClassName = "",
   contentClassName = "",
 }) {
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
+
   if (!isOpen) {
     return null;
   }
@@ -24,6 +36,14 @@ export default function Modal({
         aria-labelledby="modal-title"
         onClick={(event) => event.stopPropagation()}
       >
+        <button
+          type="button"
+          className={styles.closeIconBtn}
+          onClick={onClose}
+          aria-label="Cerrar modal"
+        >
+          <X size={20} strokeWidth={2} />
+        </button>
         {eyebrow && <span className={styles.eyebrow}>{eyebrow}</span>}
         <h3 id="modal-title" className={styles.title}>
           {title}

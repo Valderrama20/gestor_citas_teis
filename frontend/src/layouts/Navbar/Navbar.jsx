@@ -48,13 +48,18 @@ export default function Navbar() {
                 {item.label}
               </a>
             ) : (
-              <Link key={item.path} to={item.path} className={styles.navLink}>
+              <Link 
+                key={item.path} 
+                to={item.path} 
+                className={styles.navLink}
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 {item.label}
               </Link>
             )
           ))}
           <div className={styles.divider} />
-          <Link to="/reservar" className={styles.btnReservePrimary}>
+          <Link to="/reservar" className={styles.btnReservePrimary} onClick={() => window.scrollTo(0, 0)}>
             Reservar
           </Link>
         </div>
@@ -65,6 +70,7 @@ export default function Navbar() {
           <Link
             to={isReservar ? "/" : "/reservar"}
             className={styles.btnReserveSecondary}
+            onClick={() => window.scrollTo(0, 0)}
           >
             {isReservar ? "Volver" : "Reservar"}
           </Link>

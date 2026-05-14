@@ -3,8 +3,8 @@
   inset: 0;
   background: rgba(58, 46, 50, 0.35);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: var(--space-5);
   overflow-y: auto;
   z-index: 1000;
@@ -14,14 +14,15 @@
   width: min(100%, 32rem);
   box-sizing: border-box;
   max-width: 100%;
-  max-height: calc(100vh - (var(--space-5) * 2));
-  overflow-y: auto;
   background: var(--color-surface-strong);
   border: 1px solid var(--color-accent-border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-soft);
   padding: var(--space-7);
   text-align: center;
+  margin: auto;
+  flex-shrink: 0;
+  position: relative;
 }
 
 .eyebrow {
@@ -70,13 +71,33 @@
   background: var(--color-accent-strong);
 }
 
+.closeIconBtn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-full);
+  display: grid;
+  place-items: center;
+  transition: all var(--transition-fast);
+  z-index: 50;
+}
+
+.closeIconBtn:hover {
+  background: var(--color-accent-wash);
+  color: var(--color-accent-strong);
+}
+
 @media (max-width: 767px) {
   .overlay {
     padding: var(--space-3);
   }
 
   .modal {
-    max-height: calc(100vh - (var(--space-3) * 2));
     padding: var(--space-5);
   }
 }

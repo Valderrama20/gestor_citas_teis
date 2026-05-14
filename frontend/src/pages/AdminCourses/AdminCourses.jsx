@@ -1,4 +1,4 @@
-import { AlertCircle, LogOut, Plus, Settings } from "lucide-react";
+import { AlertCircle, LogOut, Plus, Settings, Sparkles, Scissors, Flower, Hand, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AdminCourseCard from "../../components/AdminCourseCard";
@@ -9,6 +9,13 @@ import styles from "./AdminCourses.module.css";
 import { useToast } from "../../context/ToastContext";
 import Modal from "../../components/Modal";
 import { useAuthStore } from "../../store/authStore";
+
+const ICON_MAP = {
+  sparkles: Sparkles,
+  scissors: Scissors,
+  flower: Flower,
+  hand: Hand
+};
 
 export default function AdminCourses() {
   const { usuario, logout } = useAuthStore();
@@ -147,9 +154,22 @@ export default function AdminCourses() {
             <p>Cargando cursos...</p>
           ) : (
             <div className={styles.grid}>
-              {courses.map((course) => (
-                <AdminCourseCard key={course.id} course={course} onDelete={handleDeleteCourse} onEdit={handleEditCourse} onDuplicate={handleDuplicateCourse} />
-              ))}
+              {courses.map((course) => {
+                // Hacemos la lectura tolerante a fallos, mayúsculas o si el backend envía "icon"
+                const iconKey = (course.icono || course.icon || "").trim().toLowerCase();
+                const CourseIcon = ICON_MAP[iconKey] || BookOpen;
+
+                return (
+                  <AdminCourseCard
+                    key={course.id}
+                    course={course}
+                    icon={CourseIcon}
+                    onDelete={handleDeleteCourse}
+                    onEdit={handleEditCourse}
+                    onDuplicate={handleDuplicateCourse}
+                  />
+                );
+              })}
             </div>
           )}
         </section>
@@ -173,7 +193,7 @@ export default function AdminCourses() {
       >
         <div className={styles.confirmWrapper}>
           <div className={styles.dangerIconBox}>
-            <AlertCircle size={48} color="#b83232" strokeWidth={1.5} />
+            <AlertCircle size={48} color="var(--color-accent)" strokeWidth={1.5} />
           </div>
 
           <div className={styles.confirmTextGroup}>
@@ -184,7 +204,7 @@ export default function AdminCourses() {
           <div className={styles.modalActionsVertical}>
             <button
               type="button"
-              className={styles.dangerButton}
+              className={styles.confirmButton}
               onClick={handleConfirmDelete}
             >
               Eliminar definitivamente

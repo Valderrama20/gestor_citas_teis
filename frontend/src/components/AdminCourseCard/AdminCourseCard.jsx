@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./AdminCourseCard.module.css";
 
-export default function AdminCourseCard({ course, onDelete, onEdit, onDuplicate }) {
+export default function AdminCourseCard({ course, icon: Icon, onDelete, onEdit, onDuplicate }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = (e) => {
@@ -23,7 +23,11 @@ export default function AdminCourseCard({ course, onDelete, onEdit, onDuplicate 
     <Link to={`/admin/cursos/${course.id}`} className={styles.card}>
       <div className={styles.header}>
         <div className={styles.iconBox}>
-          <GraduationCap className={styles.icon} strokeWidth={1.8} />
+          {Icon ? (
+            <Icon className={styles.icon} strokeWidth={1.8} />
+          ) : (
+            <GraduationCap className={styles.icon} strokeWidth={1.8} />
+          )}
         </div>
 
         <div className={styles.menuContainer}>
@@ -48,12 +52,12 @@ export default function AdminCourseCard({ course, onDelete, onEdit, onDuplicate 
         </div>
       </div>
 
-      <h3 className={styles.title}>{course.name}</h3>
+      <h3 className={styles.title}>{course.nombreCurso || course.name}</h3>
       <p className={styles.info}>
-        {course.level} | {course.period}
+        {course.nivel || course.level} | {course.cursoAcademico || course.period}
       </p>
       <div className={styles.footer}>
-        <span>{course.studentCount} alumnos</span>
+        <span>{course.alumnos || course.studentCount || 0} alumnos</span>
         <ArrowRight className={styles.arrow} strokeWidth={1.8} />
       </div>
     </Link >
