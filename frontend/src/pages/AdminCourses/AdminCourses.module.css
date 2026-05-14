@@ -68,6 +68,7 @@ button.textButton:hover {
   padding: 0.9rem 1.35rem;
   font-weight: 700;
   cursor: pointer;
+  transition: background-color var(--transition-fast);
 }
 
 .primaryButton {
@@ -79,6 +80,10 @@ button.textButton:hover {
   background: var(--color-accent-strong);
 }
 
+.primaryButton:active:not(:disabled) {
+  background-color: var(--color-accent-press, #9a5353);
+}
+
 .secondaryButton {
   background: rgba(58, 46, 50, 0.08);
   color: var(--color-text);
@@ -86,6 +91,10 @@ button.textButton:hover {
 
 .secondaryButton:hover {
   background: rgba(58, 46, 50, 0.12);
+}
+
+.secondaryButton:active:not(:disabled) {
+  background: rgba(58, 46, 50, 0.18);
 }
 
 .primaryButton:disabled,
@@ -135,8 +144,8 @@ button.textButton:hover {
   /* margin-bottom: 2rem; */
 }
 
-  .dangerButton {
-  background-color: #b83232;
+.confirmButton {
+  background-color: var(--color-accent);
   color: var(--color-white);
   border: 0;
   border-radius: var(--radius-full);
@@ -146,8 +155,12 @@ button.textButton:hover {
   transition: background-color var(--transition-fast);
 }
 
-.dangerButton:hover {
-  background-color: #962828;
+.confirmButton:hover {
+  background-color: var(--color-accent-strong);
+}
+
+.confirmButton:active {
+  background-color: var(--color-accent-press, #9a5353);
 }
 
 .modalActionsVertical {

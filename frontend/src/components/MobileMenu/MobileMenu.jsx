@@ -29,7 +29,16 @@ export default function MobileMenu({ isOpen, onClose, menuItems = [], onLogout =
                                 key={item.path}
                                 href={item.path}
                                 className={styles.menuItem}
-                                onClick={onClose}
+                                onClick={(e) => {
+                                    if (item.path === "#contact") {
+                                        e.preventDefault();
+                                        window.scrollTo({
+                                            top: document.documentElement.scrollHeight,
+                                            behavior: "smooth"
+                                        });
+                                        onClose();
+                                    }
+                                }}
                             >
                                 {item.label}
                             </a>
@@ -38,7 +47,10 @@ export default function MobileMenu({ isOpen, onClose, menuItems = [], onLogout =
                                 key={item.path}
                                 to={item.path}
                                 className={styles.menuItem}
-                                onClick={onClose}
+                                onClick={() => {
+                                    window.scrollTo(0, 0);
+                                    onClose();
+                                }}
                             >
                                 {item.label}
                             </Link>

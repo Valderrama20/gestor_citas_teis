@@ -21,11 +21,32 @@
   border-radius: var(--radius-xl);
   padding: var(--layout-padding-card);
   box-shadow: var(--shadow-soft);
-  border: 1px solid var(--color-border-soft);
+  border: 1px solid var(--color-border-field);
   width: 100%;
+  position: relative;
 }
 
+/* Botón de Cerrar (X) */
+.closeIconBtn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-full);
+  display: grid;
+  place-items: center;
+  transition: all var(--transition-fast);
+  z-index: 40;
+}
 
+.closeIconBtn:hover {
+  background: var(--color-accent-wash);
+  color: var(--color-accent-strong);
+}
 
 /* Tipografía y Header */
 .header {
@@ -152,6 +173,11 @@
   color: var(--color-text-faint);
 }
 
+.input:hover:not(:focus),
+.select:hover:not(:focus) {
+  border-color: var(--color-accent-soft);
+}
+
 .input:focus,
 .select:focus {
   outline: none;
@@ -161,14 +187,13 @@
 }
 
 .errorMessage {
-  color: #d32f2f;
-  background-color: #ffebee;
+  color: var(--color-text-error);
+  background-color: var(--color-background-error);
   padding: 0.75rem var(--space-4);
   border-radius: var(--radius-md);
   font-size: var(--size-copy);
   font-weight: 600;
   text-align: left;
-  border-left: 4px solid #d32f2f;
 }
 
 /* --- Alergias UI --- */
@@ -176,7 +201,7 @@
 .allergiesSection {
   background: var(--color-background-soft);
   padding: var(--space-5);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-divider);
 }
 
@@ -264,7 +289,7 @@
 .summary {
   background: var(--color-accent-wash);
   border: 1px solid var(--color-accent-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   padding: var(--space-5) var(--space-6);
   text-align: left;
   flex: 1;
@@ -284,31 +309,47 @@
   font-size: var(--size-copy);
 }
 
+.formActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .formActions {
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
+
 .buttonPrimary {
   background: var(--color-accent);
   color: var(--color-white);
   border: none;
   border-radius: var(--radius-full);
-  padding: var(--space-4) var(--space-7);
-  font-size: var(--size-copy-lg);
+  padding: 0.9rem 1.35rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: background-color var(--transition-fast);
   box-shadow: var(--shadow-button);
   width: 100%;
 }
 
 @media (min-width: 640px) {
-  .buttonPrimary {
+  .formActions .buttonPrimary,
+  .formActions .secondaryButton {
     width: auto;
-    align-self: flex-end;
   }
 }
 
 .buttonPrimary:hover:not(:disabled) {
-  background: var(--color-accent-strong);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-soft-hover);
+  background-color: var(--color-accent-strong);
+}
+
+.buttonPrimary:active:not(:disabled) {
+  background-color: var(--color-accent-press, #9a5353);
 }
 
 .buttonPrimary:disabled {
@@ -322,4 +363,82 @@
   .form {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* --- ESTILOS PARA MODAL DE CONFIRMACIÓN --- */
+.dangerIconBox {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.confirmQuestion {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.confirmTargetName {
+  font-size: 1.4rem;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.confirmButton {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  border: 0;
+  border-radius: var(--radius-full);
+  padding: 0.9rem 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  width: 100%;
+}
+
+.confirmButton:hover {
+  background-color: var(--color-accent-strong);
+}
+
+.confirmButton:active {
+  background-color: var(--color-accent-press, #9a5353);
+}
+
+.modalActionsVertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.confirmWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-2) 0;
+}
+
+.confirmTextGroup {
+  margin-bottom: 2rem;
+}
+
+.secondaryButton {
+  background: rgba(58, 46, 50, 0.08);
+  color: var(--color-text);
+  border: 0;
+  border-radius: var(--radius-full);
+  padding: 0.9rem 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  width: 100%;
+}
+
+.secondaryButton:hover {
+  background: rgba(58, 46, 50, 0.12);
+}
+
+.secondaryButton:active:not(:disabled) {
+  background: rgba(58, 46, 50, 0.18);
 }

@@ -54,6 +54,11 @@
     box-shadow var(--transition-fast);
 }
 
+.input:hover:not(:focus),
+.select:hover:not(:focus) {
+  border-color: var(--color-accent-soft);
+}
+
 .input:focus,
 .select:focus {
   border-color: var(--color-accent);
@@ -103,15 +108,13 @@
 }
 
 .errorMessage {
-  color: #d32f2f;
-  background-color: #ffebee;
+  color: var(--color-text-error);
+ background-color: var(--color-background-error);
   padding: 0.75rem var(--space-4);
   border-radius: var(--radius-md);
   font-size: var(--size-copy);
   font-weight: 600;
   text-align: left;
-  border-left: 4px solid #d32f2f;
-  margin-bottom: var(--space-4);
 }
 
 .helperText {
@@ -123,7 +126,7 @@
 .allergiesSection {
   background: var(--color-background-soft);
   padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-divider);
 }
 
@@ -169,23 +172,25 @@
 .summary {
   background: var(--color-accent-wash);
   border: 1px solid var(--color-accent-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   padding: var(--space-5) var(--space-6);
   width: 100%;
 }
 
-.summaryTitle {
+.summary p.summaryTitle {
   margin: 0 0 var(--space-3);
   font-family: var(--font-display);
   font-size: var(--size-card-title);
   font-weight: 700;
   color: var(--color-text);
+  line-height: normal;
 }
 
-.summaryText {
+.summary p.summaryText {
   margin: var(--space-1) 0;
   color: var(--color-text-soft);
   font-size: var(--size-copy);
+  line-height: 1.5;
 }
 
 .actions {
@@ -214,7 +219,7 @@
   font-size: var(--size-copy-lg);
   font-weight: 700;
   cursor: pointer;
-  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: background-color var(--transition-fast);
 }
 
 .secondaryButton {
@@ -226,6 +231,10 @@
   background: rgba(58, 46, 50, 0.12);
 }
 
+.secondaryButton:active:not(:disabled) {
+  background: rgba(58, 46, 50, 0.18);
+}
+
 .buttonPrimary {
   background: var(--color-accent);
   color: var(--color-white);
@@ -234,8 +243,10 @@
 
 .buttonPrimary:hover:not(:disabled) {
   background: var(--color-accent-strong);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-soft-hover);
+}
+
+.buttonPrimary:active:not(:disabled) {
+  background-color: var(--color-accent-press, #9a5353);
 }
 
 .secondaryButton:disabled,
@@ -243,4 +254,61 @@
   cursor: not-allowed;
   opacity: 0.6;
   box-shadow: none;
+}
+
+/* ESTILOS PARA MODAL DE CONFIRMACIÓN */
+.dangerIconBox {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.confirmQuestion {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.confirmTargetName {
+  font-size: 1.4rem;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.confirmButton {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  border: 0;
+  border-radius: var(--radius-full);
+  padding: 0.9rem 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.confirmButton:hover {
+  background-color: var(--color-accent-strong);
+}
+
+.confirmButton:active {
+  background-color: var(--color-accent-press, #9a5353);
+}
+
+.modalActionsVertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.confirmWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-2) 0;
+}
+
+.confirmTextGroup {
+  margin-bottom: 2rem;
 }
