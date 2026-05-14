@@ -4,17 +4,31 @@ import es.iesdeteis.gestorcitas.model.Cita;
 import es.iesdeteis.gestorcitas.model.PerfilCliente;
 import es.iesdeteis.gestorcitas.model.Rol;
 import es.iesdeteis.gestorcitas.model.Usuario;
+import es.iesdeteis.gestorcitas.enums.EstadoCita;
+import es.iesdeteis.gestorcitas.dto.CancelacionCitaResponse;
 import es.iesdeteis.gestorcitas.repository.CitaRepository;
 import es.iesdeteis.gestorcitas.repository.PerfilClienteRepository;
 import es.iesdeteis.gestorcitas.repository.RolRepository;
+import es.iesdeteis.gestorcitas.repository.TallerRepository;
 import es.iesdeteis.gestorcitas.repository.UsuarioRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -33,6 +47,32 @@ public class CitaService implements ICitaService {
     private RolRepository rolRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ICorreoService correoService;
+    @Autowired
+    private TallerRepository tallerRepository;
+    @Autowired
+    private CitaCancelacionTokenService cancelacionTokenService;
+
+    @Value("${citas.cancelacion.frontend-url:}")
+    private String cancelacionFrontendUrl;
+
+    private static final String PLANTILLA_CITA_PENDIENTE = "correo/cita-pendiente-confirmacion";
+    private static final String ASUNTO_CITA_PENDIENTE = "Cita pendiente de confirmacion";
+    private static final String MENSAJE_CITA_PENDIENTE = "Te avisaremos en cuanto la confirmacion este lista.";
+    private static final String PLANTILLA_CITA_CONFIRMADA = "correo/cita-confirmacion";
+    private static final String ASUNTO_CITA_CONFIRMADA = "Confirmacion de cita";
+    private static final String MENSAJE_CITA_CONFIRMADA = "Te esperamos unos minutos antes de la hora reservada.";
+    private static final String PLANTILLA_CITA_CANCELADA = "correo/cita-cancelada";
+    private static final String ASUNTO_CITA_CANCELADA = "Cita cancelada";
+    private static final String MENSAJE_CITA_CANCELADA = "Si necesitas reprogramar, puedes reservar una nueva cita cuando quieras.";
+    private static final String CANCELACION_OK = "Cita cancelada correctamente.";
+    private static final String CANCELACION_YA = "La cita ya estaba cancelada.";
+    private static final String CANCELACION_NO_ENCONTRADA = "No se encontro la cita solicitada.";
+    private static final String CANCELACION_EXPIRADA = "El enlace de cancelacion ha expirado.";
+    private static final String CANCELACION_TOKEN_INVALIDO = "El token de cancelacion no es valido.";
+    private static final DateTimeFormatter FECHA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter HORA_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     @Override
     public List<Cita> findAll() {
@@ -46,6 +86,14 @@ public class CitaService implements ICitaService {
 
     @Override
     public void save(Cita cita) {
+        boolean esNuevaCita = (cita.getIdCita() == null);
+        EstadoCita estadoAnterior = null;
+        if (!esNuevaCita) {
+            Cita citaExistente = citaRepository.findById(cita.getIdCita()).orElse(null);
+            if (citaExistente != null) {
+                estadoAnterior = citaExistente.getEstado();
+            }
+        }
         Usuario usuarioRequest = cita.getCliente();
 
         if (usuarioRequest != null && usuarioRequest.getEmail() != null) {
@@ -59,7 +107,29 @@ public class CitaService implements ICitaService {
             cita.setCliente(usuarioFinal);
         }
 
-        citaRepository.save(cita);
+        resolverTaller(cita);
+
+        Cita citaGuardada = citaRepository.save(cita);
+
+        if (esNuevaCita) {
+            enviarCorreoCitaPendiente(citaGuardada);
+            return;
+        }
+
+        if (estadoAnterior == null || citaGuardada.getEstado() == null) {
+            return;
+        }
+
+        if (estadoAnterior != EstadoCita.CONFIRMADA
+                && EstadoCita.CONFIRMADA.equals(citaGuardada.getEstado())) {
+            enviarCorreoCitaConfirmada(citaGuardada);
+            return;
+        }
+
+        if (estadoAnterior != EstadoCita.CANCELADA
+                && EstadoCita.CANCELADA.equals(citaGuardada.getEstado())) {
+            enviarCorreoCitaCancelada(citaGuardada);
+        }
     }
 
     // --- MÉTODOS PRIVADOS DE LÓGICA DE NEGOCIO ---
@@ -70,6 +140,172 @@ public class CitaService implements ICitaService {
         // No es estrictamente necesario hacer un .save() aquí porque @Transactional 
         // aplica un dirty-checking y guarda los cambios al terminar, pero es buena práctica.
         return usuarioRepository.save(usuarioDB); 
+    }
+
+    private void resolverTaller(Cita cita) {
+        if (cita == null || cita.getTaller() == null) {
+            return;
+        }
+
+        Long idTaller = cita.getTaller().getIdTaller();
+        if (idTaller == null) {
+            return;
+        }
+
+        tallerRepository.findById(idTaller).ifPresent(cita::setTaller);
+    }
+
+    private void enviarCorreoCitaPendiente(Cita cita) {
+        if (cita == null) {
+            return;
+        }
+
+        Usuario cliente = cita.getCliente();
+        if (cliente == null || cliente.getEmail() == null) {
+            return;
+        }
+
+        String destinatario = cliente.getEmail().trim();
+        if (destinatario.isEmpty()) {
+            return;
+        }
+
+        String nombreCliente = resolverNombre(cliente.getNombre(), destinatario);
+        String nombreTaller = "Taller";
+
+        if (cita.getTaller() != null) {
+            String nombre = cita.getTaller().getNombreTaller();
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                nombreTaller = nombre.trim();
+            }
+        }
+
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("asunto", ASUNTO_CITA_PENDIENTE);
+        variables.put("nombreCliente", nombreCliente);
+        variables.put("nombreTaller", nombreTaller);
+
+        if (cita.getFecha() != null) {
+            variables.put("fechaCita", cita.getFecha().format(FECHA_FORMATTER));
+        }
+        if (cita.getHora() != null) {
+            variables.put("horaCita", cita.getHora().format(HORA_FORMATTER));
+        }
+
+        variables.put("mensajeAdicional", MENSAJE_CITA_PENDIENTE);
+        variables.put("urlCancelacion", construirUrlCancelacion(cita));
+
+        correoService.enviarCorreoHtml(destinatario, ASUNTO_CITA_PENDIENTE, PLANTILLA_CITA_PENDIENTE, variables);
+    }
+
+    private void enviarCorreoCitaConfirmada(Cita cita) {
+        if (cita == null) {
+            return;
+        }
+
+        Usuario cliente = cita.getCliente();
+        if (cliente == null || cliente.getEmail() == null) {
+            return;
+        }
+
+        String destinatario = cliente.getEmail().trim();
+        if (destinatario.isEmpty()) {
+            return;
+        }
+
+        String nombreCliente = resolverNombre(cliente.getNombre(), destinatario);
+        String nombreTaller = "Taller";
+
+        if (cita.getTaller() != null) {
+            String nombre = cita.getTaller().getNombreTaller();
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                nombreTaller = nombre.trim();
+            }
+        }
+
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("asunto", ASUNTO_CITA_CONFIRMADA);
+        variables.put("nombreCliente", nombreCliente);
+        variables.put("nombreTaller", nombreTaller);
+
+        if (cita.getFecha() != null) {
+            variables.put("fechaCita", cita.getFecha().format(FECHA_FORMATTER));
+        }
+        if (cita.getHora() != null) {
+            variables.put("horaCita", cita.getHora().format(HORA_FORMATTER));
+        }
+
+        variables.put("mensajeAdicional", MENSAJE_CITA_CONFIRMADA);
+        variables.put("urlCancelacion", construirUrlCancelacion(cita));
+
+        correoService.enviarCorreoHtml(destinatario, ASUNTO_CITA_CONFIRMADA, PLANTILLA_CITA_CONFIRMADA, variables);
+    }
+
+    private void enviarCorreoCitaCancelada(Cita cita) {
+        if (cita == null) {
+            return;
+        }
+
+        Usuario cliente = cita.getCliente();
+        if (cliente == null || cliente.getEmail() == null) {
+            return;
+        }
+
+        String destinatario = cliente.getEmail().trim();
+        if (destinatario.isEmpty()) {
+            return;
+        }
+
+        String nombreCliente = resolverNombre(cliente.getNombre(), destinatario);
+        String nombreTaller = "Taller";
+
+        if (cita.getTaller() != null) {
+            String nombre = cita.getTaller().getNombreTaller();
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                nombreTaller = nombre.trim();
+            }
+        }
+
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("asunto", ASUNTO_CITA_CANCELADA);
+        variables.put("nombreCliente", nombreCliente);
+        variables.put("nombreTaller", nombreTaller);
+
+        if (cita.getFecha() != null) {
+            variables.put("fechaCita", cita.getFecha().format(FECHA_FORMATTER));
+        }
+        if (cita.getHora() != null) {
+            variables.put("horaCita", cita.getHora().format(HORA_FORMATTER));
+        }
+
+        variables.put("mensajeAdicional", MENSAJE_CITA_CANCELADA);
+
+        correoService.enviarCorreoHtml(destinatario, ASUNTO_CITA_CANCELADA, PLANTILLA_CITA_CANCELADA, variables);
+    }
+
+    private String construirUrlCancelacion(Cita cita) {
+        if (cita == null || cita.getIdCita() == null) {
+            return null;
+        }
+
+        if (cancelacionFrontendUrl == null || cancelacionFrontendUrl.trim().isEmpty()) {
+            return null;
+        }
+
+        if (cita.getFecha() == null || cita.getHora() == null) {
+            return null;
+        }
+
+        LocalDateTime fechaHora = LocalDateTime.of(cita.getFecha(), cita.getHora());
+        Instant expiracion = fechaHora.atZone(ZoneId.systemDefault()).toInstant();
+        String token = cancelacionTokenService.generarToken(cita.getIdCita(), expiracion);
+        if (token == null || token.isEmpty()) {
+            return null;
+        }
+
+        String encoded = URLEncoder.encode(token, StandardCharsets.UTF_8);
+        String separador = cancelacionFrontendUrl.contains("?") ? "&" : "?";
+        return cancelacionFrontendUrl.trim() + separador + "token=" + encoded;
     }
 
     private Usuario procesarNuevoUsuario(Usuario usuarioRequest, String emailNormalizado) {
@@ -143,6 +379,50 @@ public class CitaService implements ICitaService {
     @Override
     public void deleteById(Long id) {
         citaRepository.deleteById(id);
+    }
+
+    @Override
+    public CancelacionCitaResponse cancelarPorToken(String token) {
+        if (token == null || token.trim().isEmpty()) {
+            return new CancelacionCitaResponse("TOKEN_INVALIDO", CANCELACION_TOKEN_INVALIDO);
+        }
+
+        Long idCita;
+        try {
+            idCita = cancelacionTokenService.extraerIdCita(token);
+        } catch (ExpiredJwtException e) {
+            return new CancelacionCitaResponse("TOKEN_EXPIRADO", CANCELACION_EXPIRADA);
+        } catch (JwtException | IllegalArgumentException e) {
+            return new CancelacionCitaResponse("TOKEN_INVALIDO", CANCELACION_TOKEN_INVALIDO);
+        }
+
+        if (idCita == null) {
+            return new CancelacionCitaResponse("TOKEN_INVALIDO", CANCELACION_TOKEN_INVALIDO);
+        }
+
+        Cita cita = citaRepository.findById(idCita).orElse(null);
+        if (cita == null) {
+            return new CancelacionCitaResponse("NO_ENCONTRADA", CANCELACION_NO_ENCONTRADA);
+        }
+
+        if (EstadoCita.CANCELADA.equals(cita.getEstado())) {
+            return new CancelacionCitaResponse("YA_CANCELADA", CANCELACION_YA);
+        }
+
+        if (cita.getFecha() == null || cita.getHora() == null) {
+            return new CancelacionCitaResponse("TOKEN_INVALIDO", CANCELACION_TOKEN_INVALIDO);
+        }
+
+        LocalDateTime fechaHora = LocalDateTime.of(cita.getFecha(), cita.getHora());
+        LocalDateTime ahora = LocalDateTime.now(ZoneId.systemDefault());
+        if (!fechaHora.isAfter(ahora)) {
+            return new CancelacionCitaResponse("TOKEN_EXPIRADO", CANCELACION_EXPIRADA);
+        }
+
+        cita.setEstado(EstadoCita.CANCELADA);
+        save(cita);
+
+        return new CancelacionCitaResponse("CANCELADA", CANCELACION_OK);
     }
 
     @Override

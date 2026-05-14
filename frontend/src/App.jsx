@@ -5,6 +5,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import AboutUs from "./pages/AboutUs";
 import Booking from "./pages/Booking";
+import CancelAppointment from "./pages/CancelAppointment";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Talleres from "./pages/Talleres";
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "sobre-nosotros", element: <AboutUs /> },
       { path: "reservar", element: <Booking /> },
+      { path: "citas/cancelar", element: <CancelAppointment /> },
       { path: "curso/:courseId/talleres", element: <Talleres /> },
     ],
   },

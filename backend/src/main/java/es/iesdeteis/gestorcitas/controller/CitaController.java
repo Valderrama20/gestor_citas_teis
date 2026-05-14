@@ -1,11 +1,15 @@
 package es.iesdeteis.gestorcitas.controller;
 
 import es.iesdeteis.gestorcitas.dto.CitaDTO;
+import es.iesdeteis.gestorcitas.dto.CancelacionCitaRequest;
+import es.iesdeteis.gestorcitas.dto.CancelacionCitaResponse;
 import es.iesdeteis.gestorcitas.model.Cita;
 import es.iesdeteis.gestorcitas.model.Taller;
 import es.iesdeteis.gestorcitas.model.Usuario;
 import es.iesdeteis.gestorcitas.service.ICitaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,6 +63,20 @@ public class CitaController {
     @PutMapping
     public void updateCita(@RequestBody Cita cita) {
         citaService.save(cita);
+    }
+
+    @PostMapping("/cancelar")
+    public ResponseEntity<CancelacionCitaResponse> cancelarCita(@RequestBody(required = false) CancelacionCitaRequest request) {
+        String token = request != null ? request.getToken() : null;
+        CancelacionCitaResponse response = citaService.cancelarPorToken(token);
+        HttpStatus status = switch (response.getStatus()) {
+            case "CANCELADA", "YA_CANCELADA" -> HttpStatus.OK;
+            case "NO_ENCONTRADA" -> HttpStatus.NOT_FOUND;
+            case "TOKEN_EXPIRADO" -> HttpStatus.GONE;
+            default -> HttpStatus.BAD_REQUEST;
+        };
+
+        return ResponseEntity.status(status).body(response);
     }
 
     private List<CitaDTO> toDtoList(List<Cita> citas) {
