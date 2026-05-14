@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Modal from "../Modal"; 
 import workshopService from "../../services/workshopService";
 import { useToast } from "../../context/ToastContext";
-import styles from "./EditWorkshopModal.module.css"; 
+import styles from "./EditWorkShopModal.module.css"; 
 
 export default function EditWorkshopModal({ isOpen, onClose, onUpdate, workshop }) {
   // 1. Usamos los nombres exactos de tu Taller.java

@@ -21,7 +21,7 @@ import AdminTopbar from "../../components/AdminTopbar";
 import CreateAppointmentModal from "../../components/CreateAppointmentModal";
 import CreateWorkshopModal from "../../components/CreateWorkshopModal";
 // Asegúrate de crear estos dos componentes:
-import EditWorkshopModal from "../../components/EditWorkshopModal"; 
+import EditWorkshopModal from "../../components/EditWorkShopModal"; 
 import WorkshopDetailsModal from "../../components/WorkshopDetailsModal"; 
 import appointmentService from "../../services/appointmentService";
 import courseService from "../../services/courseService";
