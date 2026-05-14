@@ -91,6 +91,7 @@
 }
 
 .userName {
+  display: none; /* Oculto por defecto en móvil */
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -237,6 +238,7 @@
   }
 
   .userName {
+    display: inline; /* Visible en desktop */
     max-width: 150px;
   }
 }

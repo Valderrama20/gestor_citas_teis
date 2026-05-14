@@ -99,6 +99,9 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* Separador */}
+          <div className={styles.contactDivider}></div>
+
           {/* Derecha: Formulario */}
           <div className={styles.contactFormSide}>
             <form className={styles.contactForm} onSubmit={handleContactSubmit} ref={formRef}>

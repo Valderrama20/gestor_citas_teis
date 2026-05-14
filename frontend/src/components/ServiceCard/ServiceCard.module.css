@@ -3,7 +3,7 @@
   aspect-ratio: 1 / 1;
   background: var(--color-surface);
   backdrop-filter: blur(10px);
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--color-border-field);
   border-radius: var(--radius-xl);
   display: flex;
   flex-direction: column;

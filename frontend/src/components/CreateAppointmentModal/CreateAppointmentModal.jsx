@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Droplet, Sparkles, Magnet, Brush, Flower } from "lucide-react";
+import { Droplet, Sparkles, Magnet, Brush, Flower, AlertCircle } from "lucide-react";
 import availabilityService from "../../services/availabilityService";
 import Modal from "../Modal";
 import styles from "./CreateAppointmentModal.module.css";
@@ -25,6 +25,11 @@ export default function CreateAppointmentModal({
   const [slots, setSlots] = useState([]);
   const [contactError, setContactError] = useState("");
   const [allergyError, setAllergyError] = useState("");
+  const [isDirty, setIsDirty] = useState(false);
+  const [showConfirmClose, setShowConfirmClose] = useState(false);
+  const [clientError, setClientError] = useState("");
+  const [workshopError, setWorkshopError] = useState("");
+  const [slotError, setSlotError] = useState("");
 
   const [uiState, setUiState] = useState({
     hasAllergies: "no",
@@ -51,6 +56,10 @@ export default function CreateAppointmentModal({
     setAllergyError("");
     setSlots([]);
     setIsSubmitting(false);
+    setIsDirty(false);
+    setClientError("");
+    setWorkshopError("");
+    setSlotError("");
   }, [isOpen, workshops]);
 
   useEffect(() => {
@@ -90,9 +99,23 @@ export default function CreateAppointmentModal({
     };
   }, [formData.workshopId]);
 
+  const handleClose = () => {
+    if (isDirty) {
+      setShowConfirmClose(true);
+    } else {
+      onClose();
+    }
+  };
+
+  const confirmClose = () => {
+    setShowConfirmClose(false);
+    onClose();
+  };
+
   function handleChange(event) {
     const { name, value } = event.target;
-    
+    setIsDirty(true);
+
     setFormData((current) => {
       const nextData = { ...current, [name]: value };
       if (name === "workshopId") nextData.slotId = "";
@@ -100,10 +123,14 @@ export default function CreateAppointmentModal({
     });
 
     if (name === "email" || name === "phone") setContactError("");
+    if (name === "client") setClientError("");
+    if (name === "workshopId") setWorkshopError("");
+    if (name === "slotId") setSlotError("");
   }
 
   function handleAllergyToggle(value) {
     setAllergyError("");
+    setIsDirty(true);
     setUiState(prev => {
       const isSelected = prev.selectedAllergies.includes(value);
       if (!isSelected) return { ...prev, selectedAllergies: [...prev.selectedAllergies, value] };
@@ -114,13 +141,38 @@ export default function CreateAppointmentModal({
   async function handleSubmit(event) {
     event.preventDefault();
 
+    if (!formData.client.trim()) {
+      setClientError("Por favor, introduce el nombre completo del cliente.");
+      const el = document.getElementById("client");
+      if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
+      return;
+    }
+
+    if (!formData.workshopId) {
+      setWorkshopError("Por favor, selecciona un taller de la lista.");
+      const el = document.getElementById("workshopId");
+      if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
+      return;
+    }
+
+    if (!formData.slotId) {
+      setSlotError("Por favor, selecciona un día y horario disponible.");
+      const el = document.getElementById("slotId");
+      if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
+      return;
+    }
+
     if (!formData.email && !formData.phone) {
       setContactError("Por favor, facilita un correo electrónico o un teléfono de contacto.");
+      const el = document.getElementById("email");
+      if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (uiState.hasAllergies === "yes" && uiState.selectedAllergies.length === 0 && uiState.otherAllergies.trim() === "") {
       setAllergyError("Por favor, selecciona al menos una alergia o especifica en el campo 'Otro'.");
+      const el = document.getElementById("otherAllergies");
+      if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
@@ -140,16 +192,16 @@ export default function CreateAppointmentModal({
     }
   }
 
-  const isSubmitDisabled =
-    isSubmitting || !formData.workshopId || !formData.slotId;
-    
+  const isSubmitDisabled = isSubmitting;
+
   const tallerSeleccionado = workshops.find(w => String(w.id || w.idTaller) === String(formData.workshopId));
   const horarioSeleccionado = slots.find(s => String(s.id) === String(formData.slotId));
 
   return (
+    <>
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       eyebrow="Panel administrativo"
       title="Agregar cita manual"
       showAction={false}
@@ -157,7 +209,7 @@ export default function CreateAppointmentModal({
       contentClassName={styles.content}
     >
       <form className={styles.gridForm} onSubmit={handleSubmit} noValidate>
-        
+
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="course">
             Curso asociado
@@ -186,6 +238,12 @@ export default function CreateAppointmentModal({
             required
           />
         </div>
+        
+        {clientError && (
+          <div className={`${styles.fullWidth} ${styles.errorMessage}`}>
+            {clientError}
+          </div>
+        )}
 
         <div className={styles.fieldGroup}>
           <label className={styles.label}>
@@ -207,6 +265,12 @@ export default function CreateAppointmentModal({
             })}
           </select>
         </div>
+        
+        {workshopError && (
+          <div className={`${styles.fullWidth} ${styles.errorMessage}`}>
+            {workshopError}
+          </div>
+        )}
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="slotId">
@@ -234,6 +298,12 @@ export default function CreateAppointmentModal({
             ))}
           </select>
         </div>
+        
+        {slotError && (
+          <div className={`${styles.fullWidth} ${styles.errorMessage}`}>
+            {slotError}
+          </div>
+        )}
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="email">
@@ -285,6 +355,7 @@ export default function CreateAppointmentModal({
               className={`${styles.cardButton} ${uiState.hasAllergies === "no" ? styles.cardButtonActive : ""}`}
               onClick={() => {
                 setAllergyError("");
+                setIsDirty(true);
                 setUiState({ ...uiState, hasAllergies: "no" });
               }}
             >
@@ -295,6 +366,7 @@ export default function CreateAppointmentModal({
               className={`${styles.cardButton} ${uiState.hasAllergies === "yes" ? styles.cardButtonActive : ""}`}
               onClick={() => {
                 setAllergyError("");
+                setIsDirty(true);
                 setUiState({ ...uiState, hasAllergies: "yes" });
               }}
             >
@@ -319,11 +391,14 @@ export default function CreateAppointmentModal({
               </div>
               <div className={styles.otherAllergyGroup}>
                 <label htmlFor="otherAllergies" className={styles.labelSmall}>Otro (especificar):</label>
-                <input
+                <textarea
                   id="otherAllergies" type="text" className={styles.input}
                   placeholder="Ej. Piel rosácea..."
                   value={uiState.otherAllergies}
-                  onChange={(e) => setUiState({ ...uiState, otherAllergies: e.target.value })}
+                  onChange={(e) => {
+                    setIsDirty(true);
+                    setUiState({ ...uiState, otherAllergies: e.target.value })
+                  }}
                 />
               </div>
             </div>
@@ -359,7 +434,7 @@ export default function CreateAppointmentModal({
           </div>
 
           <div className={styles.actions}>
-            <button type="button" className={styles.secondaryButton} onClick={onClose} disabled={isSubmitting}>
+            <button type="button" className={styles.secondaryButton} onClick={handleClose} disabled={isSubmitting}>
               Cancelar
             </button>
             <button type="submit" className={styles.buttonPrimary} disabled={isSubmitDisabled}>
@@ -369,5 +444,33 @@ export default function CreateAppointmentModal({
         </div>
       </form>
     </Modal>
+
+    <Modal
+      isOpen={showConfirmClose}
+      onClose={() => setShowConfirmClose(false)}
+      title="Descartar cambios"
+      showAction={false}
+    >
+      <div className={styles.confirmWrapper}>
+        <div className={styles.dangerIconBox}>
+          <AlertCircle size={48} color="var(--color-accent)" strokeWidth={1.5} />
+        </div>
+
+        <div className={styles.confirmTextGroup}>
+          <p className={styles.confirmQuestion}>Tienes cambios sin guardar</p>
+          <h3 className={styles.confirmTargetName}>¿Seguro que quieres salir?</h3>
+        </div>
+
+        <div className={styles.modalActionsVertical}>
+          <button type="button" className={styles.confirmButton} onClick={confirmClose}>
+            Salir y perder cambios
+          </button>
+          <button type="button" className={styles.secondaryButton} onClick={() => setShowConfirmClose(false)}>
+            Continuar editando
+          </button>
+        </div>
+      </div>
+    </Modal>
+    </>
   );
 }

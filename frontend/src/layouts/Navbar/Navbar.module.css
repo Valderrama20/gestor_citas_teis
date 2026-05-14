@@ -96,21 +96,23 @@
   display: none;
   padding: 0.85rem 1.8rem;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-soft));
+  background-color: var(--color-accent);
   color: var(--color-white);
   font-weight: 600;
   font-size: 0.95rem;
   text-decoration: none;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-button);
+  transition: background-color var(--transition-fast);
   cursor: pointer;
   border: 0;
   white-space: nowrap;
 }
 
 .btnReservePrimary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(196, 139, 139, 0.3);
+  background-color: var(--color-accent-strong);
+}
+
+.btnReservePrimary:active {
+  background-color: var(--color-accent-press, #9a5353);
 }
 
 /* BOTÓN RESERVAR SECONDARY (Móvil/Responsivo) */
@@ -123,16 +125,18 @@
   font-weight: 600;
   font-size: 0.9rem;
   text-decoration: none;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-button);
+  transition: background-color var(--transition-fast);
   cursor: pointer;
   border: 2px solid var(--color-accent);
   white-space: nowrap;
 }
 
 .btnReserveSecondary:hover {
-  background: var(--color-accent-wash);
-  transform: translateY(-2px);
+  /* background-color: var(--color-accent-wash); */
+}
+
+.btnReserveSecondary:active {
+  background-color: var(--color-accent-border);
 }
 
 .menuContainer {
