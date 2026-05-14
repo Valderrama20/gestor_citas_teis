@@ -103,13 +103,13 @@ export default function AboutUs() {
 
                     <div className={styles.workshopsGrid}>
                         {workshops.map((workshop) => (
-                            <div key={workshop.name} className={styles.workshopCard}>
-                                <Phone className={styles.phoneIcon} strokeWidth={1.8} />
-                                <h4 className={styles.workshopName}>{workshop.name}</h4>
-                                <a href={`tel:${workshop.phone}`} className={styles.phoneLink}>
+                            <a href={`tel:${workshop.phone}`} className={styles.phoneLink}>
+                                <div key={workshop.name} className={styles.workshopCard}>
+                                    <Phone className={styles.phoneIcon} strokeWidth={1.8} />
+                                    <h4 className={styles.workshopName}>{workshop.name}</h4>
                                     {workshop.phone}
-                                </a>
-                            </div>
+                                </div>
+                            </a>
                         ))}
                     </div>
                 </div>

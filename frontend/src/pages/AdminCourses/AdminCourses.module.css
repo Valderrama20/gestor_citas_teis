@@ -135,19 +135,21 @@ button.textButton:hover {
   /* margin-bottom: 2rem; */
 }
 
-  .dangerButton {
-  background-color: #b83232;
+.confirmButton {
+  background-color: var(--color-accent);
   color: var(--color-white);
   border: 0;
   border-radius: var(--radius-full);
   padding: 0.9rem 1.35rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color var(--transition-fast);
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.dangerButton:hover {
-  background-color: #962828;
+.confirmButton:hover {
+  background-color: var(--color-accent-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft-hover);
 }
 
 .modalActionsVertical {

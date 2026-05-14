@@ -8,7 +8,8 @@ import {
   Clock,
   Trash2,
   CalendarDays,
-  CalendarX // Añadido para el estado vacío
+  CalendarX,
+  AlertCircle
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -22,6 +23,7 @@ import workshopService from "../../services/workshopService";
 import availabilityService from "../../services/availabilityService";
 import { useToast } from "../../context/ToastContext";
 import styles from "./AdminDashboard.module.css";
+import Modal from "../../components/Modal";
 
 export default function AdminDashboard() {
   const { courseId } = useParams();
@@ -361,20 +363,34 @@ export default function AdminDashboard() {
       <CreateWorkshopModal isOpen={isCreateWorkshopModalOpen} onClose={() => setIsCreateWorkshopModalOpen(false)} onSubmit={handleCreateWorkshop} courseName={course?.nombreCurso} />
       <CreateAppointmentModal isOpen={isCreateAppointmentModalOpen} onClose={() => setIsCreateAppointmentModalOpen(false)} onSubmit={handleCreateAppointment} courseName={course?.nombreCurso} workshops={workshops} />
 
-      {isDeleteDialogOpen && (
-        <div className={styles.overlay}>
-          <div className={styles.confirmModal}>
-            <h2 className={styles.confirmTitle}>Eliminar citas</h2>
-            <p className={styles.confirmText}>
+      <Modal
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        title="Eliminar citas"
+        showAction={false}
+      >
+        <div className={styles.confirmWrapper}>
+          <div className={styles.dangerIconBox}>
+            <AlertCircle size={48} color="var(--color-accent)" strokeWidth={1.5} />
+          </div>
+
+          <div className={styles.confirmTextGroup}>
+            <p className={styles.confirmQuestion}>¡Esta acción no se puede deshacer!</p>
+            <h3 className={styles.confirmTargetName}>
               ¿Deseas eliminar <strong>{selectedIds.length}</strong> cita{selectedIds.length > 1 ? 's' : ''} permanentemente?
-            </p>
-            <div className={styles.confirmActions}>
-              <button type="button" className={styles.bulkBtn} onClick={() => setIsDeleteDialogOpen(false)}>Cancelar</button>
-              <button type="button" className={styles.dangerButton} onClick={confirmBulkDelete}>Eliminar</button>
-            </div>
+            </h3>
+          </div>
+
+          <div className={styles.modalActionsVertical}>
+            <button type="button" className={styles.confirmButton} onClick={confirmBulkDelete}>
+              Eliminar definitivamente
+            </button>
+            <button type="button" className={styles.secondaryButton} onClick={() => setIsDeleteDialogOpen(false)}>
+              Cancelar
+            </button>
           </div>
         </div>
-      )}
+      </Modal>
     </main>
   );
 }

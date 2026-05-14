@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { User, Mail, Shield, Lock, Camera, Save } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { User, Mail, Shield, Lock, Camera, Save, ChevronLeft } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
 import AdminTopbar from "../../components/AdminTopbar/AdminTopbar";
 import styles from "./AdminProfile.module.css";
@@ -7,6 +8,7 @@ import styles from "./AdminProfile.module.css";
 export default function AdminProfile() {
     const { usuario } = useAuthStore();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         nombre: usuario?.nombre || "",
@@ -48,10 +50,28 @@ export default function AdminProfile() {
     return (
         <div className={styles.container}>
             <AdminTopbar
-                startContent={<h1 className={styles.pageTitle}>Mi Perfil</h1>}
+                startContent={
+                    <button type="button" onClick={() => navigate(-1)} className={styles.textButton}>
+                        <ChevronLeft size={18} />
+                        <span>Volver</span>
+                    </button>
+                }
+                endContent={
+                    <div className={styles.brand}>
+                        <User size={18} />
+                        <span>IES TEIS | Perfil</span>
+                    </div>
+                }
             />
 
             <main className={styles.main}>
+                <header className={styles.headerRow}>
+                    <div className={styles.titleSection}>
+                        <h1 className={styles.title}>Mi Perfil</h1>
+                        <p className={styles.subtitle}>Gestiona la información y seguridad de tu cuenta.</p>
+                    </div>
+                </header>
+
                 <div className={styles.grid}>
 
                     {/* Tarjeta de Información de Usuario */}

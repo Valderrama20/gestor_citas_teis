@@ -9,15 +9,16 @@
   width: 100%;
   max-width: 1100px; /* Centra el contenido y evita que sea muy ancho */
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.5rem 1rem;
 }
 
 /* --- CABECERA Y BOTONES --- */
 .headerRow {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .title {
@@ -38,6 +39,7 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .primaryButton {
@@ -62,8 +64,9 @@
 /* --- BARRA ESTILO GMAIL (SELECCIÓN MÚLTIPLE) --- */
 .bulkActionsBar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
   background: var(--color-surface-strong, #ffffff);
   border: 1px solid rgba(58, 46, 50, 0.1);
   border-radius: var(--radius-lg);
@@ -85,6 +88,7 @@
 
 .bulkButtons {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.8rem;
 }
 
@@ -165,6 +169,7 @@
 
 .weekPicker {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
   background: var(--color-surface-strong, #ffffff);
@@ -227,6 +232,25 @@
   color: var(--color-text);
 }
 
+/* --- MEDIA QUERIES PARA ADMINDASHBOARD --- */
+@media (min-width: 768px) {
+  .container {
+    padding: 2rem;
+  }
+
+  .headerRow {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .bulkActionsBar {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
 /* --- NUEVOS ESTILOS: ESTADO VACÍO (NO HAY CITAS) --- */
 .noDataContainer {
   display: flex;
@@ -251,4 +275,74 @@
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: 1.5rem;
+}
+
+/* --- ESTILOS PARA MODAL DE CONFIRMACIÓN --- */
+.dangerIconBox {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.confirmQuestion {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.confirmTargetName {
+  font-size: 1.4rem;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.confirmButton {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  border: 0;
+  border-radius: var(--radius-full);
+  padding: 0.9rem 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.confirmButton:hover {
+  background-color: var(--color-accent-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft-hover);
+}
+
+.modalActionsVertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.confirmWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-2) 0;
+}
+
+.confirmTextGroup {
+  margin-bottom: 2rem;
+}
+
+.secondaryButton {
+  background: rgba(58, 46, 50, 0.08);
+  color: var(--color-text);
+  border: 0;
+  border-radius: var(--radius-full);
+  padding: 0.9rem 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.secondaryButton:hover {
+  background: rgba(58, 46, 50, 0.12);
 }
