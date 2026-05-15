@@ -5,11 +5,8 @@ services:
       dockerfile: Dockerfile
     container_name: gestor_citas_db_container
     restart: always
-    environment:
-      MARIADB_ROOT_PASSWORD: abc123.
-      MARIADB_DATABASE: gestor_citas_db
-      MARIADB_USER: admin
-      MARIADB_PASSWORD: abc123.
+    env_file:
+      - ./backend/.env
     ports:
       - "3306:3306"
     volumes:
@@ -20,10 +17,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        VITE_API_URL: http://localhost:9001
     container_name: gestor_citas_frontend_container
     restart: always
+    env_file:
+      - ./frontend/.env
     ports:
       - "5173:80"
 
@@ -34,12 +31,7 @@ services:
     container_name: gestor_citas_backend_container
     restart: always
     env_file:
-      - .env
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/gestor_citas_db
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: abc123.
-      SERVER_PORT: 9001
+      - ./backend/.env
     ports:
       - "9001:9001"
     depends_on:
