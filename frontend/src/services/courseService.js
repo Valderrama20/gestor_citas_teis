@@ -16,7 +16,8 @@ getAdminCourses: async () => {
       name: curso.nombreCurso,
       level: curso.nivel,
       period: curso.cursoAcademico,
-      studentCount: curso.alumnos
+      studentCount: curso.alumnos,
+      icon: curso.icono
     }));
   },
 

@@ -5,7 +5,7 @@ import styles from "./AdminCourseCard.module.css";
 
 export default function AdminCourseCard({ course, icon: Icon, onDelete, onEdit, onDuplicate }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  
   const toggleMenu = (e) => {
     e.preventDefault();
     setIsMenuOpen(!isMenuOpen);
