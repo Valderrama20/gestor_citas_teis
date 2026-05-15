@@ -24,6 +24,7 @@ import CreateWorkshopModal from "../../components/CreateWorkshopModal";
 import EditWorkshopModal from "../../components/EditWorkShopModal";
 import WorkshopDetailsModal from "../../components/WorkshopDetailsModal";
 import Modal from "../../components/Modal";
+import WorkshopIcon from "../../components/WorkshopIcon";
 import appointmentService from "../../services/appointmentService";
 import courseService from "../../services/courseService";
 import workshopService from "../../services/workshopService";
@@ -491,7 +492,7 @@ export default function AdminDashboard() {
                     >
                       <div className={styles.workshopHeader}>
                         <div className={styles.workshopIconWrapper}>
-                          <Briefcase size={20} className={styles.workshopIcon} />
+                          <WorkshopIcon iconName={workshop.icono} size={20} className={styles.workshopIcon} />
                         </div>
                         <h3 className={styles.workshopTitle}>{workshop.nombreTaller}</h3>
                       </div>

@@ -1,28 +1,11 @@
-import {
-  Brush,
-  Droplets,
-  Flower2,
-  Hand,
-  Scissors,
-  Sparkles,
-  Waves,
-} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ServiceCard from "../../components/ServiceCard";
+import WorkshopIcon, { workshopIconMap } from "../../components/WorkshopIcon/WorkshopIcon";
+import { Sparkles } from "lucide-react";
 import courseService from "../../services/courseService";
 import workshopService from "../../services/workshopService";
 import styles from "./Talleres.module.css";
-
-const workshopIconMap = {
-  brush: Brush,
-  droplets: Droplets,
-  flower: Flower2,
-  hand: Hand,
-  scissors: Scissors,
-  sparkles: Sparkles,
-  waves: Waves,
-};
 
 export default function Talleres() {
   const { courseId } = useParams();
