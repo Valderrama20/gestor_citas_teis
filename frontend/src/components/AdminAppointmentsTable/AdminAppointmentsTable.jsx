@@ -223,18 +223,18 @@ export default function AdminAppointmentsTable({
                         >
                           <XCircle size={14} strokeWidth={1.8} /> Cancelar
                         </button>
-                        <button
+                        {/* <button
                           type="button"
                           className={`${styles.actionButton} ${styles.undoButton}`}
                           onClick={() => onUndo(actionPayload)}
                           title="Volver a pendiente"
                         >
                           <RotateCcw size={14} strokeWidth={1.8} />
-                        </button>
+                        </button> */}
                       </>
                     )}
 
-                    {statusKey === "CANCELADA" && (
+                    {/* {statusKey === "CANCELADA" && (
                       <button
                         type="button"
                         className={`${styles.actionButton} ${styles.undoButton}`}
@@ -242,7 +242,7 @@ export default function AdminAppointmentsTable({
                       >
                         <RotateCcw size={14} strokeWidth={1.8} /> Deshacer
                       </button>
-                    )}
+                    )} */}
 
                     <button
                       type="button"

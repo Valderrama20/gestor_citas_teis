@@ -41,15 +41,20 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("citas");
   const [filterWorkshopId, setFilterWorkshopId] = useState(null);
 
-  const [isCreateAppointmentModalOpen, setIsCreateAppointmentModalOpen] = useState(false);
-  const [isCreateWorkshopModalOpen, setIsCreateWorkshopModalOpen] = useState(false);
+  const [isCreateAppointmentModalOpen, setIsCreateAppointmentModalOpen] =
+    useState(false);
+  const [isCreateWorkshopModalOpen, setIsCreateWorkshopModalOpen] =
+    useState(false);
   const [isEditWorkshopModalOpen, setIsEditWorkshopModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const [selectedIds, setSelectedIds] = useState([]);
-  const [sortConfig, setSortConfig] = useState({ key: "fecha", direction: "asc" });
+  const [sortConfig, setSortConfig] = useState({
+    key: "fecha",
+    direction: "asc",
+  });
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const { addToast } = useToast();
@@ -63,11 +68,13 @@ export default function AdminDashboard() {
 
     async function loadDashboardData() {
       try {
-        const [nextCourse, nextAppointments, nextWorkshops] = await Promise.all([
-          courseService.getCourseById(courseId),
-          appointmentService.getAppointmentsByCourseId(courseId),
-          workshopService.getWorkshopsByCourseId(courseId),
-        ]);
+        const [nextCourse, nextAppointments, nextWorkshops] = await Promise.all(
+          [
+            courseService.getCourseById(courseId),
+            appointmentService.getAppointmentsByCourseId(courseId),
+            workshopService.getWorkshopsByCourseId(courseId),
+          ],
+        );
 
         if (!isMounted) return;
 
@@ -116,7 +123,8 @@ export default function AdminDashboard() {
       const inWeek = appDate >= weekRange.monday && appDate <= weekRange.sunday;
 
       if (filterWorkshopId) {
-        const appId = app.taller?.id_taller || app.taller?.idTaller || app.workshopId;
+        const appId =
+          app.taller?.id_taller || app.taller?.idTaller || app.workshopId;
         return inWeek && String(appId) === String(filterWorkshopId);
       }
 
@@ -126,7 +134,8 @@ export default function AdminDashboard() {
 
   const handleSort = (key) => {
     let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") direction = "desc";
+    if (sortConfig.key === key && sortConfig.direction === "asc")
+      direction = "desc";
     setSortConfig({ key, direction });
   };
 
@@ -170,48 +179,54 @@ export default function AdminDashboard() {
   };
 
   async function handleConfirmAppointment(appointment) {
-    const updatedAppointments = await appointmentService.updateAppointmentStatus({
-      courseId,
-      appointment,
-      appointmentId: appointment.id,
-      estado: "CONFIRMADA",
-    });
+    const updatedAppointments =
+      await appointmentService.updateAppointmentStatus({
+        courseId,
+        appointment,
+        appointmentId: appointment.id,
+        estado: "CONFIRMADA",
+      });
     setAppointments(updatedAppointments);
     addToast("Cita confirmada", "success");
   }
 
   async function handleCancelAppointment(appointment) {
-    const updatedAppointments = await appointmentService.updateAppointmentStatus({
-      courseId,
-      appointment,
-      appointmentId: appointment.id,
-      estado: "CANCELADA",
-    });
+    const updatedAppointments =
+      await appointmentService.updateAppointmentStatus({
+        courseId,
+        appointment,
+        appointmentId: appointment.id,
+        estado: "CANCELADA",
+      });
     setAppointments(updatedAppointments);
     addToast("Cita cancelada", "success");
   }
 
   async function handleUndoAppointment(appointment) {
-    const updatedAppointments = await appointmentService.updateAppointmentStatus({
-      courseId,
-      appointment,
-      appointmentId: appointment.id,
-      estado: "PENDIENTE",
-    });
+    const updatedAppointments =
+      await appointmentService.updateAppointmentStatus({
+        courseId,
+        appointment,
+        appointmentId: appointment.id,
+        estado: "PENDIENTE",
+      });
     setAppointments(updatedAppointments);
     addToast("Cita restaurada a pendiente", "success");
   }
 
   function handleToggleSelect(rowId) {
     setSelectedIds((prev) =>
-      prev.includes(rowId) ? prev.filter((id) => id !== rowId) : [...prev, rowId]
+      prev.includes(rowId)
+        ? prev.filter((id) => id !== rowId)
+        : [...prev, rowId],
     );
   }
 
   function handleToggleSelectAll(isChecked) {
     if (isChecked) {
       const allIds = sortedAppointments.map(
-        (app) => app.idCita ?? app.id ?? `${app.client}-${app.date}-${app.time}`
+        (app) =>
+          app.idCita ?? app.id ?? `${app.client}-${app.date}-${app.time}`,
       );
       setSelectedIds(allIds);
     } else {
@@ -223,7 +238,8 @@ export default function AdminDashboard() {
     if (selectedIds.length === 0) return;
     try {
       const appointmentsToUpdate = appointments.filter((app) => {
-        const rowId = app.idCita ?? app.id ?? `${app.client}-${app.date}-${app.time}`;
+        const rowId =
+          app.idCita ?? app.id ?? `${app.client}-${app.date}-${app.time}`;
         return selectedIds.includes(rowId);
       });
 
@@ -247,12 +263,15 @@ export default function AdminDashboard() {
   async function confirmBulkDelete() {
     try {
       const appointmentsToDelete = appointments.filter((app) => {
-        const rowId = app.idCita ?? app.id ?? `${app.client}-${app.date}-${app.time}`;
+        const rowId =
+          app.idCita ?? app.id ?? `${app.client}-${app.date}-${app.time}`;
         return selectedIds.includes(rowId);
       });
 
       for (const appointment of appointmentsToDelete) {
-        await appointmentService.deleteAppointment(appointment.id ?? appointment.idCita);
+        await appointmentService.deleteAppointment(
+          appointment.id ?? appointment.idCita,
+        );
       }
 
       await refreshData();
@@ -267,7 +286,10 @@ export default function AdminDashboard() {
 
   async function handleCreateAppointment(appointmentData) {
     try {
-      await appointmentService.createAppointment({ ...appointmentData, courseId });
+      await appointmentService.createAppointment({
+        ...appointmentData,
+        courseId,
+      });
       await refreshData();
       setIsCreateAppointmentModalOpen(false);
       addToast("Cita creada", "success");
@@ -371,7 +393,10 @@ export default function AdminDashboard() {
           <div className={styles.tabContent}>
             <div className={styles.filtersBar}>
               <div className={styles.weekPicker}>
-                <button onClick={() => setCurrentDate(new Date())} className={styles.todayBtn}>
+                <button
+                  onClick={() => setCurrentDate(new Date())}
+                  className={styles.todayBtn}
+                >
                   Hoy
                 </button>
                 <div className={styles.navButtons}>
@@ -399,8 +424,12 @@ export default function AdminDashboard() {
               </div>
 
               {filterWorkshopId && (
-                <button className={styles.clearFilterBtn} onClick={() => setFilterWorkshopId(null)}>
-                  Mostrando solo citas del taller seleccionado <FilterX size={14} />
+                <button
+                  className={styles.clearFilterBtn}
+                  onClick={() => setFilterWorkshopId(null)}
+                >
+                  Mostrando solo citas del taller seleccionado{" "}
+                  <FilterX size={14} />
                 </button>
               )}
             </div>
@@ -413,29 +442,31 @@ export default function AdminDashboard() {
                 </span>
                 <div className={styles.bulkButtons}>
                   <button
-                    onClick={() => handleBulkAction("CONFIRMADA")}
-                    className={`${styles.bulkBtn} ${styles.bulkConfirm}`}
-                  >
-                    <CheckCheck size={16} /> Confirmar
-                  </button>
-                  <button
-                    onClick={() => handleBulkAction("CANCELADA")}
-                    className={`${styles.bulkBtn} ${styles.bulkCancel}`}
-                  >
-                    <XCircle size={16} /> Cancelar
-                  </button>
-                  <button
                     onClick={() => handleBulkAction("PENDIENTE")}
                     className={`${styles.bulkBtn} ${styles.bulkUndo}`}
                   >
                     <Clock size={16} /> Pendiente
                   </button>
                   <button
+                    onClick={() => handleBulkAction("CONFIRMADA")}
+                    className={`${styles.bulkBtn} ${styles.bulkConfirm}`}
+                  >
+                    <CheckCheck size={16} /> Confirmar
+                  </button>
+
+                  <button
+                    onClick={() => handleBulkAction("CANCELADA")}
+                    className={`${styles.bulkBtn} ${styles.bulkCancel}`}
+                  >
+                    <XCircle size={16} /> Cancelar
+                  </button>
+
+                  {/* <button
                     onClick={() => setIsDeleteDialogOpen(true)}
                     className={`${styles.bulkBtn} ${styles.bulkDelete}`}
                   >
                     <Trash2 size={16} /> Eliminar
-                  </button>
+                  </button> */}
                 </div>
               </div>
             )}
@@ -456,7 +487,9 @@ export default function AdminDashboard() {
               <div className={styles.noDataContainer}>
                 <CalendarX size={48} className={styles.noDataIcon} />
                 <h3 className={styles.noDataTitle}>
-                  {filterWorkshopId ? "Este taller no tiene citas esta semana" : "Sin citas para esta semana"}
+                  {filterWorkshopId
+                    ? "Este taller no tiene citas esta semana"
+                    : "Sin citas para esta semana"}
                 </h3>
                 <button
                   type="button"
@@ -478,10 +511,15 @@ export default function AdminDashboard() {
                   const wsId = String(workshop.idTaller);
 
                   const citasDelTaller = appointments.filter((a) => {
-                    const citaWorkshopId = String(a.taller?.idTaller || a.idTaller || "");
+                    const citaWorkshopId = String(
+                      a.taller?.idTaller || a.idTaller || "",
+                    );
                     const tallerIdPagina = String(workshop.idTaller);
 
-                    return citaWorkshopId === tallerIdPagina && a.estado !== "CANCELADA";
+                    return (
+                      citaWorkshopId === tallerIdPagina &&
+                      a.estado !== "CANCELADA"
+                    );
                   });
 
                   return (
@@ -492,28 +530,42 @@ export default function AdminDashboard() {
                     >
                       <div className={styles.workshopHeader}>
                         <div className={styles.workshopIconWrapper}>
-                          <WorkshopIcon iconName={workshop.icono} size={20} className={styles.workshopIcon} />
+                          <WorkshopIcon
+                            iconName={workshop.icono}
+                            size={20}
+                            className={styles.workshopIcon}
+                          />
                         </div>
-                        <h3 className={styles.workshopTitle}>{workshop.nombreTaller}</h3>
+                        <h3 className={styles.workshopTitle}>
+                          {workshop.nombreTaller}
+                        </h3>
                       </div>
 
                       <div className={styles.workshopInfo}>
                         <div className={styles.infoItem}>
                           <Clock size={16} className={styles.infoIcon} />
                           <span>
-                            Duración: <strong>{workshop.duracionMinutos || 0} min</strong>
+                            Duración:{" "}
+                            <strong>{workshop.duracionMinutos || 0} min</strong>
                           </span>
                         </div>
                         <div className={styles.infoItem}>
                           <Users size={16} className={styles.infoIcon} />
                           <span>
-                            Aforo máximo: <strong>{workshop.capacidadMaxima || 15} clientes</strong>
+                            Aforo máximo:{" "}
+                            <strong>
+                              {workshop.capacidadMaxima || 15} clientes
+                            </strong>
                           </span>
                         </div>
                         <div className={styles.infoItem}>
-                          <CalendarCheck size={16} className={styles.infoIcon} />
+                          <CalendarCheck
+                            size={16}
+                            className={styles.infoIcon}
+                          />
                           <span>
-                            <strong>{citasDelTaller.length}</strong> citas agendadas (activas)
+                            <strong>{citasDelTaller.length}</strong> citas
+                            agendadas (activas)
                           </span>
                         </div>
                       </div>
@@ -539,7 +591,9 @@ export default function AdminDashboard() {
             ) : (
               <div className={styles.noDataContainer}>
                 <Briefcase size={48} className={styles.noDataIcon} />
-                <h3 className={styles.noDataTitle}>Aún no hay talleres creados</h3>
+                <h3 className={styles.noDataTitle}>
+                  Aún no hay talleres creados
+                </h3>
                 <p className={styles.noDataSubtitle}>
                   Crea un taller para poder empezar a agendar citas.
                 </p>
@@ -595,11 +649,17 @@ export default function AdminDashboard() {
       >
         <div className={styles.confirmWrapper}>
           <div className={styles.dangerIconBox}>
-            <AlertCircle size={48} color="var(--color-accent)" strokeWidth={1.5} />
+            <AlertCircle
+              size={48}
+              color="var(--color-accent)"
+              strokeWidth={1.5}
+            />
           </div>
 
           <div className={styles.confirmTextGroup}>
-            <p className={styles.confirmQuestion}>¡Esta acción no se puede deshacer!</p>
+            <p className={styles.confirmQuestion}>
+              ¡Esta acción no se puede deshacer!
+            </p>
             <h3 className={styles.confirmTargetName}>
               ¿Deseas eliminar <strong>{selectedIds.length}</strong> cita
               {selectedIds.length > 1 ? "s" : ""} permanentemente?
@@ -607,7 +667,11 @@ export default function AdminDashboard() {
           </div>
 
           <div className={styles.modalActionsVertical}>
-            <button type="button" className={styles.confirmButton} onClick={confirmBulkDelete}>
+            <button
+              type="button"
+              className={styles.confirmButton}
+              onClick={confirmBulkDelete}
+            >
               Eliminar definitivamente
             </button>
             <button
