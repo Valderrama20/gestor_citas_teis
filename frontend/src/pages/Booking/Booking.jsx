@@ -133,6 +133,30 @@ export default function Booking() {
     navigate(-1);
   };
 
+  const handleAnotherBooking = () => {
+    setShowSuccessModal(false);
+    setIsDirty(false);
+    setFormData({
+      client: "",
+      email: "",
+      phone: "",
+      workshopId: talleres.length > 0 ? String(talleres[0].idTaller) : "",
+      slotId: "",
+    });
+    setUiState({
+      hasAllergies: "no",
+      selectedAllergies: [],
+      otherAllergies: ""
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleGoHome = () => {
+    setShowSuccessModal(false);
+    setIsDirty(false);
+    navigate("/");
+  };
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -397,7 +421,7 @@ export default function Booking() {
               Cancelar
             </button>
             <button type="submit" className={styles.buttonPrimary} disabled={isSubmitDisabled}>
-              {isSubmitting ? "Procesando..." : "Confirmar reserva"}
+              {isSubmitting ? "Procesando..." : "Solicitar cita"}
             </button>
           </div>
             </div>
@@ -407,12 +431,26 @@ export default function Booking() {
 
       <Modal
         isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
+        onClose={handleGoHome}
         eyebrow="Solicitud completada"
         title="Tu cita está en proceso"
+        showAction={false}
       >
-        <p>Hemos registrado la solicitud para el taller de <strong>{tallerSeleccionado?.nombreTaller}</strong>.</p>
-        <p>En breve nos pondremos en contacto contigo a través de los datos facilitados para confirmar definitivamente tu plaza.</p>
+        <div className={styles.confirmWrapper} style={{ textAlign: "center" }}>
+          <p style={{ marginBottom: "1rem" }}>Hemos registrado la solicitud para el taller de <strong>{tallerSeleccionado?.nombreTaller}</strong>.</p>
+          <p style={{ marginBottom: "2rem" }}>En breve nos pondremos en contacto contigo a través de los datos facilitados para confirmar definitivamente tu plaza.</p>
+          
+          <p className={styles.confirmQuestion} style={{ marginBottom: "1rem" }}>¿Deseas solicitar otra cita?</p>
+          
+          <div className={styles.modalActionsVertical}>
+            <button type="button" className={styles.buttonPrimary} onClick={handleAnotherBooking}>
+              Sí, solicitar otra cita
+            </button>
+            <button type="button" className={styles.secondaryButton} onClick={handleGoHome}>
+              No, volver al inicio
+            </button>
+          </div>
+        </div>
       </Modal>
 
       <Modal
