@@ -43,3 +43,5 @@ export const workshopIconMap = AVAILABLE_ICONS.reduce((acc, curr) => {
   acc[curr.id] = curr.icon;
   return acc;
 }, {});
+
+export const courseIconMap = workshopIconMap;

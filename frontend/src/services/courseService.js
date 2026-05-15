@@ -1,11 +1,7 @@
 import api from "../config/api";
 
-function cloneData(value) {
-  return JSON.parse(JSON.stringify(value));
-}
-
 const courseService = {
-  getAllCourses: async () => cloneData(coursesTable),
+  getAllCourses: async () => (await api.get("/CursosController")).data,
 
   getPublicCourses: async () => (await api.get("/CursosController")).data,
 
@@ -17,6 +13,7 @@ getAdminCourses: async () => {
       level: curso.nivel,
       period: curso.cursoAcademico,
       studentCount: curso.alumnos,
+      icono: curso.icono,
       icon: curso.icono
     }));
   },

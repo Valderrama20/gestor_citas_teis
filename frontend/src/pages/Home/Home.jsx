@@ -1,16 +1,10 @@
-import { Flower2, Hand, Scissors, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import ServiceCard from "../../components/ServiceCard";
 import courseService from "../../services/courseService";
 import FAQSection from "../../components/FAQSection";
 import styles from "./Home.module.css";
-
-const courseIconMap = {
-  scissors: Scissors,
-  sparkles: Sparkles,
-  flower: Flower2,
-  hand: Hand,
-};
+import { courseIconMap } from "../../constants/icons";
 
 export default function Home() {
   const [specialties, setSpecialties] = useState([]);

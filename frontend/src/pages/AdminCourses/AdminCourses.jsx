@@ -1,4 +1,4 @@
-import { AlertCircle, LogOut, Plus, Settings, Sparkles, Scissors, Flower, Hand, BookOpen } from "lucide-react";
+import { AlertCircle, LogOut, Plus, Settings, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AdminCourseCard from "../../components/AdminCourseCard";
@@ -9,13 +9,7 @@ import styles from "./AdminCourses.module.css";
 import { useToast } from "../../context/ToastContext";
 import Modal from "../../components/Modal";
 import { useAuthStore } from "../../store/authStore";
-
-const ICON_MAP = {
-  sparkles: Sparkles,
-  scissors: Scissors,
-  flower: Flower,
-  hand: Hand
-};
+import { courseIconMap } from "../../constants/icons";
 
 export default function AdminCourses() {
   const { usuario, logout } = useAuthStore();
@@ -80,6 +74,7 @@ export default function AdminCourses() {
       setCourses(prev => prev.filter(c => c.id !== courseToDelete.id));
       addToast("Curso eliminado", "success");
     } catch (error) {
+      console.error(error);
       addToast("Error al borrar", "error");
     } finally {
       setCourseToDelete(null);
@@ -157,7 +152,7 @@ export default function AdminCourses() {
               {courses.map((course) => {
                 // Hacemos la lectura tolerante a fallos, mayúsculas o si el backend envía "icon"
                 const iconKey = (course.icono || course.icon || "").trim().toLowerCase();
-                const CourseIcon = ICON_MAP[iconKey] || BookOpen;
+                const CourseIcon = courseIconMap[iconKey] || BookOpen;
 
                 return (
                   <AdminCourseCard
