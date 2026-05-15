@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ServiceCard from "../../components/ServiceCard";
-import WorkshopIcon from "../../components/WorkshopIcon/WorkshopIcon";
 import { workshopIconMap } from "../../constants/icons";
-import { Sparkles } from "lucide-react";
+import { Home, ScissorsLineDashed, Sparkles } from "lucide-react";
 import courseService from "../../services/courseService";
 import workshopService from "../../services/workshopService";
 import styles from "./Talleres.module.css";
@@ -74,21 +73,46 @@ export default function Talleres() {
         <p className={styles.description}>{course.workshopPageDescription}</p>
       </div>
 
-      <div className={styles.grid}>
-        {workshops.map((workshop) => (
-          <ServiceCard
-            key={workshop.idTaller}
-            title={workshop.nombreTaller}
-            description={workshop.descripcion}
-            Icon={workshopIconMap[workshop.icono] ?? Sparkles}
-            to="/reservar"
-            state={{
-              selectedWorkshopId: workshop.idTaller,
-              selectedCourseId: course.id,
-            }}
-          />
-        ))}
-      </div>
+      {workshops.length === 0 ? (
+        <section className={styles.emptyCard}>
+          <div className={styles.emptyBadge}>
+            <ScissorsLineDashed className={styles.emptyBadgeIcon} strokeWidth={1.8} />
+            Sin talleres
+          </div>
+
+          <p className={styles.emptyCode}>0</p>
+
+          <h3 className={styles.emptyTitle}>
+            Aun no hay <span className={styles.emptyTitleHighlight}>talleres disponibles</span>
+          </h3>
+
+          <p className={styles.emptyDescription}>
+            Esta especialidad todavia no tiene talleres publicados. Vuelve a especialidades
+            para elegir otra opcion disponible.
+          </p>
+
+          <Link to="/" className={styles.emptyAction}>
+            <Home className={styles.emptyActionIcon} strokeWidth={1.8} />
+            Volver a especialidades
+          </Link>
+        </section>
+      ) : (
+        <div className={styles.grid}>
+          {workshops.map((workshop) => (
+            <ServiceCard
+              key={workshop.idTaller}
+              title={workshop.nombreTaller}
+              description={workshop.descripcion}
+              Icon={workshopIconMap[workshop.icono] ?? Sparkles}
+              to="/reservar"
+              state={{
+                selectedWorkshopId: workshop.idTaller,
+                selectedCourseId: course.id,
+              }}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
