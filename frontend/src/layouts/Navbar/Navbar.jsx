@@ -10,6 +10,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
+    { label: "Inicio", path: "/" },
     { label: "Sobre nosotros", path: "/sobre-nosotros" },
     { label: "Contacto", path: "#contact" },
   ];
