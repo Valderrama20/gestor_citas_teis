@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { Plus, Trash2, Sparkles, Scissors, Droplets, Waves, Brush, Flower, Hand, Paintbrush, Palette, Gem, Heart, Smile, Wind, Sun, Moon, Star, Gift, Award, Feather, Leaf, ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import Modal from "../Modal";
+import { AVAILABLE_ICONS } from "../../constants/icons";
 import styles from "./CreateWorkshopModal.module.css";
 
 const INITIAL_FORM = {
@@ -12,30 +13,6 @@ const INITIAL_FORM = {
 };
 
 const DEFAULT_HORARIO = { diaSemana: "Lunes", horaApertura: "09:00", horaCierre: "14:00" };
-
-const ALL_ICONS = [
-  { id: "sparkles", label: "Estética", icon: Sparkles },
-  { id: "scissors", label: "Peluquería", icon: Scissors },
-  { id: "brush", label: "Maquillaje", icon: Brush },
-  { id: "droplets", label: "Lavado", icon: Droplets },
-  { id: "waves", label: "Tratamientos", icon: Waves },
-  { id: "hand", label: "Manos", icon: Hand },
-  { id: "flower", label: "Bienestar", icon: Flower },
-  { id: "leaf", label: "Natural", icon: Leaf },
-  { id: "gem", label: "Joyas", icon: Gem },
-  { id: "heart", label: "Favorito", icon: Heart },
-  { id: "star", label: "Estrella", icon: Star },
-  { id: "award", label: "Premio", icon: Award },
-  { id: "gift", label: "Regalo", icon: Gift },
-  { id: "palette", label: "Color", icon: Palette },
-  { id: "paintbrush", label: "Pintura", icon: Paintbrush },
-  { id: "shopping-bag", label: "Venta", icon: ShoppingBag },
-  { id: "sun", label: "Día", icon: Sun },
-  { id: "moon", label: "Noche", icon: Moon },
-  { id: "wind", label: "Aire", icon: Wind },
-  { id: "smile", label: "Facial", icon: Smile },
-  { id: "feather", label: "Ligero", icon: Feather },
-];
 
 export default function CreateWorkshopModal({
   isOpen,
@@ -146,7 +123,7 @@ export default function CreateWorkshopModal({
               <ChevronLeft size={20} strokeWidth={2} />
             </button>
             <div className={styles.iconSelector} ref={iconContainerRef}>
-              {ALL_ICONS.map(({ id, label, icon: Icon }) => (
+              {AVAILABLE_ICONS.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   type="button"

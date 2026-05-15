@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ServiceCard from "../../components/ServiceCard";
-import WorkshopIcon, { workshopIconMap } from "../../components/WorkshopIcon/WorkshopIcon";
+import WorkshopIcon from "../../components/WorkshopIcon/WorkshopIcon";
+import { workshopIconMap } from "../../constants/icons";
 import { Sparkles } from "lucide-react";
 import courseService from "../../services/courseService";
 import workshopService from "../../services/workshopService";
