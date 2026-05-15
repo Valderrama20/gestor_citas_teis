@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { Sparkles, Scissors, Flower, Hand, AlertCircle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import Modal from "../Modal";
+import { AVAILABLE_ICONS } from "../../constants/icons";
 import styles from "./CreateCourseModal.module.css";
 
 const INITIAL_FORM = {
@@ -11,12 +12,20 @@ const INITIAL_FORM = {
   icono: "sparkles",
   descripcion: "",
 };
+const ICON_SCROLL_AMOUNT = 250;
+const ICON_SCROLL_DURATION = 420;
+
+function easeOutCubic(progress) {
+  return 1 - Math.pow(1 - progress, 3);
+}
 
 export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToEdit }) {
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const [showConfirmClose, setShowConfirmClose] = useState(false);
+  const iconContainerRef = useRef(null);
+  const scrollAnimationRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -37,6 +46,14 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
       setIsDirty(false);
     }
   }, [isOpen, courseToEdit]);
+
+  useEffect(() => {
+    return () => {
+      if (scrollAnimationRef.current) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+      }
+    };
+  }, []);
 
   const handleClose = () => {
     if (isDirty) {
@@ -73,6 +90,40 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
       setIsSubmitting(false);
     }
   }
+
+  const scrollIcons = (direction) => {
+    const container = iconContainerRef.current;
+
+    if (container) {
+      if (scrollAnimationRef.current) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+      }
+
+      const startScroll = container.scrollLeft;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const targetScroll = Math.min(
+        Math.max(startScroll + (direction === "left" ? -ICON_SCROLL_AMOUNT : ICON_SCROLL_AMOUNT), 0),
+        maxScroll
+      );
+      const scrollDelta = targetScroll - startScroll;
+      let startTime;
+
+      const animateScroll = (timestamp) => {
+        startTime ??= timestamp;
+
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / ICON_SCROLL_DURATION, 1);
+
+        container.scrollLeft = startScroll + scrollDelta * easeOutCubic(progress);
+
+        if (progress < 1) {
+          scrollAnimationRef.current = requestAnimationFrame(animateScroll);
+        }
+      };
+
+      scrollAnimationRef.current = requestAnimationFrame(animateScroll);
+    }
+  };
 
   return (
     <>
@@ -153,30 +204,45 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>
-            Icono representativo
-          </label>
-          <div className={styles.iconSelector}>
-            {[
-              { id: "sparkles", label: "Estética", icon: Sparkles },
-              { id: "scissors", label: "Peluquería", icon: Scissors },
-              { id: "flower", label: "Bienestar", icon: Flower },
-              { id: "hand", label: "Cuidado", icon: Hand },
-            ].map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                type="button"
-                className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
-                onClick={() => {
-                  setIsDirty(true);
-                  setFormData((current) => ({ ...current, icono: id }));
-                }}
-                aria-label={`Seleccionar icono ${id}`}
-              >
-                <Icon size={18} strokeWidth={1.8} />
-                <span>{label}</span>
-              </button>
-            ))}
+          <label className={styles.label}>Icono representativo</label>
+          <div className={styles.iconCarousel}>
+            <button
+              type="button"
+              className={styles.carouselButton}
+              onClick={() => scrollIcons('left')}
+              aria-label="Desplazar a la izquierda"
+            >
+              <ChevronLeft size={20} strokeWidth={2} />
+            </button>
+            <div className={styles.iconSelector} ref={iconContainerRef}>
+              {AVAILABLE_ICONS.map(({ id, label, icon }) => {
+                const Icon = icon;
+
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
+                    onClick={() => {
+                      setIsDirty(true);
+                      setFormData((current) => ({ ...current, icono: id }));
+                    }}
+                    aria-label={`Seleccionar icono ${label}`}
+                  >
+                    <Icon size={18} strokeWidth={1.8} />
+                    <span>{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              className={styles.carouselButton}
+              onClick={() => scrollIcons('right')}
+              aria-label="Desplazar a la derecha"
+            >
+              <ChevronRight size={20} strokeWidth={2} />
+            </button>
           </div>
         </div>
 

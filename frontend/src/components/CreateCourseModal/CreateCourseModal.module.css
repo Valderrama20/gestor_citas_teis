@@ -53,29 +53,70 @@
   resize: vertical;
 }
 
-.iconSelector {
+.iconCarousel {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  width: 100%;
+}
+
+.carouselButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid var(--color-border-field);
+  border-radius: var(--radius-full);
+  background: var(--color-white);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.carouselButton:hover {
+  background: var(--color-accent-wash);
+  color: var(--color-accent);
+  border-color: var(--color-accent-soft);
+}
+
+.iconSelector {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 0.5rem;
+  margin-bottom: -0.5rem;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  flex: 1;
+}
+
+.iconSelector::-webkit-scrollbar {
+  display: none;
 }
 
 .iconButton {
-  display: flex;
-  flex: 1;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   width: auto;
   padding: 0 1rem;
-  height: 3rem;
+  height: 2.5rem;
   border: 1px solid var(--color-border-field);
   border-radius: var(--radius-md);
   background: var(--color-white);
   color: var(--color-text-muted);
   cursor: pointer;
   transition: all var(--transition-fast);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .iconButton:hover {

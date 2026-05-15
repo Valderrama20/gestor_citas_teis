@@ -13,6 +13,12 @@ const INITIAL_FORM = {
 };
 
 const DEFAULT_HORARIO = { diaSemana: "Lunes", horaApertura: "09:00", horaCierre: "14:00" };
+const ICON_SCROLL_AMOUNT = 250;
+const ICON_SCROLL_DURATION = 420;
+
+function easeOutCubic(progress) {
+  return 1 - Math.pow(1 - progress, 3);
+}
 
 export default function CreateWorkshopModal({
   isOpen,
@@ -24,6 +30,7 @@ export default function CreateWorkshopModal({
   const [horarios, setHorarios] = useState([{ ...DEFAULT_HORARIO }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const iconContainerRef = useRef(null);
+  const scrollAnimationRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -32,6 +39,14 @@ export default function CreateWorkshopModal({
       setIsSubmitting(false);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    return () => {
+      if (scrollAnimationRef.current) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+      }
+    };
+  }, []);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -57,12 +72,36 @@ export default function CreateWorkshopModal({
   }
 
   const scrollIcons = (direction) => {
-    if (iconContainerRef.current) {
-      const scrollAmount = 250;
-      iconContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
+    const container = iconContainerRef.current;
+
+    if (container) {
+      if (scrollAnimationRef.current) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+      }
+
+      const startScroll = container.scrollLeft;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const targetScroll = Math.min(
+        Math.max(startScroll + (direction === "left" ? -ICON_SCROLL_AMOUNT : ICON_SCROLL_AMOUNT), 0),
+        maxScroll
+      );
+      const scrollDelta = targetScroll - startScroll;
+      let startTime;
+
+      const animateScroll = (timestamp) => {
+        startTime ??= timestamp;
+
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / ICON_SCROLL_DURATION, 1);
+
+        container.scrollLeft = startScroll + scrollDelta * easeOutCubic(progress);
+
+        if (progress < 1) {
+          scrollAnimationRef.current = requestAnimationFrame(animateScroll);
+        }
+      };
+
+      scrollAnimationRef.current = requestAnimationFrame(animateScroll);
     }
   };
 
@@ -123,18 +162,22 @@ export default function CreateWorkshopModal({
               <ChevronLeft size={20} strokeWidth={2} />
             </button>
             <div className={styles.iconSelector} ref={iconContainerRef}>
-              {AVAILABLE_ICONS.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  type="button"
-                  className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
-                  onClick={() => setFormData((current) => ({ ...current, icono: id }))}
-                  aria-label={`Seleccionar icono ${label}`}
-                >
-                  <Icon size={18} strokeWidth={1.8} />
-                  <span>{label}</span>
-                </button>
-              ))}
+              {AVAILABLE_ICONS.map(({ id, label, icon }) => {
+                const Icon = icon;
+
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
+                    onClick={() => setFormData((current) => ({ ...current, icono: id }))}
+                    aria-label={`Seleccionar icono ${label}`}
+                  >
+                    <Icon size={18} strokeWidth={1.8} />
+                    <span>{label}</span>
+                  </button>
+                );
+              })}
             </div>
             <button
               type="button"
