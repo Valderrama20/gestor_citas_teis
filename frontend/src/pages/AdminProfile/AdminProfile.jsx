@@ -123,9 +123,8 @@ export default function AdminProfile() {
                             </div>
 
                             <div className={styles.actions}>
-                                <button type="submit" className={styles.primaryBtn} disabled={isSubmitting}>
-                                    <Save size={18} />
-                                    {isSubmitting ? "Guardando..." : "Guardar cambios"}
+                                <button type="submit" className={styles.primaryButton} disabled={isSubmitting}>
+                                    {isSubmitting ? "Guardando..." : "Guardar"}
                                 </button>
                             </div>
                         </form>
@@ -166,9 +165,8 @@ export default function AdminProfile() {
                             </div>
 
                             <div className={styles.actions}>
-                                <button type="button" className={styles.secondaryBtn}>
-                                    <Lock size={18} />
-                                    Actualizar contraseña
+                                <button type="button" className={styles.primaryButton}>
+                                    Actualizar
                                 </button>
                             </div>
                         </form>

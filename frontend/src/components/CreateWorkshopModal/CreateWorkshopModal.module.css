@@ -163,6 +163,10 @@
   background: rgba(58, 46, 50, 0.12);
 }
 
+.secondaryButton:active:not(:disabled) {
+  background: rgba(58, 46, 50, 0.18);
+}
+
 .primaryButton {
   background: var(--color-accent);
   color: var(--color-white);
@@ -170,6 +174,10 @@
 
 .primaryButton:hover {
   background: var(--color-accent-strong);
+}
+
+.primaryButton:active:not(:disabled) {
+  background: var(--color-accent-press);
 }
 
 .secondaryButton:disabled,

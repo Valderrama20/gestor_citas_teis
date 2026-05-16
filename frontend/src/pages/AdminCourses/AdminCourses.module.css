@@ -1,6 +1,6 @@
 .page {
   min-height: 100vh;
-  background: var(--gradient-page), var(--color-background);
+  background: var(--gradient-page);
   padding-top: 60px;
 }
 

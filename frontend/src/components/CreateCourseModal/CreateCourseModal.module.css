@@ -145,7 +145,7 @@
 }
 
 .primaryButton:active:not(:disabled) {
-  background: var(--color-accent-press, #9a5353);
+  background: var(--color-accent-press);
 }
 
 .secondaryButton:disabled,
