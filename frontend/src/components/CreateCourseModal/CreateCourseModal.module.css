@@ -43,6 +43,11 @@
     box-shadow var(--transition-fast);
 }
 
+.input:hover:not(:focus),
+.textarea:hover:not(:focus) {
+  border-color: var(--color-accent-soft);
+}
+
 .input:focus,
 .textarea:focus {
   border-color: var(--color-accent);
@@ -131,6 +136,16 @@
   box-shadow: var(--shadow-focus);
 }
 
+.errorMessage {
+  color: var(--color-text-error);
+  background-color: var(--color-background-error);
+  padding: 0.75rem var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--size-copy);
+  font-weight: 600;
+  text-align: left;
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -145,6 +160,7 @@
   padding: 0.9rem 1.35rem;
   font-weight: 700;
   cursor: pointer;
+  transition: background-color var(--transition-fast);
 }
 
 .secondaryButton {
@@ -156,6 +172,10 @@
   background: rgba(58, 46, 50, 0.12);
 }
 
+.secondaryButton:active:not(:disabled) {
+  background: rgba(58, 46, 50, 0.18);
+}
+
 .primaryButton {
   background: var(--color-accent);
   color: var(--color-white);
@@ -163,6 +183,10 @@
 
 .primaryButton:hover {
   background: var(--color-accent-strong);
+}
+
+.primaryButton:active:not(:disabled) {
+  background: var(--color-accent-press);
 }
 
 .secondaryButton:disabled,
@@ -208,13 +232,15 @@
   padding: 0.9rem 1.35rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: background-color var(--transition-fast);
 }
 
 .confirmButton:hover {
   background-color: var(--color-accent-strong);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-soft-hover);
+}
+
+.confirmButton:active {
+  background-color: var(--color-accent-press);
 }
 
 .modalActionsVertical {

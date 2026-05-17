@@ -1,9 +1,8 @@
 /* --- ESTRUCTURA GENERAL DE LA PAGINA --- */
 .page {
   min-height: 100vh;
-  background-color: var(--color-background, #fffaf9);
-  display: flex;
-  flex-direction: column;
+  background-color: var(--gradient-page);
+  padding-top: 60px;
 }
 
 .container {
@@ -31,6 +30,7 @@
 .title {
   font-size: 2.5rem;
   font-weight: 700;
+  font-family: var(--font-display);
   color: var(--color-text, #3a2e32);
   margin: 0;
   letter-spacing: -0.02em;
@@ -50,23 +50,26 @@
 }
 
 .primaryButton {
-  background-color: var(--color-accent, #c07a7a);
-  color: var(--color-white, #ffffff);
+  background-color: var(--color-accent);
+  color: var(--color-white);
   border: none;
   padding: 0.7rem 1.2rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-full);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: opacity 0.2s;
-  box-shadow: 0 4px 12px rgba(192, 122, 122, 0.2);
+  transition: background-color 0.2s;
 }
 
 .primaryButton:hover {
-  opacity: 0.85;
+  background-color: var(--color-accent-strong);
+}
+
+.primaryButton:active {
+  background-color: var(--color-accent-press);
 }
 
 /* --- PESTANAS --- */
@@ -157,6 +160,10 @@
   background: #fae4e4;
 }
 
+.todayBtn:active {
+  background: #f4cccc;
+}
+
 .navButtons {
   display: flex;
   align-items: center;
@@ -212,6 +219,10 @@
   color: #ffffff;
 }
 
+.clearFilterBtn:active {
+  background: var(--color-accent-press);
+}
+
 /* --- ESTADO VACIO --- */
 .noDataContainer {
   display: flex;
@@ -254,7 +265,7 @@
 .workshopCard {
   background: var(--color-surface-strong, #ffffff);
   border: 1px solid rgba(58, 46, 50, 0.08);
-  border-radius: 1.2rem;
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
   box-shadow: var(--shadow-soft-sm, 0 4px 12px rgba(0, 0, 0, 0.02));
   transition: all 0.2s ease;
@@ -358,6 +369,10 @@
   color: #1e293b;
 }
 
+.editBtn:active {
+  background: #cbd5e1;
+}
+
 /* --- BARRA DE ACCIONES MULTIPLES --- */
 .bulkActionsBar {
   display: flex;
@@ -411,6 +426,10 @@
   background: #b2f5ea;
 }
 
+.bulkConfirm:active {
+  background: #81e6d9;
+}
+
 .bulkCancel {
   background: #fdecec;
   color: #b83232;
@@ -419,6 +438,10 @@
 
 .bulkCancel:hover {
   background: #fed7d7;
+}
+
+.bulkCancel:active {
+  background: #fecaca;
 }
 
 .bulkUndo {
@@ -431,15 +454,8 @@
   background: #feebc8;
 }
 
-.bulkDelete {
-  background: transparent;
-  color: #e53e3e;
-  border: 1px solid #e53e3e;
-}
-
-.bulkDelete:hover {
-  background: #e53e3e;
-  color: #ffffff;
+.bulkUndo:active {
+  background: #fbd38d;
 }
 
 @keyframes slideDown {
@@ -518,16 +534,15 @@
   padding: 0.9rem 1.35rem;
   font-weight: 700;
   cursor: pointer;
-  transition:
-    background-color var(--transition-fast, 0.2s ease),
-    transform var(--transition-fast, 0.2s ease),
-    box-shadow var(--transition-fast, 0.2s ease);
+  transition: background-color var(--transition-fast, 0.2s ease);
 }
 
 .confirmButton:hover {
   background-color: var(--color-accent-strong, #a86262);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-soft-hover, 0 8px 20px rgba(0, 0, 0, 0.08));
+}
+
+.confirmButton:active {
+  background-color: var(--color-accent-press);
 }
 
 .secondaryButton {
@@ -543,6 +558,10 @@
 
 .secondaryButton:hover {
   background: rgba(58, 46, 50, 0.12);
+}
+
+.secondaryButton:active {
+  background: rgba(58, 46, 50, 0.18);
 }
 
 @media (min-width: 768px) {

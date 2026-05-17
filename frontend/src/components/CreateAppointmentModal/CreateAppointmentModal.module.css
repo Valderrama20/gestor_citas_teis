@@ -54,6 +54,11 @@
     box-shadow var(--transition-fast);
 }
 
+.input:hover:not(:focus),
+.select:hover:not(:focus) {
+  border-color: var(--color-accent-soft);
+}
+
 .input:focus,
 .select:focus {
   border-color: var(--color-accent);
@@ -103,15 +108,13 @@
 }
 
 .errorMessage {
-  color: #d32f2f;
-  background-color: #ffebee;
+  color: var(--color-text-error);
+ background-color: var(--color-background-error);
   padding: 0.75rem var(--space-4);
   border-radius: var(--radius-md);
   font-size: var(--size-copy);
   font-weight: 600;
   text-align: left;
-  border-left: 4px solid #d32f2f;
-  margin-bottom: var(--space-4);
 }
 
 .helperText {
@@ -123,7 +126,7 @@
 .allergiesSection {
   background: var(--color-background-soft);
   padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-divider);
 }
 
@@ -169,7 +172,7 @@
 .summary {
   background: var(--color-accent-wash);
   border: 1px solid var(--color-accent-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   padding: var(--space-5) var(--space-6);
   width: 100%;
 }
@@ -216,7 +219,7 @@
   font-size: var(--size-copy-lg);
   font-weight: 700;
   cursor: pointer;
-  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: background-color var(--transition-fast);
 }
 
 .secondaryButton {
@@ -228,6 +231,10 @@
   background: rgba(58, 46, 50, 0.12);
 }
 
+.secondaryButton:active:not(:disabled) {
+  background: rgba(58, 46, 50, 0.18);
+}
+
 .buttonPrimary {
   background: var(--color-accent);
   color: var(--color-white);
@@ -236,8 +243,10 @@
 
 .buttonPrimary:hover:not(:disabled) {
   background: var(--color-accent-strong);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-soft-hover);
+}
+
+.buttonPrimary:active:not(:disabled) {
+  background-color: var(--color-accent-press, #9a5353);
 }
 
 .secondaryButton:disabled,
@@ -274,13 +283,15 @@
   padding: 0.9rem 1.35rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: background-color var(--transition-fast);
 }
 
 .confirmButton:hover {
   background-color: var(--color-accent-strong);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-soft-hover);
+}
+
+.confirmButton:active {
+  background-color: var(--color-accent-press, #9a5353);
 }
 
 .modalActionsVertical {

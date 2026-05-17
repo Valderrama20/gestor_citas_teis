@@ -222,41 +222,48 @@
   justify-content: flex-end;
 }
 
-.primaryBtn, .secondaryBtn {
+.secondaryButton,
+.primaryButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.8rem 1.5rem;
-  border-radius: var(--radius-md);
-  font-weight: 600;
+  border: 0;
+  border-radius: var(--radius-full);
+  padding: 0.9rem 1.35rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  border: none;
+  transition: background-color var(--transition-fast);
 }
 
-.primaryBtn {
-  background-color: var(--color-accent);
+.secondaryButton {
+  background: rgba(58, 46, 50, 0.08);
+  color: var(--color-text);
+}
+
+.secondaryButton:hover {
+  background: rgba(58, 46, 50, 0.12);
+}
+
+.secondaryButton:active:not(:disabled) {
+  background: rgba(58, 46, 50, 0.18);
+}
+
+.primaryButton {
+  background: var(--color-accent);
   color: var(--color-white);
-  box-shadow: var(--shadow-soft-sm);
 }
 
-.primaryBtn:hover:not(:disabled) {
-  background-color: var(--color-accent-strong);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-soft-md);
+.primaryButton:hover {
+  background: var(--color-accent-strong);
 }
 
-.primaryBtn:disabled {
-  opacity: 0.7;
+.primaryButton:active:not(:disabled) {
+  background: var(--color-accent-press, #9a5353);
+}
+
+.secondaryButton:disabled,
+.primaryButton:disabled {
   cursor: not-allowed;
-}
-
-.secondaryBtn {
-  background-color: var(--color-text);
-  color: var(--color-white);
-}
-
-.secondaryBtn:hover {
-  background-color: var(--color-text-muted);
+  opacity: 0.6;
 }

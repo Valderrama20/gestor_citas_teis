@@ -5,6 +5,7 @@
     --font-body: 'Nunito', sans-serif;
 
     --color-background: #fcf9f8;
+    --color-background-error:#ffebee;
     --color-background-soft: rgba(255, 248, 246, 0.95);
     --color-surface: rgba(255, 255, 255, 0.82);
     --color-surface-strong: rgba(255, 255, 255, 1);
@@ -15,11 +16,14 @@
     --color-text: #3a2e32;
     --color-text-muted: #6f6668;
     --color-text-soft: #7f7477;
+    --color-text-error: #d32f2f;
     --color-accent: #c48b8b;
     --color-accent-strong: #b37373;
     --color-accent-soft: #de9f95;
     --color-accent-border: #f4d6d6;
     --color-accent-wash: #fff3f1;
+    --color-accent-press: #9a5353;
+
     --color-divider: #e7dddd;
     --color-divider-accent: rgba(196, 139, 139, 0.35);
     --color-text-faint: rgba(58, 46, 50, 0.5);

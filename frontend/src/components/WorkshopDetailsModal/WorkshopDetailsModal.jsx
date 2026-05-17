@@ -34,11 +34,7 @@ export default function WorkshopDetailsModal({ isOpen, onClose, workshop }) {
           />
         </div>
 
-        <div className={styles.actions}>
-          <button type="button" className={styles.primaryButton} onClick={onClose}>
-            Cerrar ventana
-          </button>
-        </div>
+        
       </div>
     </Modal>
   );

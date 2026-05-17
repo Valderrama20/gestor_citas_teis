@@ -19,10 +19,7 @@ export default function Navbar() {
     <>
       <nav className={styles.nav}>
         {/* Logo */}
-        <Link to="/" className={styles.logoGroup}>
-          {/* <div className={styles.logoIconBox}>
-            <Sparkles className={styles.logoIcon} strokeWidth={1.8} />
-          </div> */}
+        <Link to="/" className={styles.logoGroup} onClick={() => window.scrollTo(0, 0)}>
           <span className={styles.logoText}>
             IES TEIS | <span className={styles.logoHighlight}>Imagen Personal</span>
           </span>
@@ -49,9 +46,9 @@ export default function Navbar() {
                 {item.label}
               </a>
             ) : (
-              <Link 
-                key={item.path} 
-                to={item.path} 
+              <Link
+                key={item.path}
+                to={item.path}
                 className={styles.navLink}
                 onClick={() => window.scrollTo(0, 0)}
               >

@@ -1,6 +1,6 @@
 .page {
   min-height: 100vh;
-  background: var(--gradient-page), var(--color-background);
+  background: var(--gradient-page);
   padding-top: 60px;
 }
 
@@ -68,6 +68,7 @@ button.textButton:hover {
   padding: 0.9rem 1.35rem;
   font-weight: 700;
   cursor: pointer;
+  transition: background-color var(--transition-fast);
 }
 
 .primaryButton {
@@ -79,6 +80,10 @@ button.textButton:hover {
   background: var(--color-accent-strong);
 }
 
+.primaryButton:active:not(:disabled) {
+  background-color: var(--color-accent-press, #9a5353);
+}
+
 .secondaryButton {
   background: rgba(58, 46, 50, 0.08);
   color: var(--color-text);
@@ -86,6 +91,10 @@ button.textButton:hover {
 
 .secondaryButton:hover {
   background: rgba(58, 46, 50, 0.12);
+}
+
+.secondaryButton:active:not(:disabled) {
+  background: rgba(58, 46, 50, 0.18);
 }
 
 .primaryButton:disabled,
@@ -143,13 +152,15 @@ button.textButton:hover {
   padding: 0.9rem 1.35rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: background-color var(--transition-fast);
 }
 
 .confirmButton:hover {
   background-color: var(--color-accent-strong);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-soft-hover);
+}
+
+.confirmButton:active {
+  background-color: var(--color-accent-press, #9a5353);
 }
 
 .modalActionsVertical {

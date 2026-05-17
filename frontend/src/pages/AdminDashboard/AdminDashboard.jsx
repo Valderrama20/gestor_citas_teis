@@ -460,13 +460,6 @@ export default function AdminDashboard() {
                   >
                     <XCircle size={16} /> Cancelar
                   </button>
-
-                  {/* <button
-                    onClick={() => setIsDeleteDialogOpen(true)}
-                    className={`${styles.bulkBtn} ${styles.bulkDelete}`}
-                  >
-                    <Trash2 size={16} /> Eliminar
-                  </button> */}
                 </div>
               </div>
             )}
@@ -533,12 +526,9 @@ export default function AdminDashboard() {
                           <WorkshopIcon
                             iconName={workshop.icono}
                             size={20}
-                            className={styles.workshopIcon}
                           />
                         </div>
-                        <h3 className={styles.workshopTitle}>
-                          {workshop.nombreTaller}
-                        </h3>
+                        <h3 className={styles.workshopTitle}>{workshop.nombreTaller}</h3>
                       </div>
 
                       <div className={styles.workshopInfo}>

@@ -42,7 +42,7 @@ export default function AboutUs() {
                         Sobre <span className={styles.highlight}>Nosotros</span>
                     </h1>
                     <p className={styles.subtitle}>
-                        Servicios de estética y peluquería de calidad a precios accesibles
+                        Servicios de estética y peluquería con sello de calidad, creados por nuestros alumnos y guiados por docentes expertos.
                     </p>
                 </div>
                 <div className={styles.glowTop} />
