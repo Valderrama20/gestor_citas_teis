@@ -10,7 +10,7 @@
   background-color: var(--color-white);
   box-shadow: var(--shadow-soft-md);
   gap: var(--space-4);
-  border-bottom: 1px solid var(--color-accent-border); 
+  border-bottom: 1px solid var(--color-accent-border);
 }
 
 .logoGroup {
@@ -91,7 +91,7 @@
 }
 
 .userName {
-  display: none; /* Oculto por defecto en móvil */
+  display: none;/* Oculto por defecto en móvil */
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -134,6 +134,7 @@
     opacity: 0;
     transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -238,7 +239,8 @@
   }
 
   .userName {
-    display: inline; /* Visible en desktop */
     max-width: 150px;
+    display: inline;
+    /* Se muestra en pantallas grandes */
   }
 }
