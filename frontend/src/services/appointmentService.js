@@ -29,17 +29,14 @@ function normalizeBackendCita(cita) {
     date,
     time,
     status,
-    // IMPORTANTE: Extraemos el idTaller del objeto taller que viene de Java
     workshopId: String(taller.idTaller || ""), 
     idTaller: String(taller.idTaller || ""),
     idCurso: String(taller.idCurso || cita.idCurso || ""),
-    // Guardamos el objeto taller completo para que el Dashboard pueda leerlo
     taller: taller, 
     original: cita,
   };
 }
 
-// Tabla Mock para mantener funcionando el panel de administración temporalmente
 let tablaCitas = [
   {
     id: 1,
@@ -86,7 +83,6 @@ function getSiguienteIdCita() {
   );
 }
 
-// Añade el nombre del taller a la cita para el panel admin
 async function enriquecerCitas(citas) {
   const todosLosTalleres = await workshopService.getAllWorkshops();
 
@@ -108,12 +104,7 @@ const appointmentService = {
       const { data } = await api.get(`/citas/curso/${idCurso}`);
       return (data ?? []).map(normalizeBackendCita);
     } catch (error) {
-      const status = error?.response?.status;
-      if (status) {
-        console.error("Error cargando citas por curso:", status);
-      } else {
-        console.error("Error de conexión cargando citas por curso:", error);
-      }
+      console.error("Error cargando citas por curso:", error);
       return [];
     }
   },
@@ -131,121 +122,98 @@ const appointmentService = {
     try {
       await api.put('/citas', payload);
     } catch (error) {
-      const status = error?.response?.status;
-      if (status) {
-        console.error("Error actualizando estado de la cita, código HTTP:", status);
-      } else {
-        console.error("Error de conexión actualizando cita:", error);
-      }
+      console.error("Error actualizando cita:", error);
     }
 
     return appointmentService.getAppointmentsByCourseId(courseId);
   },
 
   getAvailableSlots: async (fecha) => {
-    if (!fecha) {
-      return [];
-    }
+    if (!fecha) return [];
     return availabilityService.getSlotsByDate(fecha);
   },
 
   createAppointment: async (datosCita) => {
-    // ==========================================
-    // 1. GUARDADO REAL EN SPRING BOOT (MARIADB)
-    // ==========================================
+    let horarioElegido = null;
+    if (datosCita.slotId) {
+      horarioElegido = await availabilityService.getSlotById(datosCita.slotId);
+    }
+    
+    // 1. LIMPIEZA EXTREMA DE FECHA (Prevenir que se envíe "Lunes")
+    let fechaRaw = datosCita.date || datosCita.fecha || horarioElegido?.date || "";
+    let fechaReal;
+    // Comprobamos si tiene un formato válido YYYY-MM-DD. Si no, usamos la de hoy.
+    if (/^\d{4}-\d{2}-\d{2}$/.test(fechaRaw)) {
+      fechaReal = fechaRaw;
+    } else {
+      fechaReal = new Date().toISOString().split('T')[0]; 
+    }
+
+    // 2. LIMPIEZA EXTREMA DE HORA (Prevenir que se envíe "09:00 a 14:00")
+    let horaRaw = String(datosCita.time || datosCita.hora || horarioElegido?.time || "09:00");
+    // Cortamos solo los primeros 5 caracteres y le añadimos los segundos (HH:mm:ss)
+    let horaReal = horaRaw.substring(0, 5) + ":00";
+
+    const idTaller = datosCita.workshopId || datosCita.idTaller || horarioElegido?.workshopId || "";
+
+    // 3. CONSTRUCCIÓN DEL JSON ESTRICTO
+    const citaParaMariaDB = {
+      estado: "PENDIENTE",
+      fecha: fechaReal,
+      hora: horaReal,
+      cliente: {
+        nombre: datosCita.client || datosCita.nombre || "Cliente Nuevo",
+        email: datosCita.email || "sin-email@test.com",
+        // ⚠️ He quitado "notasAlergias" temporalmente por si no existe en tu Usuario.java
+      },
+      taller: {
+        idTaller: parseInt(idTaller, 10) || null,
+      },
+    };
+
+    console.log("Enviando JSON al backend:", citaParaMariaDB);
+
     try {
-      // Necesitamos la hora exacta obtenida del servicio de horarios
-      const horarioElegido = await availabilityService.getSlotById(datosCita.slotId);
-      
-      // Adaptación a formato SQL estricto (DATE y TIME)
-      // MVP: Mandamos una fecha estática válida. En producción se calcularía el próximo día disponible.
-      const fechaParaSQL = "2026-05-20";
-      const horaParaSQL = horarioElegido ? `${horarioElegido.time}:00` : "09:00:00";
-
-      const idTaller = datosCita.workshopId ?? (horarioElegido?.workshopId ?? "");
-
-      const citaParaMariaDB = {
-        estado: "PENDIENTE",
-        fecha: fechaParaSQL,
-        hora: horaParaSQL,
-        cliente: {
-          nombre: datosCita.client,
-          email: datosCita.email,
-          notasAlergias: datosCita.allergies,
-        },
-        taller: {
-          idTaller: parseInt(idTaller, 10) || null,
-        },
-      };
-      console.log("Enviando JSON al backend:", citaParaMariaDB);
-
       await api.post("/citas", citaParaMariaDB);
       console.log("✅ ¡Cita creada con éxito en la API real!");
     } catch (error) {
-      const status = error?.response?.status;
-      if (status) {
-        console.error("Fallo al guardar la cita. Código HTTP:", status);
-      } else {
-        console.error("Error de conexión al servidor de Spring Boot:", error);
+      // 4. CHIVATO DE ERRORES: Esto nos dirá qué campo exacto no le gusta a Java
+      console.error("Fallo al guardar la cita en BD:", error);
+      if (error.response && error.response.data) {
+        console.error("🚨 MOTIVO EXACTO DEL RECHAZO (Spring Boot):", error.response.data);
       }
+      throw error; 
     }
 
-    // ==========================================
-    // 2. MANTENIMIENTO DEL MOCK PARA EL PANEL ADMIN
-    // ==========================================
-    // Esto permite que el frontend siga funcionando visualmente hasta migrar los GET
-    const horario = datosCita.slotId
-      ? await availabilityService.getSlotById(datosCita.slotId)
-      : null;
-    const idTaller = datosCita.workshopId ?? horario?.workshopId ?? "";
-    const taller = idTaller
-      ? await workshopService.getWorkshopById(idTaller)
-      : null;
-    const idCurso = datosCita.idCurso ?? taller?.idCurso ?? "";
-    const fecha = datosCita.date ?? horario?.date ?? "";
-    const hora = datosCita.time ?? horario?.time ?? "";
-    const nombreCliente = (datosCita.client ?? "").trim();
-
+    // --- MANTENIMIENTO DEL MOCK ---
     const nuevaCitaMock = {
       id: getSiguienteIdCita(),
-      idCurso: idCurso ? String(idCurso) : "",
-      nombre: nombreCliente,
-      email: datosCita.email?.trim() ?? "",
+      idCurso: String(datosCita.idCurso || datosCita.courseId || ""),
+      nombre: datosCita.client || "Cliente Nuevo",
+      email: datosCita.email || "sin-email@test.com",
       idTaller,
-      idHorario: horario?.id ?? datosCita.slotId ?? null,
-      fecha,
-      hora,
-      estado: datosCita.estado ?? "PENDIENTE",
-      idAlumno: datosCita.idAlumno ?? null,
-      alergias: datosCita.allergies?.trim() ?? "",
+      idHorario: datosCita.slotId || null,
+      fecha: fechaReal,
+      hora: horaReal,
+      estado: "PENDIENTE",
+      idAlumno: datosCita.idAlumno || null,
+      alergias: datosCita.allergies || "",
     };
 
     tablaCitas = [...tablaCitas, nuevaCitaMock];
-
     const [citaEnriquecida] = await enriquecerCitas([nuevaCitaMock]);
     return citaEnriquecida;
   },
 
   cancelAppointment: async (idCita) => {
     tablaCitas = tablaCitas.map((cita) =>
-      cita.id === idCita
-        ? {
-            ...cita,
-            estado: "Cancelada",
-          }
-        : cita,
+      cita.id === idCita ? { ...cita, estado: "Cancelada" } : cita
     );
-
-    return cloneData(
-      tablaCitas.find((cita) => cita.id === idCita) ?? null,
-    );
+    return cloneData(tablaCitas.find((cita) => cita.id === idCita) ?? null);
   },
 
   cancelAppointmentByToken: async (token) => {
-    if (!token) {
-      return { status: "TOKEN_INVALIDO", message: "Token de cancelacion no valido." };
-    }
-
+    if (!token) return { status: "TOKEN_INVALIDO", message: "Token de cancelacion no valido." };
     const { data } = await api.post("/citas/cancelar", { token });
     return data;
   },

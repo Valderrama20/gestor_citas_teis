@@ -14,6 +14,9 @@ import {
   CalendarCheck,
   FilterX,
   AlertCircle,
+  MoreVertical,
+  Edit3,
+  AlertTriangle,
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -49,6 +52,11 @@ export default function AdminDashboard() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  
+  // --- NUEVOS ESTADOS PARA EL MENÚ Y BORRADO DE TALLER ---
+  const [activeMenuWorkshopId, setActiveMenuWorkshopId] = useState(null);
+  const [isDeleteWorkshopDialogOpen, setIsDeleteWorkshopDialogOpen] = useState(false);
+  const [workshopToDelete, setWorkshopToDelete] = useState(null);
 
   const [selectedIds, setSelectedIds] = useState([]);
   const [sortConfig, setSortConfig] = useState({
@@ -87,6 +95,13 @@ export default function AdminDashboard() {
       }
     }
   }, [courseId]);
+
+  // Cierra los menús desplegables si se hace clic fuera
+  useEffect(() => {
+    const closeMenus = () => setActiveMenuWorkshopId(null);
+    window.addEventListener("click", closeMenus);
+    return () => window.removeEventListener("click", closeMenus);
+  }, []);
 
   const refreshData = async () => {
     try {
@@ -166,14 +181,43 @@ export default function AdminDashboard() {
     setIsDetailsModalOpen(true);
   };
 
+  // --- LÓGICA DEL MENÚ Y BORRADO ---
+  const toggleWorkshopMenu = (e, id) => {
+    e.stopPropagation();
+    setActiveMenuWorkshopId(activeMenuWorkshopId === id ? null : id);
+  };
+
   const handleEditClick = (e, workshop) => {
     e.stopPropagation();
     setSelectedWorkshop(workshop);
     setIsEditWorkshopModalOpen(true);
+    setActiveMenuWorkshopId(null);
+  };
+
+  const handleDeleteWorkshopClick = (e, workshop) => {
+    e.stopPropagation();
+    setWorkshopToDelete(workshop);
+    setIsDeleteWorkshopDialogOpen(true);
+    setActiveMenuWorkshopId(null);
+  };
+
+  const confirmDeleteWorkshop = async () => {
+    try {
+      if (workshopService.deleteWorkshop) {
+        await workshopService.deleteWorkshop(workshopToDelete.idTaller);
+      }
+      addToast("Taller eliminado con éxito", "success");
+      setIsDeleteWorkshopDialogOpen(false);
+      await refreshData();
+    } catch (error) {
+      addToast("No se puede eliminar un taller con citas asociadas", "error");
+      setIsDeleteWorkshopDialogOpen(false);
+    }
   };
 
   const goToFilteredAppointments = (e, workshopId) => {
     e.stopPropagation();
+    setCurrentDate(new Date()); // Se asegura de volver a "Hoy"
     setFilterWorkshopId(workshopId);
     setActiveTab("citas");
   };
@@ -521,14 +565,38 @@ export default function AdminDashboard() {
                       className={styles.workshopCard}
                       onClick={() => handleWorkshopClick(workshop)}
                     >
-                      <div className={styles.workshopHeader}>
-                        <div className={styles.workshopIconWrapper}>
-                          <WorkshopIcon
-                            iconName={workshop.icono}
-                            size={20}
-                          />
+                      <div className={styles.header}>
+                        <div className={styles.headerLeft}>
+                          <div className={styles.workshopIconWrapper}>
+                            <WorkshopIcon
+                              iconName={workshop.icono}
+                              size={20}
+                            />
+                          </div>
+                          <h3 className={styles.workshopTitle}>{workshop.nombreTaller}</h3>
                         </div>
-                        <h3 className={styles.workshopTitle}>{workshop.nombreTaller}</h3>
+
+                        <div className={styles.menuContainer}>
+                          <button 
+                            onClick={(e) => toggleWorkshopMenu(e, wsId)} 
+                            className={styles.menuTrigger} 
+                            title="Opciones"
+                          >
+                            <MoreVertical strokeWidth={1.8} size={20} />
+                          </button>
+
+                          {activeMenuWorkshopId === wsId && (
+                            <div className={styles.dropdown}>
+                              <button onClick={(e) => handleEditClick(e, workshop)} className={styles.dropdownItem}>
+                                <Edit3 size={16} /> Editar
+                              </button>
+                              <div className={styles.dropdownDivider} />
+                              <button onClick={(e) => handleDeleteWorkshopClick(e, workshop)} className={`${styles.dropdownItem} ${styles.danger}`}>
+                                <Trash2 size={16} /> Eliminar
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       <div className={styles.workshopInfo}>
@@ -555,7 +623,7 @@ export default function AdminDashboard() {
                           />
                           <span>
                             <strong>{citasDelTaller.length}</strong> citas
-                            agendadas (activas)
+                            esta semana
                           </span>
                         </div>
                       </div>
@@ -565,13 +633,7 @@ export default function AdminDashboard() {
                           className={styles.linkTextBtn}
                           onClick={(e) => goToFilteredAppointments(e, wsId)}
                         >
-                          Ver citas agendadas
-                        </button>
-                        <button
-                          className={styles.editBtn}
-                          onClick={(e) => handleEditClick(e, workshop)}
-                        >
-                          Editar taller
+                          Ver citas de esta semana
                         </button>
                       </div>
                     </div>
@@ -668,6 +730,53 @@ export default function AdminDashboard() {
               type="button"
               className={styles.secondaryButton}
               onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+     {/* --- MODAL PARA ELIMINAR TALLER --- */}
+      <Modal
+        isOpen={isDeleteWorkshopDialogOpen}
+        onClose={() => setIsDeleteWorkshopDialogOpen(false)}
+        title="Eliminar taller"
+        showAction={false}
+      >
+        <div className={styles.confirmWrapper}>
+          <div className={styles.dangerIconBox}>
+            <AlertCircle
+              size={48}
+              color="var(--color-accent)"
+              strokeWidth={1.5}
+            />
+          </div>
+
+          <div className={styles.confirmTextGroup}>
+            <p className={styles.confirmQuestion}>
+              ¡Esta acción no se puede deshacer!
+            </p>
+            <h3 className={styles.confirmTargetName}>
+              {workshopToDelete?.nombreTaller}
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>
+              (Solo se puede eliminar si no tiene citas asociadas)
+            </p>
+          </div>
+
+          <div className={styles.modalActionsVertical}>
+            <button
+              type="button"
+              className={styles.confirmButton}
+              onClick={confirmDeleteWorkshop}
+            >
+              Eliminar definitivamente
+            </button>
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={() => setIsDeleteWorkshopDialogOpen(false)}
             >
               Cancelar
             </button>
