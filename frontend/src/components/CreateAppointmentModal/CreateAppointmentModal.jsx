@@ -79,6 +79,7 @@ export default function CreateAppointmentModal({
 
       const nextSlots = await availabilityService.getSlotsByWorkshopId(
         formData.workshopId,
+        4,
       );
 
       if (!isMounted) {
@@ -197,21 +198,10 @@ export default function CreateAppointmentModal({
 
   const tallerSeleccionado = workshops.find(w => String(w.id || w.idTaller) === String(formData.workshopId));
   
-  // Convertir nombres de días a números (0=Domingo, 1=Lunes, ..., 6=Sábado)
-  const dayNameToNumber = {
-    "Lunes": 1,
-    "Martes": 2,
-    "Miércoles": 3,
-    "Jueves": 4,
-    "Viernes": 5,
-    "Sábado": 6,
-    "Domingo": 0
-  };
-
-  // Extraer los días únicos disponibles para el taller seleccionado
-  const diasPermitidosDelTaller = slots.length > 0
-    ? [...new Set(slots.map(slot => dayNameToNumber[slot.date]).filter(Boolean))]
-    : []; 
+  // Extraer las fechas únicas disponibles para el taller seleccionado
+  const fechasPermitidasDelTaller = slots.length > 0
+    ? [...new Set(slots.map(slot => slot.fecha).filter(Boolean))]
+    : [];
 
   return (
     <>
@@ -498,7 +488,7 @@ export default function CreateAppointmentModal({
     <CalendarModal 
       isOpen={isCalendarOpen} 
       onClose={() => setIsCalendarOpen(false)}
-      allowedDaysOfWeek={diasPermitidosDelTaller}
+      allowedDates={fechasPermitidasDelTaller}
       onSelectDate={(selectedDate) => {
         setIsDirty(true);
         setDateError("");

@@ -69,7 +69,7 @@ export default function Booking() {
         setHorarios([]);
         return;
       }
-      const nextHorarios = await availabilityService.getSlotsByWorkshopId(formData.workshopId);
+      const nextHorarios = await availabilityService.getSlotsByWorkshopId(formData.workshopId, 1);
       if (!isMounted) return;
       setHorarios(nextHorarios);
       setFormData((current) => ({

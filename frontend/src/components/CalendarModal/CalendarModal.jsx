@@ -3,7 +3,13 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Modal from "../Modal";
 import styles from "./CalendarModal.module.css";
 
-export default function CalendarModal({ isOpen, onClose, onSelectDate, allowedDaysOfWeek = [] }) {
+export default function CalendarModal({
+  isOpen,
+  onClose,
+  onSelectDate,
+  allowedDaysOfWeek = [],
+  allowedDates = [],
+}) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -32,13 +38,14 @@ export default function CalendarModal({ isOpen, onClose, onSelectDate, allowedDa
     setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
   };
 
+  const getLocalIsoDate = (date) => {
+    const tzOffset = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() - tzOffset).toISOString().split("T")[0];
+  };
+
   const handleDateClick = (day) => {
     const selectedDate = new Date(currentYear, currentMonth, day);
-    // Ajustar zona horaria local para el string YYYY-MM-DD
-    const tzOffset = selectedDate.getTimezoneOffset() * 60000;
-    const localISOTime = new Date(selectedDate.getTime() - tzOffset).toISOString().split('T')[0];
-    
-    onSelectDate(localISOTime);
+    onSelectDate(getLocalIsoDate(selectedDate));
     onClose();
   };
 
@@ -52,18 +59,22 @@ export default function CalendarModal({ isOpen, onClose, onSelectDate, allowedDa
       days.push(<div key={`empty-${i}`} className={styles.emptyDay}></div>);
     }
 
+    const allowedDateSet = new Set(allowedDates.filter(Boolean));
+
     // Días reales del mes
     for (let i = 1; i <= daysInMonth; i++) {
       const dateToCheck = new Date(currentYear, currentMonth, i);
       const jsDayOfWeek = dateToCheck.getDay(); // 0 = Domingo, 1 = Lunes...
+      const localIsoDate = getLocalIsoDate(dateToCheck);
       
       // Ajustamos el día de la semana para que coincida con tu backend si es necesario 
       // (Aquí asumimos que 1=Lunes, 2=Martes... 0=Domingo)
       
       const isPast = dateToCheck < today;
-      // Si allowedDaysOfWeek está vacío, permitimos todos (fallback). Si tiene datos, filtramos.
+      const isAllowedDate = allowedDateSet.size === 0 || allowedDateSet.has(localIsoDate);
       const isAllowedDay = allowedDaysOfWeek.length === 0 || allowedDaysOfWeek.includes(jsDayOfWeek);
-      const isDisabled = isPast || !isAllowedDay;
+      const isAllowed = allowedDateSet.size > 0 ? isAllowedDate : isAllowedDay;
+      const isDisabled = isPast || !isAllowed;
 
       days.push(
         <button

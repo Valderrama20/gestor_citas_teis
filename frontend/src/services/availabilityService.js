@@ -11,30 +11,13 @@ const availabilityService = {
     }
   },
 
-  getSlotsByWorkshopId: async (workshopId) => {
+  getSlotsByWorkshopId: async (workshopId, semanas) => {
     try {
-      const response = await api.get('/horarios-talleres');
-      const allSlots = response.data;
-
-      // 1. Filtramos buscando el ID dentro del objeto idTaller
-      const filteredSlots = allSlots.filter(
-        (slot) => String(slot.idTaller?.idTaller) === String(workshopId)
+      const response = await api.get(
+        `/horarios-talleres/taller/${workshopId}`,
+        semanas ? { params: { semanas } } : undefined,
       );
-
-      // 2. Mapeamos los datos para que el desplegable de React los entienda
-      return filteredSlots.map((slot) => {
-        // Cortamos los segundos de la hora para que quede "09:00" en vez de "09:00:00"
-        const horaInicio = slot.horaApertura.substring(0, 5);
-        const horaFin = slot.horaCierre.substring(0, 5);
-
-        return {
-          id: String(slot.idHorario), // Usamos el ID correcto del horario
-          workshopId: String(slot.idTaller.idTaller),
-          label: `${slot.diaSemana} - de ${horaInicio} a ${horaFin}`, // Esto es lo que verá el usuario
-          date: slot.diaSemana, // Guardamos "Lunes", "Martes", etc.
-          time: horaInicio,
-        };
-      });
+      return response.data ?? [];
 
     } catch (error) {
       console.error("Error de conexión con la API de horarios:", error);
