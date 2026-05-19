@@ -1,0 +1,15 @@
+info:
+  name: GET HORARIO-TALLERES (1)
+  type: http
+  seq: 7
+
+http:
+  method: GET
+  url: http://localhost:9001/horarios-talleres
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

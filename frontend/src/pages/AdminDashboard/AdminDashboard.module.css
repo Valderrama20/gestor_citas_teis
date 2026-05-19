@@ -580,4 +580,98 @@
     align-items: center;
     justify-content: space-between;
   }
+
+  /* --- LAYOUT HEADER Y MENÚ (ESTILO CURSOS) --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menuContainer {
+  position: relative;
+}
+
+.menuTrigger {
+  background: none; 
+  border: none; 
+  color: var(--color-text-muted);
+  cursor: pointer; 
+  padding: 0.25rem; 
+  border-radius: var(--radius-full);
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  margin-top: 0.2rem; /* Alinea los puntos visualmente con el icono */
+}
+
+.menuTrigger:hover {
+  background-color: var(--color-surface-muted, rgba(0,0,0,0.05)); 
+  color: var(--color-text);
+}
+
+.dropdown {
+  position: absolute; 
+  top: 100%; 
+  right: 0; 
+  margin-top: 0.25rem;
+  background: var(--color-white); 
+  border: 1px solid var(--color-border-field);
+  border-radius: var(--radius-md); 
+  box-shadow: var(--shadow-soft-md);
+  padding: 0.5rem; 
+  min-width: 140px; 
+  z-index: 20;
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.25rem;
+  animation: slideIn 0.2s ease-out;
+}
+
+.dropdownItem {
+  display: flex; 
+  align-items: center; 
+  gap: 0.5rem;
+  background: none; 
+  border: none; 
+  width: 100%; 
+  text-align: left;
+  padding: 0.5rem 0.75rem; 
+  border-radius: 0.35rem; 
+  color: var(--color-text);
+  font-size: 0.85rem; 
+  font-weight: 500; 
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.dropdownItem:hover { 
+  background-color: rgba(58, 46, 50, 0.04); 
+}
+
+.dropdownDivider { 
+  height: 1px; 
+  background-color: var(--color-border-field); 
+  margin: 0.25rem 0; 
+  opacity: 0.5; 
+}
+
+.danger { color: #b83232; }
+.danger:hover { background-color: #fdecec; }
+
+/* Modal de Advertencia (Eliminar) */
+.warningIcon {
+  color: #f59e0b;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
 }

@@ -26,6 +26,11 @@ public class HorarioTallerService implements IHorarioTallerService {
     }
 
     @Override
+    public List<HorarioTaller> findByTallerId(Long idTaller) {
+        return horarioTallerRepository.findByIdTallerIdTaller(idTaller);
+    }
+
+    @Override
     public void save(HorarioTaller horarioTaller) {
         horarioTallerRepository.save(horarioTaller);
     }

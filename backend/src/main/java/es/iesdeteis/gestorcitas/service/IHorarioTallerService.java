@@ -11,6 +11,8 @@ public interface IHorarioTallerService {
 
     public HorarioTaller findById(Long id);
 
+    public List<HorarioTaller> findByTallerId(Long idTaller);
+
     public void save(HorarioTaller horarioTaller);
 
     public void deleteById(Long id);

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Droplet, Sparkles, Magnet, Brush, Flower, AlertCircle } from "lucide-react";
+import { Droplet, Sparkles, Magnet, Brush, Flower, AlertCircle, Calendar } from "lucide-react";
 import availabilityService from "../../services/availabilityService";
 import Modal from "../Modal";
+import CalendarModal from "../CalendarModal/CalendarModal";
 import styles from "./CreateAppointmentModal.module.css";
 
 const INITIAL_FORM = {
@@ -9,7 +10,8 @@ const INITIAL_FORM = {
   email: "",
   phone: "",
   workshopId: "",
-  slotId: "",
+  slotId: "", // Mantengo slotId por compatibilidad, aunque ahora uses fecha directa
+  date: "", // NUEVO: Guardaremos la fecha real aquí
   allergies: "",
 };
 
@@ -29,7 +31,10 @@ export default function CreateAppointmentModal({
   const [showConfirmClose, setShowConfirmClose] = useState(false);
   const [clientError, setClientError] = useState("");
   const [workshopError, setWorkshopError] = useState("");
-  const [slotError, setSlotError] = useState("");
+  const [dateError, setDateError] = useState(""); // Cambiado de slotError a dateError
+  
+  // NUEVO: Estado para abrir el modal del calendario
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const [uiState, setUiState] = useState({
     hasAllergies: "no",
@@ -59,9 +64,10 @@ export default function CreateAppointmentModal({
     setIsDirty(false);
     setClientError("");
     setWorkshopError("");
-    setSlotError("");
+    setDateError("");
   }, [isOpen, workshops]);
 
+  // Si sigues usando slots para la hora, los cargamos
   useEffect(() => {
     let isMounted = true;
 
@@ -73,6 +79,7 @@ export default function CreateAppointmentModal({
 
       const nextSlots = await availabilityService.getSlotsByWorkshopId(
         formData.workshopId,
+        4,
       );
 
       if (!isMounted) {
@@ -80,17 +87,10 @@ export default function CreateAppointmentModal({
       }
 
       setSlots(nextSlots);
-      setFormData((current) => {
-        const nextSlotId =
-          nextSlots.find((slot) => slot.id === current.slotId)?.id ??
-          nextSlots[0]?.id ??
-          "";
-
-        return {
-          ...current,
-          slotId: nextSlotId,
-        };
-      });
+      // Solo forzamos el slot si hay, pero ya no es la única fuente de fecha
+      if (nextSlots.length > 0 && !formData.slotId) {
+        setFormData(prev => ({ ...prev, slotId: nextSlots[0].id }));
+      }
     }
 
     loadSlots();
@@ -118,14 +118,16 @@ export default function CreateAppointmentModal({
 
     setFormData((current) => {
       const nextData = { ...current, [name]: value };
-      if (name === "workshopId") nextData.slotId = "";
+      if (name === "workshopId") {
+        nextData.date = ""; // Resetea fecha si cambia el taller
+        nextData.slotId = "";
+      }
       return nextData;
     });
 
     if (name === "email" || name === "phone") setContactError("");
     if (name === "client") setClientError("");
     if (name === "workshopId") setWorkshopError("");
-    if (name === "slotId") setSlotError("");
   }
 
   function handleAllergyToggle(value) {
@@ -155,9 +157,9 @@ export default function CreateAppointmentModal({
       return;
     }
 
-    if (!formData.slotId) {
-      setSlotError("Por favor, selecciona un día y horario disponible.");
-      const el = document.getElementById("slotId");
+    if (!formData.date) {
+      setDateError("Por favor, selecciona una fecha en el calendario.");
+      const el = document.getElementById("dateBtn");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
@@ -195,7 +197,9 @@ export default function CreateAppointmentModal({
   const isSubmitDisabled = isSubmitting;
 
   const tallerSeleccionado = workshops.find(w => String(w.id || w.idTaller) === String(formData.workshopId));
-  const horarioSeleccionado = slots.find(s => String(s.id) === String(formData.slotId));
+  
+  // Pasar los objetos completos de los slots al calendario para que lea capacidad y ocupación
+  const fechasPermitidasDelTaller = slots.filter(slot => slot.fecha);
 
   return (
     <>
@@ -272,36 +276,38 @@ export default function CreateAppointmentModal({
           </div>
         )}
 
+        {/* --- NUEVO SELECTOR DE FECHA (CALENDARIO) --- */}
         <div className={styles.fieldGroup}>
-          <label className={styles.label} htmlFor="slotId">
+          <label className={styles.label} htmlFor="dateBtn">
             Día y horario disponible *
           </label>
-          <select
-            id="slotId"
-            name="slotId"
-            className={styles.select}
-            value={formData.slotId}
-            onChange={handleChange}
-            required
-            disabled={!formData.workshopId || slots.length === 0}
+          <button 
+            id="dateBtn"
+            type="button" 
+            className={styles.input} 
+            style={{ 
+              textAlign: 'left', 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              cursor: formData.workshopId ? 'pointer' : 'not-allowed',
+              opacity: formData.workshopId ? 1 : 0.6
+            }}
+            disabled={!formData.workshopId}
+            onClick={() => setIsCalendarOpen(true)}
           >
-            {!formData.workshopId && (
-              <option value="">Selecciona un taller primero</option>
-            )}
-            {formData.workshopId && slots.length === 0 && (
-              <option value="">Sin horarios disponibles</option>
-            )}
-            {slots.map((slot) => (
-              <option key={slot.id} value={slot.id}>
-                {slot.label}
-              </option>
-            ))}
-          </select>
+            <span style={{ color: formData.date ? 'inherit' : 'var(--color-text-muted)' }}>
+              {formData.date 
+                ? new Date(formData.date).toLocaleDateString("es-ES", { weekday: 'long', day: 'numeric', month: 'long' }) 
+                : "Seleccionar día en el calendario..."}
+            </span>
+            <Calendar size={18} color="var(--color-text-muted)" />
+          </button>
         </div>
         
-        {slotError && (
+        {dateError && (
           <div className={`${styles.fullWidth} ${styles.errorMessage}`}>
-            {slotError}
+            {dateError}
           </div>
         )}
 
@@ -424,7 +430,11 @@ export default function CreateAppointmentModal({
               Teléfono: <strong>{formData.phone || "No especificado"}</strong>
             </p>
             <p className={styles.summaryText}>
-              Día y horario: <strong>{horarioSeleccionado?.label || "Sin disponibilidad"}</strong>
+              Día agendado: <strong>
+                {formData.date 
+                  ? new Date(formData.date).toLocaleDateString("es-ES", { weekday: 'long', day: 'numeric', month: 'long' })
+                  : "Sin seleccionar"}
+              </strong>
             </p>
             <p className={styles.summaryText}>
               Alergias: <strong>
@@ -471,6 +481,18 @@ export default function CreateAppointmentModal({
         </div>
       </div>
     </Modal>
+
+    {/* MODAL DEL CALENDARIO */}
+    <CalendarModal 
+      isOpen={isCalendarOpen} 
+      onClose={() => setIsCalendarOpen(false)}
+      allowedDates={fechasPermitidasDelTaller}
+      onSelectDate={(selectedDate) => {
+        setIsDirty(true);
+        setDateError("");
+        setFormData(prev => ({ ...prev, date: selectedDate }));
+      }}
+    />
     </>
   );
 }
