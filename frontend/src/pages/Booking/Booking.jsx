@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ShieldCheck, AlertTriangle, AlertCircle, Droplet, Sparkles, Magnet, Brush, Flower, X } from "lucide-react";
+import { ShieldCheck, AlertTriangle, AlertCircle, Droplet, Sparkles, Magnet, Brush, Flower, X, Calendar } from "lucide-react";
 import Modal from "../../components/Modal";
+import CalendarModal from "../../components/CalendarModal/CalendarModal";
 import appointmentService from "../../services/appointmentService";
 import availabilityService from "../../services/availabilityService";
 import workshopService from "../../services/workshopService";
@@ -19,7 +20,9 @@ export default function Booking() {
   const [showConfirmClose, setShowConfirmClose] = useState(false);
   const [clientError, setClientError] = useState("");
   const [workshopError, setWorkshopError] = useState("");
-  const [slotError, setSlotError] = useState("");
+  const [dateError, setDateError] = useState("");
+
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const [talleres, setTalleres] = useState([]);
   const [horarios, setHorarios] = useState([]);
@@ -45,6 +48,7 @@ export default function Booking() {
     phone: "", // Nuevo campo
     workshopId: initialWorkshopId,
     slotId: "",
+    date: "",
   });
 
   useEffect(() => {
@@ -69,7 +73,7 @@ export default function Booking() {
         setHorarios([]);
         return;
       }
-      const nextHorarios = await availabilityService.getSlotsByWorkshopId(formData.workshopId, 1);
+      const nextHorarios = await availabilityService.getSlotsByWorkshopId(formData.workshopId, 4);
       if (!isMounted) return;
       setHorarios(nextHorarios);
       setFormData((current) => ({
@@ -89,13 +93,18 @@ export default function Booking() {
     setIsDirty(true);
     setFormData((current) => {
       const nextData = { ...current, [name]: value };
-      if (name === "workshopId") nextData.slotId = "";
+      if (name === "workshopId") {
+        nextData.slotId = "";
+        nextData.date = "";
+      }
       return nextData;
     });
     if (name === "email" || name === "phone") setContactError("");
     if (name === "client") setClientError("");
-    if (name === "workshopId") setWorkshopError("");
-    if (name === "slotId") setSlotError("");
+    if (name === "workshopId") {
+      setWorkshopError("");
+      setDateError("");
+    }
   }
 
   function handleAllergyToggle(value) {
@@ -142,6 +151,7 @@ export default function Booking() {
       phone: "",
       workshopId: talleres.length > 0 ? String(talleres[0].idTaller) : "",
       slotId: "",
+      date: "",
     });
     setUiState({
       hasAllergies: "no",
@@ -174,9 +184,9 @@ export default function Booking() {
       return;
     }
 
-    if (!formData.slotId) {
-      setSlotError("Por favor, selecciona un día y horario disponible.");
-      const el = document.getElementById("slotId");
+    if (!formData.date) {
+      setDateError("Por favor, selecciona una fecha en el calendario.");
+      const el = document.getElementById("dateBtn");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
@@ -214,6 +224,7 @@ export default function Booking() {
         phone: formData.phone, // Si tu DTO no lo acepta, puedes concatenarlo a 'client' temporalmente
         workshopId: formData.workshopId,
         slotId: formData.slotId,
+        date: formData.date,
         allergies: finalAllergies, // Backend no nota la diferencia
       });
       setShowSuccessModal(true);
@@ -227,7 +238,7 @@ export default function Booking() {
   const isSubmitDisabled = isSubmitting;
 
   const tallerSeleccionado = talleres.find((taller) => String(taller.idTaller) === String(formData.workshopId));
-  const horarioSeleccionado = horarios.find((horario) => String(horario.id) === String(formData.slotId));
+  const fechasPermitidasDelTaller = horarios.filter((horario) => horario.fecha);
 
   return (
     <>
@@ -313,20 +324,34 @@ export default function Booking() {
             )}
 
             <div className={`${styles.fieldGroup} ${styles.fullWidth}`}>
-              <label className={styles.label} htmlFor="slotId">Día y horario disponible *</label>
-              <select
-                id="slotId" name="slotId" className={styles.select}
-                value={formData.slotId} onChange={handleChange} required
+              <label className={styles.label} htmlFor="dateBtn">Día y horario disponible *</label>
+              <button
+                id="dateBtn"
+                type="button"
+                className={styles.input}
+                style={{
+                  textAlign: "left",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  cursor: formData.workshopId ? "pointer" : "not-allowed",
+                  opacity: formData.workshopId ? 1 : 0.6
+                }}
+                disabled={!formData.workshopId}
+                onClick={() => setIsCalendarOpen(true)}
               >
-                {horarios.map((horario) => (
-                  <option key={horario.id} value={horario.id}>{horario.label}</option>
-                ))}
-              </select>
+                <span style={{ color: formData.date ? "inherit" : "var(--color-text-muted)" }}>
+                  {formData.date
+                    ? new Date(formData.date).toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" })
+                    : "Seleccionar día en el calendario..."}
+                </span>
+                <Calendar size={18} color="var(--color-text-muted)" />
+              </button>
             </div>
-            
-            {slotError && (
+
+            {dateError && (
               <div className={`${styles.fullWidth} ${styles.errorMessage}`}>
-                {slotError}
+                {dateError}
               </div>
             )}
 
@@ -407,7 +432,11 @@ export default function Booking() {
                   Teléfono: <strong>{formData.phone || "No especificado"}</strong>
                 </p>
                 <p className={styles.summaryText}>
-                  Día y horario: <strong>{horarioSeleccionado?.label || "Sin disponibilidad"}</strong>
+                  Día agendado: <strong>
+                    {formData.date
+                      ? new Date(formData.date).toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" })
+                      : "Sin seleccionar"}
+                  </strong>
                 </p>
                 <p className={styles.summaryText}>
                   Alergias: <strong>
@@ -479,6 +508,25 @@ export default function Booking() {
           </div>
         </div>
       </Modal>
+
+      <CalendarModal
+        isOpen={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
+        allowedDates={fechasPermitidasDelTaller}
+        onSelectDate={(selectedDate) => {
+          setIsDirty(true);
+          setDateError("");
+
+          const matchedSlot = horarios.find((horario) =>
+            String(horario.fecha || horario.date || "") === String(selectedDate)
+          );
+          const nextSlotId = matchedSlot
+            ? String(matchedSlot.id || matchedSlot.idHorario || matchedSlot.slotId || "")
+            : "";
+
+          setFormData((prev) => ({ ...prev, date: selectedDate, slotId: nextSlotId }));
+        }}
+      />
     </>
   );
 }
