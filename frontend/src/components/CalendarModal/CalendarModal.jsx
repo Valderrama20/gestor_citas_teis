@@ -59,7 +59,14 @@ export default function CalendarModal({
       days.push(<div key={`empty-${i}`} className={styles.emptyDay}></div>);
     }
 
-    const allowedDateSet = new Set(allowedDates.filter(Boolean));
+    const allowedDateMap = new Map();
+    if (allowedDates.length > 0) {
+      if (typeof allowedDates[0] === 'object' && allowedDates[0].fecha) {
+        allowedDates.forEach(d => allowedDateMap.set(d.fecha, d));
+      } else {
+        allowedDates.forEach(d => allowedDateMap.set(d, { isString: true }));
+      }
+    }
 
     // Días reales del mes
     for (let i = 1; i <= daysInMonth; i++) {
@@ -71,20 +78,57 @@ export default function CalendarModal({
       // (Aquí asumimos que 1=Lunes, 2=Martes... 0=Domingo)
       
       const isPast = dateToCheck < today;
-      const isAllowedDate = allowedDateSet.size === 0 || allowedDateSet.has(localIsoDate);
-      const isAllowedDay = allowedDaysOfWeek.length === 0 || allowedDaysOfWeek.includes(jsDayOfWeek);
-      const isAllowed = allowedDateSet.size > 0 ? isAllowedDate : isAllowedDay;
-      const isDisabled = isPast || !isAllowed;
+      let isAllowedDate = false;
+      let availabilityClass = "";
+      let isDisabled = isPast;
+      let remainingSpots = null;
+
+      if (allowedDateMap.size > 0) {
+        const dateData = allowedDateMap.get(localIsoDate);
+        if (dateData) {
+          isAllowedDate = true;
+          if (!dateData.isString) {
+            const { capacidadMaxima, ocupacionActual } = dateData;
+            remainingSpots = capacidadMaxima - (ocupacionActual || 0);
+            if (remainingSpots <= 0) {
+              availabilityClass = styles.noAvailability;
+              isDisabled = true;
+            } else if (remainingSpots <= 2) { // Puedes ajustar este umbral
+              availabilityClass = styles.lowAvailability;
+            } else {
+              availabilityClass = styles.highAvailability;
+            }
+          }
+        }
+      } else {
+         isAllowedDate = allowedDaysOfWeek.includes(jsDayOfWeek);
+      }
+
+      const isAllowed = allowedDateMap.size > 0 ? isAllowedDate : (allowedDaysOfWeek.length === 0 || allowedDaysOfWeek.includes(jsDayOfWeek));
+      isDisabled = isDisabled || !isAllowed;
+
+      let btnClasses = `${styles.dayBtn}`;
+      if (isDisabled) {
+        btnClasses += ` ${styles.disabled}`;
+        if (availabilityClass === styles.noAvailability) {
+           btnClasses += ` ${styles.noAvailability}`;
+        }
+      } else {
+        btnClasses += ` ${availabilityClass || styles.enabled}`;
+      }
 
       days.push(
         <button
           key={i}
           type="button"
           disabled={isDisabled}
-          className={`${styles.dayBtn} ${isDisabled ? styles.disabled : styles.enabled}`}
+          className={btnClasses}
           onClick={() => handleDateClick(i)}
         >
-          {i}
+          {remainingSpots !== null && isAllowedDate && (
+             <span className={styles.spotsBadge}>{remainingSpots}</span>
+          )}
+          <span className={styles.dayNumber}>{i}</span>
         </button>
       );
     }

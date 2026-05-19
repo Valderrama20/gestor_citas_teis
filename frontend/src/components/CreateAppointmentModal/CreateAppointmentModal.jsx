@@ -198,10 +198,8 @@ export default function CreateAppointmentModal({
 
   const tallerSeleccionado = workshops.find(w => String(w.id || w.idTaller) === String(formData.workshopId));
   
-  // Extraer las fechas únicas disponibles para el taller seleccionado
-  const fechasPermitidasDelTaller = slots.length > 0
-    ? [...new Set(slots.map(slot => slot.fecha).filter(Boolean))]
-    : [];
+  // Pasar los objetos completos de los slots al calendario para que lea capacidad y ocupación
+  const fechasPermitidasDelTaller = slots.filter(slot => slot.fecha);
 
   return (
     <>
