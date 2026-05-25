@@ -38,8 +38,7 @@ export default function Home() {
           <span className={styles.breakDesktop}> con el talento de nuestr@s alumn@s</span>
         </h1>
         <p className={styles.subtitle}>
-          Tratamientos profesionales de peluqueria y estetica a precios de
-          taller educativo. Elige tu especialidad.
+          Tratamientos de peluquería y estética bajo supervisión de docentes experimentad@s. Elige una especialidad.
         </p>
       </div>
 
