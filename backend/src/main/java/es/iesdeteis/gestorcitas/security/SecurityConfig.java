@@ -1,5 +1,7 @@
 package es.iesdeteis.gestorcitas.security;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +39,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> {}) // Si ya se tiene configuración Cors en un bean o WebMvcConfigurer, esto le permite encontrarla
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
@@ -50,8 +55,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/talleres/**").hasAnyRole("ADMIN", "PROFESOR")
                 .requestMatchers(HttpMethod.PUT, "/talleres/**").hasAnyRole("ADMIN", "PROFESOR")
                 .requestMatchers(HttpMethod.DELETE, "/talleres/**").hasAnyRole("ADMIN", "PROFESOR")
-                    .requestMatchers(HttpMethod.GET, "/citas/**").hasAnyRole("ADMIN", "PROFESOR")
-                    .requestMatchers(HttpMethod.PUT, "/citas/**").hasAnyRole("ADMIN", "PROFESOR")
+                .requestMatchers(HttpMethod.GET, "/citas/**").hasAnyRole("ADMIN", "PROFESOR")
+                .requestMatchers(HttpMethod.PUT, "/citas/**").hasAnyRole("ADMIN", "PROFESOR")
                 // Cualquier otra requerir autenticación
                 .anyRequest().authenticated()
             );
@@ -59,5 +64,19 @@ public class SecurityConfig {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        configuration.setAllowCredentials(false);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

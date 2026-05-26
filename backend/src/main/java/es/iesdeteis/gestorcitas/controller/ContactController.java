@@ -8,7 +8,6 @@ import es.iesdeteis.gestorcitas.service.EmailService;
 
 @RestController
 @RequestMapping("/contacto")
-@CrossOrigin(origins = "*")
 public class ContactController {
 
     @Autowired

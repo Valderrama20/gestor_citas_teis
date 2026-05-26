@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/horarios-talleres")
-@CrossOrigin(origins = "*")
 public class HorarioTallerController {
 
     // --- ATRIBUTOS ---
