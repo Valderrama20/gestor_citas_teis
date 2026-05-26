@@ -25,6 +25,21 @@ const availabilityService = {
     }
   },
 
+  getSchedulesByWorkshopId: async (workshopId) => {
+    try {
+      const response = await api.get('/horarios-talleres');
+      const schedules = response.data ?? [];
+
+      return schedules.filter((schedule) => {
+        const scheduleWorkshopId = schedule.idTaller?.idTaller ?? schedule.idTaller?.id_taller;
+        return String(scheduleWorkshopId) === String(workshopId);
+      });
+    } catch (error) {
+      console.error("Error cargando horarios del taller:", error);
+      return [];
+    }
+  },
+
   getSlotsByDate: async (date) => {
     try {
       const response = await api.get('/horarios-talleres');
@@ -39,7 +54,7 @@ const availabilityService = {
           date: slot.diaSemana,
           time: slot.horaApertura.substring(0, 5),
         }));
-    } catch (error) {
+    } catch {
       return [];
     }
   },
@@ -56,7 +71,7 @@ const availabilityService = {
         date: slot.diaSemana,
         time: slot.horaApertura.substring(0, 5),
       };
-    } catch (error) {
+    } catch {
       return null;
     }
   },

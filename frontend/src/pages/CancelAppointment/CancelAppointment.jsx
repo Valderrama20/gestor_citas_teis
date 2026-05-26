@@ -120,7 +120,7 @@ export default function CancelAppointment() {
           <Icon className={`${styles.statusIconSvg} ${status === "loading" ? styles.spinner : ""}`} strokeWidth={1.8} />
         </div>
         <h1 className={styles.title}>{ui.title}</h1>
-        <p className={styles.description}>{message || ui.description}</p>
+        {/* <p className={styles.description}>{message || ui.description}</p> */}
 
         {showActions && (
           <div className={styles.actions}>

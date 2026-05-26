@@ -114,7 +114,11 @@
 }
 
 .primaryAction:hover {
-  background: var(--color-accent-strong);
+  background-color: var(--color-accent-strong);
+}
+
+.primaryAction:active {
+  background-color: var(--color-accent-press);
 }
 
 .secondaryAction {
@@ -124,6 +128,10 @@
 
 .secondaryAction:hover {
   background: rgba(58, 46, 50, 0.12);
+}
+
+.secondaryAction:active {
+  background: rgba(58, 46, 50, 0.18);
 }
 
 .actionIcon {

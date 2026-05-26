@@ -28,7 +28,7 @@ const workshopService = {
     try {
       const response = await api.get(`/talleres/${idTaller}`);
       return response.data;
-    } catch (error) {
+    } catch {
       return null;
     }
   },
@@ -63,6 +63,15 @@ const workshopService = {
       return response.data;
     } catch (error) {
       console.error("Error actualizando taller:", error);
+      throw error;
+    }
+  },
+
+  deleteWorkshop: async (idTaller) => {
+    try {
+      await api.delete(`/talleres/${idTaller}`);
+    } catch (error) {
+      console.error("Error eliminando taller:", error);
       throw error;
     }
   }

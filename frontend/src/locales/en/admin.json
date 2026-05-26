@@ -73,7 +73,9 @@
             "appointments": "appointments this week",
             "viewAppointments": "View this week's appointments",
             "edit": "Edit",
-            "delete": "Delete"
+            "delete": "Delete",
+            "duplicate": "Duplicate",
+            "copySuffix": "(Copy)"
         },
         "toasts": {
             "wsDeleted": "Workshop deleted successfully",
@@ -88,7 +90,9 @@
             "appCreated": "Appointment created",
             "appCreateError": "Error creating appointment",
             "wsCreated": "Workshop created successfully",
-            "wsCreateError": "Error creating workshop"
+            "wsCreateError": "Error creating workshop",
+            "wsDuplicated": "Workshop duplicated successfully",
+            "wsDuplicateError": "Error duplicating workshop"
         },
         "deleteAppointmentsModal": {
             "title": "Delete appointments",
@@ -137,7 +141,11 @@
         "edit": "Edit",
         "duplicate": "Duplicate",
         "delete": "Delete",
-        "students": "students"
+        "students": "students",
+        "levels": {
+            "medium": "Intermediate vocational training",
+            "higher": "Higher vocational training"
+        }
     },
     "editWorkshop": {
         "eyebrow": "Admin dashboard",

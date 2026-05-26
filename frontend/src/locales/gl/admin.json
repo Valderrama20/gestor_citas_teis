@@ -73,7 +73,9 @@
             "appointments": "citas esta semana",
             "viewAppointments": "Ver citas desta semana",
             "edit": "Editar",
-            "delete": "Eliminar"
+            "delete": "Eliminar",
+            "duplicate": "Duplicar",
+            "copySuffix": "(Copia)"
         },
         "toasts": {
             "wsDeleted": "Obradoiro eliminado con éxito",
@@ -88,7 +90,9 @@
             "appCreated": "Cita creada",
             "appCreateError": "Erro creando cita",
             "wsCreated": "Obradoiro creado con éxito",
-            "wsCreateError": "Erro ao crear obradoiro"
+            "wsCreateError": "Erro ao crear obradoiro",
+            "wsDuplicated": "Obradoiro duplicado con éxito",
+            "wsDuplicateError": "Erro ao duplicar obradoiro"
         },
         "deleteAppointmentsModal": {
             "title": "Eliminar citas",
@@ -137,7 +141,11 @@
         "edit": "Editar",
         "duplicate": "Duplicar",
         "delete": "Eliminar",
-        "students": "alumnos"
+        "students": "alumnos",
+        "levels": {
+            "medium": "Grao medio",
+            "higher": "Grao superior"
+        }
     },
     "editWorkshop": {
         "eyebrow": "Panel administrativo",

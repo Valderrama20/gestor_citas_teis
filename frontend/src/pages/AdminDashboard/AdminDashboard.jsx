@@ -16,7 +16,7 @@ import {
   AlertCircle,
   MoreVertical,
   Edit3,
-  AlertTriangle,
+  Copy,
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -203,6 +203,46 @@ export default function AdminDashboard() {
     setActiveMenuWorkshopId(null);
   };
 
+  const handleDuplicateWorkshopClick = async (e, workshop) => {
+    e.stopPropagation();
+    setActiveMenuWorkshopId(null);
+
+    try {
+      const fullWorkshop = await workshopService.getWorkshopById(workshop.idTaller);
+      const sourceWorkshop = fullWorkshop || workshop;
+      const schedules = await availabilityService.getSchedulesByWorkshopId(workshop.idTaller);
+
+      const duplicatedWorkshop = await workshopService.createWorkshop({
+        nombreTaller: `${sourceWorkshop.nombreTaller || workshop.nombreTaller} ${t("dashboard.workshopCard.copySuffix")}`,
+        descripcion: sourceWorkshop.descripcion || "",
+        icono: sourceWorkshop.icono || "sparkles",
+        duracionMinutos: Number(sourceWorkshop.duracionMinutos || 60),
+        capacidadMaxima: Number(sourceWorkshop.capacidadMaxima || 10),
+        tipoTaller: sourceWorkshop.tipoTaller || course?.nombreCurso || "",
+        idCurso: Number(courseId),
+      });
+
+      const newWorkshopId = duplicatedWorkshop?.idTaller || duplicatedWorkshop?.id;
+
+      if (newWorkshopId) {
+        for (const schedule of schedules) {
+          await availabilityService.createSlot({
+            diaSemana: schedule.diaSemana,
+            horaApertura: schedule.horaApertura,
+            horaCierre: schedule.horaCierre,
+            idTaller: { idTaller: newWorkshopId },
+          });
+        }
+      }
+
+      await refreshData();
+      addToast(t("dashboard.toasts.wsDuplicated"), "success");
+    } catch (error) {
+      console.error("Error duplicando taller:", error);
+      addToast(t("dashboard.toasts.wsDuplicateError"), "error");
+    }
+  };
+
   const confirmDeleteWorkshop = async () => {
     try {
       if (workshopService.deleteWorkshop) {
@@ -212,6 +252,7 @@ export default function AdminDashboard() {
       setIsDeleteWorkshopDialogOpen(false);
       await refreshData();
     } catch (error) {
+      console.error("Error eliminando taller:", error);
       addToast(t("dashboard.toasts.wsDeleteError"), "error");
       setIsDeleteWorkshopDialogOpen(false);
     }
@@ -302,6 +343,7 @@ export default function AdminDashboard() {
       setSelectedIds([]);
       addToast(t("dashboard.toasts.appsUpdated", { count: appointmentsToUpdate.length }), "success");
     } catch (error) {
+      console.error("Error actualizando citas:", error);
       addToast(t("dashboard.toasts.appsUpdateError"), "error");
     }
   }
@@ -325,6 +367,7 @@ export default function AdminDashboard() {
       setIsDeleteDialogOpen(false);
       addToast(t("dashboard.toasts.appsDeleted", { count: appointmentsToDelete.length }), "success");
     } catch (error) {
+      console.error("Error eliminando citas:", error);
       setIsDeleteDialogOpen(false);
       addToast(t("dashboard.toasts.appsDeleteError"), "error");
     }
@@ -340,6 +383,7 @@ export default function AdminDashboard() {
       setIsCreateAppointmentModalOpen(false);
       addToast(t("dashboard.toasts.appCreated"), "success");
     } catch (error) {
+      console.error("Error creando cita:", error);
       addToast(t("dashboard.toasts.appCreateError"), "error");
     }
   }
@@ -366,6 +410,7 @@ export default function AdminDashboard() {
       await refreshData();
       addToast(t("dashboard.toasts.wsCreated"), "success");
     } catch (error) {
+      console.error("Error creando taller:", error);
       addToast(t("dashboard.toasts.wsCreateError"), "error");
     }
   }
@@ -591,6 +636,9 @@ export default function AdminDashboard() {
                             <div className={styles.dropdown}>
                               <button onClick={(e) => handleEditClick(e, workshop)} className={styles.dropdownItem}>
                                 <Edit3 size={16} /> {t("dashboard.workshopCard.edit")}
+                              </button>
+                              <button onClick={(e) => handleDuplicateWorkshopClick(e, workshop)} className={styles.dropdownItem}>
+                                <Copy size={16} /> {t("dashboard.workshopCard.duplicate")}
                               </button>
                               <div className={styles.dropdownDivider} />
                               <button onClick={(e) => handleDeleteWorkshopClick(e, workshop)} className={`${styles.dropdownItem} ${styles.danger}`}>

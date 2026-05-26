@@ -1,5 +1,5 @@
 import { ArrowRight, Copy, Edit3, GraduationCap, MoreVertical, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./AdminCourseCard.module.css";
@@ -7,14 +7,37 @@ import styles from "./AdminCourseCard.module.css";
 export default function AdminCourseCard({ course, icon: Icon, onDelete, onEdit, onDuplicate }) {
   const { t } = useTranslation('admin');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isMenuOpen]);
+
+  const getLevelLabel = (level) => {
+    const normalized = String(level || "").trim().toLowerCase();
+    if (normalized === "grado medio") return t("courseCard.levels.medium");
+    if (normalized === "grado superior") return t("courseCard.levels.higher");
+    return level;
+  };
 
   const toggleMenu = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleAction = (e, action) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsMenuOpen(false);
     if (action === 'delete') onDelete(course);
     if (action === 'edit') onEdit(course);
@@ -32,7 +55,7 @@ export default function AdminCourseCard({ course, icon: Icon, onDelete, onEdit, 
           )}
         </div>
 
-        <div className={styles.menuContainer}>
+        <div className={styles.menuContainer} ref={menuRef}>
           <button onClick={toggleMenu} className={styles.menuTrigger} title={t('courseCard.options')}>
             <MoreVertical strokeWidth={1.8} size={20} />
           </button>
@@ -56,7 +79,7 @@ export default function AdminCourseCard({ course, icon: Icon, onDelete, onEdit, 
 
       <h3 className={styles.title}>{course.nombreCurso || course.name}</h3>
       <p className={styles.info}>
-        {course.nivel || course.level} | {course.cursoAcademico || course.period}
+        {getLevelLabel(course.nivel || course.level)} | {course.cursoAcademico || course.period}
       </p>
       <div className={styles.footer}>
         <span>{course.alumnos || course.studentCount || 0} {t('courseCard.students')}</span>
