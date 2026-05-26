@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { AlertCircle, ChevronLeft, ChevronRight, Form } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import Modal from "../Modal";
 import { AVAILABLE_ICONS } from "../../constants/icons";
 import styles from "./CreateCourseModal.module.css";
@@ -12,6 +13,7 @@ const INITIAL_FORM = {
   icono: "sparkles",
   descripcion: "",
 };
+
 const ICON_SCROLL_AMOUNT = 250;
 const ICON_SCROLL_DURATION = 420;
 
@@ -20,6 +22,7 @@ function easeOutCubic(progress) {
 }
 
 export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToEdit }) {
+  const { t } = useTranslation('admin');
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
@@ -77,7 +80,6 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
       ...current,
       [name]: value,
     }));
-    // Limpia el error del campo en cuanto el usuario empieza a escribir
     if (errors[name]) {
       setErrors((curr) => ({ ...curr, [name]: null }));
     }
@@ -86,16 +88,15 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
   async function handleSubmit(event) {
     event.preventDefault();
 
-    // Validación de campos individuales
     const newErrors = {};
-    if (!formData.nombreCurso.trim()) newErrors.nombreCurso = "El nombre es obligatorio.";
-    if (!formData.cursoAcademico.trim()) newErrors.cursoAcademico = "El periodo es obligatorio.";
-    if (formData.alumnos === "" || Number(formData.alumnos) < 0) newErrors.alumnos = "Debe ser un número válido.";
-    if (!formData.descripcion.trim()) newErrors.descripcion = "La descripción es obligatoria.";
+    if (!formData.nombreCurso.trim()) newErrors.nombreCurso = t('createCourse.errors.name');
+    if (!formData.cursoAcademico.trim()) newErrors.cursoAcademico = t('createCourse.errors.period');
+    if (formData.alumnos === "" || Number(formData.alumnos) < 0) newErrors.alumnos = t('createCourse.errors.students');
+    if (!formData.descripcion.trim()) newErrors.descripcion = t('createCourse.errors.description');
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return; // Detenemos el envío si hay errores
+      return;
     }
 
     setIsSubmitting(true);
@@ -107,7 +108,7 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
         alumnos: Number(formData.alumnos),
       });
     } catch (err) {
-      setErrors({ submit: err.message || "Ha ocurrido un error al procesar el formulario." });
+      setErrors({ submit: err.message || t('createCourse.errors.submit') });
     } finally {
       setIsSubmitting(false);
     }
@@ -152,8 +153,8 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
-        eyebrow="Panel administrativo"
-        title={courseToEdit ? "Editar curso" : "Crear nuevo curso"}
+        eyebrow={t('createCourse.eyebrow')}
+        title={courseToEdit ? t('createCourse.titleEdit') : t('createCourse.titleCreate')}
         showAction={false}
         modalClassName={styles.modal}
         contentClassName={styles.content}
@@ -162,7 +163,7 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
           <div className={styles.grid}>
             <div className={styles.field}>
               <label className={styles.label} htmlFor="nombreCurso">
-                Nombre del curso
+                {t('createCourse.nameLabel')}
               </label>
               <input
                 id="nombreCurso"
@@ -171,14 +172,14 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
                 className={styles.input}
                 value={formData.nombreCurso}
                 onChange={handleChange}
-                placeholder="Ej. Peluqueria avanzada"
+                placeholder={t('createCourse.namePlaceholder')}
               />
               {errors.nombreCurso && <div className={styles.errorMessage}>{errors.nombreCurso}</div>}
             </div>
 
             <div className={styles.field}>
               <label className={styles.label} htmlFor="nivel">
-                Nivel
+                {t('createCourse.levelLabel')}
               </label>
               <select
                 id="nivel"
@@ -187,14 +188,14 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
                 value={formData.nivel}
                 onChange={handleChange}
               >
-                <option value="Grado Medio">Grado Medio</option>
-                <option value="Grado Superior">Grado Superior</option>
+                <option value="Grado Medio">{t('createCourse.levels.medium')}</option>
+                <option value="Grado Superior">{t('createCourse.levels.higher')}</option>
               </select>
             </div>
 
             <div className={styles.field}>
               <label className={styles.label} htmlFor="cursoAcademico">
-                Periodo
+                {t('createCourse.periodLabel')}
               </label>
               <input
                 id="cursoAcademico"
@@ -203,14 +204,14 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
                 className={styles.input}
                 value={formData.cursoAcademico}
                 onChange={handleChange}
-                placeholder="2025/2026"
+                placeholder={t('createCourse.periodPlaceholder')}
                 required
               />
             </div>
 
             <div className={styles.field}>
               <label className={styles.label} htmlFor="alumnos">
-                Numero de alumnos
+                {t('createCourse.studentsLabel')}
               </label>
               <input
                 id="alumnos"
@@ -227,7 +228,7 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
 
           <div className={styles.field}>
             <label className={styles.label} htmlFor="descripcion">
-              Descripción
+              {t('createCourse.descriptionLabel')}
             </label>
             <textarea
               id="descripcion"
@@ -236,19 +237,19 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
               className={styles.textarea}
               value={formData.descripcion}
               onChange={handleChange}
-              placeholder="Breve descripción del curso"
+              placeholder={t('createCourse.descriptionPlaceholder')}
             />
             {errors.descripcion && <div className={styles.errorMessage}>{errors.descripcion}</div>}
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Icono representativo</label>
+            <label className={styles.label}>{t('createCourse.iconLabel')}</label>
             <div className={styles.iconCarousel}>
               <button
                 type="button"
                 className={styles.carouselButton}
                 onClick={() => scrollIcons('left')}
-                aria-label="Desplazar a la izquierda"
+                aria-label={t('createCourse.ariaScrollLeft')}
               >
                 <ChevronLeft size={20} strokeWidth={2} />
               </button>
@@ -265,7 +266,7 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
                         setIsDirty(true);
                         setFormData((current) => ({ ...current, icono: id }));
                       }}
-                      aria-label={`Seleccionar icono ${label}`}
+                      aria-label={`${t('createCourse.ariaSelectIcon')} ${label}`}
                     >
                       <Icon size={18} strokeWidth={1.8} />
                       <span>{label}</span>
@@ -277,7 +278,7 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
                 type="button"
                 className={styles.carouselButton}
                 onClick={() => scrollIcons('right')}
-                aria-label="Desplazar a la derecha"
+                aria-label={t('createCourse.ariaScrollRight')}
               >
                 <ChevronRight size={20} strokeWidth={2} />
               </button>
@@ -288,10 +289,10 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
 
           <div className={styles.actions}>
             <button type="button" className={styles.secondaryButton} onClick={handleClose}>
-              Cancelar
+              {t('createCourse.actions.cancel')}
             </button>
             <button type="submit" className={styles.primaryButton} disabled={isSubmitting}>
-              {isSubmitting ? "Guardando..." : (courseToEdit ? "Guardar cambios" : "Crear curso")}
+              {isSubmitting ? t('createCourse.actions.saving') : (courseToEdit ? t('createCourse.actions.save') : t('createCourse.actions.create'))}
             </button>
           </div>
         </form>
@@ -307,15 +308,15 @@ export default function CreateCourseModal({ isOpen, onClose, onSubmit, courseToE
             <AlertCircle size={48} color="var(--color-accent)" strokeWidth={1.5} />
           </div>
           <div className={styles.confirmTextGroup}>
-            <p className={styles.confirmQuestion}>¿Descartar cambios?</p>
-            <h3 className={styles.confirmTargetName}>Tienes cambios sin guardar</h3>
+            <p className={styles.confirmQuestion}>{t('createCourse.confirmClose.title')}</p>
+            <h3 className={styles.confirmTargetName}>{t('createCourse.confirmClose.subtitle')}</h3>
           </div>
           <div className={styles.modalActionsVertical}>
             <button type="button" className={styles.confirmButton} onClick={confirmClose}>
-              Sí, descartar
+              {t('createCourse.confirmClose.confirm')}
             </button>
             <button type="button" className={styles.secondaryButton} onClick={() => setShowConfirmClose(false)}>
-              No, continuar editando
+              {t('createCourse.confirmClose.cancel')}
             </button>
           </div>
         </div>

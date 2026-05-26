@@ -4,11 +4,13 @@ import { User, Mail, Shield, Lock, Camera, Save, ChevronLeft } from "lucide-reac
 import { useAuthStore } from "../../store/authStore";
 import AdminTopbar from "../../components/AdminTopbar/AdminTopbar";
 import styles from "./AdminProfile.module.css";
+import { useTranslation } from "react-i18next";
 
 export default function AdminProfile() {
     const { usuario } = useAuthStore();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
+    const { t } = useTranslation('admin');
 
     const [formData, setFormData] = useState({
         nombre: usuario?.nombre || "",
@@ -31,10 +33,10 @@ export default function AdminProfile() {
             // Aquí irá tu conexión a la API (Ej: adminService.updateProfile)
             // await adminService.updateProfile(formData);
             await new Promise(resolve => setTimeout(resolve, 1000));
-            alert("Simulación: Actualización del perfil exitosa.");
+            alert(t("profile.alerts.success"));
         } catch (error) {
             console.error(error);
-            alert("Error al actualizar el perfil.");
+            alert(t("profile.alerts.error"));
         } finally {
             setIsSubmitting(false);
         }
@@ -53,13 +55,13 @@ export default function AdminProfile() {
                 startContent={
                     <button type="button" onClick={() => navigate(-1)} className={styles.textButton}>
                         <ChevronLeft size={18} />
-                        <span>Volver</span>
+                        <span>{t("profile.back")}</span>
                     </button>
                 }
                 endContent={
                     <div className={styles.brand}>
                         <User size={18} />
-                        <span>IES TEIS | Perfil</span>
+                        <span>{t("profile.brand")}</span>
                     </div>
                 }
             />
@@ -67,8 +69,8 @@ export default function AdminProfile() {
             <main className={styles.main}>
                 <header className={styles.headerRow}>
                     <div className={styles.titleSection}>
-                        <h1 className={styles.title}>Mi Perfil</h1>
-                        <p className={styles.subtitle}>Gestiona la información y seguridad de tu cuenta.</p>
+                        <h1 className={styles.title}>{t("profile.title")}</h1>
+                        <p className={styles.subtitle}>{t("profile.subtitle")}</p>
                     </div>
                 </header>
 
@@ -77,14 +79,14 @@ export default function AdminProfile() {
                     {/* Tarjeta de Información de Usuario */}
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
-                            <h2 className={styles.cardTitle}>Información Personal</h2>
-                            <p className={styles.cardSubtitle}>Visualiza y edita los datos de tu cuenta</p>
+                            <h2 className={styles.cardTitle}>{t("profile.personal.title")}</h2>
+                            <p className={styles.cardSubtitle}>{t("profile.personal.subtitle")}</p>
                         </div>
 
                         <div className={styles.avatarSection}>
                             <div className={styles.avatarWrapper}>
                                 <User className={styles.avatarIcon} size={48} strokeWidth={1.5} />
-                                <button className={styles.avatarEditBtn} aria-label="Cambiar foto de perfil">
+                                <button className={styles.avatarEditBtn} aria-label={t("profile.personal.ariaPhoto")}>
                                     <Camera size={16} />
                                 </button>
                             </div>
@@ -96,7 +98,7 @@ export default function AdminProfile() {
 
                         <form className={styles.form} onSubmit={handleSubmit}>
                             <div className={styles.field}>
-                                <label className={styles.label}>Nombre completo</label>
+                                <label className={styles.label}>{t("profile.personal.name")}</label>
                                 <div className={styles.inputWrapper}>
                                     <User className={styles.inputIcon} size={18} />
                                     <input
@@ -109,7 +111,7 @@ export default function AdminProfile() {
                             </div>
 
                             <div className={styles.field}>
-                                <label className={styles.label}>Correo electrónico</label>
+                                <label className={styles.label}>{t("profile.personal.email")}</label>
                                 <div className={styles.inputWrapper}>
                                     <Mail className={styles.inputIcon} size={18} />
                                     <input
@@ -124,7 +126,7 @@ export default function AdminProfile() {
 
                             <div className={styles.actions}>
                                 <button type="submit" className={styles.primaryButton} disabled={isSubmitting}>
-                                    {isSubmitting ? "Guardando..." : "Guardar"}
+                                    {isSubmitting ? t("profile.personal.saving") : t("profile.personal.save")}
                                 </button>
                             </div>
                         </form>
@@ -133,13 +135,13 @@ export default function AdminProfile() {
                     {/* Tarjeta de Seguridad (Contraseña) */}
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
-                            <h2 className={styles.cardTitle}>Seguridad</h2>
-                            <p className={styles.cardSubtitle}>Actualiza tu contraseña de acceso</p>
+                            <h2 className={styles.cardTitle}>{t("profile.security.title")}</h2>
+                            <p className={styles.cardSubtitle}>{t("profile.security.subtitle")}</p>
                         </div>
 
                         <form className={styles.form} onSubmit={handleSubmit}>
                             <div className={styles.field}>
-                                <label className={styles.label}>Contraseña actual</label>
+                                <label className={styles.label}>{t("profile.security.current")}</label>
                                 <div className={styles.inputWrapper}>
                                     <Lock className={styles.inputIcon} size={18} />
                                     <input
@@ -152,7 +154,7 @@ export default function AdminProfile() {
                             </div>
 
                             <div className={styles.field}>
-                                <label className={styles.label}>Nueva contraseña</label>
+                                <label className={styles.label}>{t("profile.security.new")}</label>
                                 <div className={styles.inputWrapper}>
                                     <Lock className={styles.inputIcon} size={18} />
                                     <input
@@ -166,7 +168,7 @@ export default function AdminProfile() {
 
                             <div className={styles.actions}>
                                 <button type="button" className={styles.primaryButton}>
-                                    Actualizar
+                                    {t("profile.security.update")}
                                 </button>
                             </div>
                         </form>

@@ -34,6 +34,7 @@ import workshopService from "../../services/workshopService";
 import availabilityService from "../../services/availabilityService";
 import { useToast } from "../../context/ToastContext";
 import styles from "./AdminDashboard.module.css";
+import { useTranslation } from "react-i18next";
 
 export default function AdminDashboard() {
   const { courseId } = useParams();
@@ -66,6 +67,7 @@ export default function AdminDashboard() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const { addToast } = useToast();
+  const { t, i18n } = useTranslation('admin');
 
   useEffect(() => {
     let isMounted = true;
@@ -206,11 +208,11 @@ export default function AdminDashboard() {
       if (workshopService.deleteWorkshop) {
         await workshopService.deleteWorkshop(workshopToDelete.idTaller);
       }
-      addToast("Taller eliminado con éxito", "success");
+      addToast(t("dashboard.toasts.wsDeleted"), "success");
       setIsDeleteWorkshopDialogOpen(false);
       await refreshData();
     } catch (error) {
-      addToast("No se puede eliminar un taller con citas asociadas", "error");
+      addToast(t("dashboard.toasts.wsDeleteError"), "error");
       setIsDeleteWorkshopDialogOpen(false);
     }
   };
@@ -231,7 +233,7 @@ export default function AdminDashboard() {
         estado: "CONFIRMADA",
       });
     setAppointments(updatedAppointments);
-    addToast("Cita confirmada", "success");
+    addToast(t("dashboard.toasts.appConfirmed"), "success");
   }
 
   async function handleCancelAppointment(appointment) {
@@ -243,7 +245,7 @@ export default function AdminDashboard() {
         estado: "CANCELADA",
       });
     setAppointments(updatedAppointments);
-    addToast("Cita cancelada", "success");
+    addToast(t("dashboard.toasts.appCancelled"), "success");
   }
 
   async function handleUndoAppointment(appointment) {
@@ -255,7 +257,7 @@ export default function AdminDashboard() {
         estado: "PENDIENTE",
       });
     setAppointments(updatedAppointments);
-    addToast("Cita restaurada a pendiente", "success");
+    addToast(t("dashboard.toasts.appUndo"), "success");
   }
 
   function handleToggleSelect(rowId) {
@@ -298,9 +300,9 @@ export default function AdminDashboard() {
 
       await refreshData();
       setSelectedIds([]);
-      addToast(`${appointmentsToUpdate.length} citas actualizadas`, "success");
+      addToast(t("dashboard.toasts.appsUpdated", { count: appointmentsToUpdate.length }), "success");
     } catch (error) {
-      addToast("Error al actualizar citas", "error");
+      addToast(t("dashboard.toasts.appsUpdateError"), "error");
     }
   }
 
@@ -321,10 +323,10 @@ export default function AdminDashboard() {
       await refreshData();
       setSelectedIds([]);
       setIsDeleteDialogOpen(false);
-      addToast(`${appointmentsToDelete.length} citas eliminadas`, "success");
+      addToast(t("dashboard.toasts.appsDeleted", { count: appointmentsToDelete.length }), "success");
     } catch (error) {
       setIsDeleteDialogOpen(false);
-      addToast("Error al eliminar citas", "error");
+      addToast(t("dashboard.toasts.appsDeleteError"), "error");
     }
   }
 
@@ -336,9 +338,9 @@ export default function AdminDashboard() {
       });
       await refreshData();
       setIsCreateAppointmentModalOpen(false);
-      addToast("Cita creada", "success");
+      addToast(t("dashboard.toasts.appCreated"), "success");
     } catch (error) {
-      addToast("Error creando cita", "error");
+      addToast(t("dashboard.toasts.appCreateError"), "error");
     }
   }
 
@@ -362,9 +364,9 @@ export default function AdminDashboard() {
 
       setIsCreateWorkshopModalOpen(false);
       await refreshData();
-      addToast("Taller creado con éxito", "success");
+      addToast(t("dashboard.toasts.wsCreated"), "success");
     } catch (error) {
-      addToast("Error al crear taller", "error");
+      addToast(t("dashboard.toasts.wsCreateError"), "error");
     }
   }
 
@@ -375,12 +377,12 @@ export default function AdminDashboard() {
       <AdminTopbar
         startContent={
           <Link to="/admin/cursos" className={styles.textButton}>
-            <ChevronLeft size={18} /> Volver a cursos
+            <ChevronLeft size={18} /> {t("dashboard.back")}
           </Link>
         }
         endContent={
           <div className={styles.brand}>
-            <Settings size={18} /> <span>IES TEIS | {course.nombreCurso}</span>
+            <Settings size={18} /> <span>{t("dashboard.brand")}{course.nombreCurso}</span>
           </div>
         }
       />
@@ -388,9 +390,9 @@ export default function AdminDashboard() {
       <section className={styles.container}>
         <header className={styles.headerRow}>
           <div className={styles.titleSection}>
-            <h1 className={styles.title}>Panel de {course.nombreCurso}</h1>
+            <h1 className={styles.title}>{t("dashboard.titlePrefix")}{course.nombreCurso}</h1>
             <p className={styles.subtitle}>
-              Gestiona las citas y los talleres disponibles de este curso.
+              {t("dashboard.subtitle")}
             </p>
           </div>
 
@@ -401,7 +403,7 @@ export default function AdminDashboard() {
                 className={styles.primaryButton}
                 onClick={() => setIsCreateAppointmentModalOpen(true)}
               >
-                <Plus size={18} /> Nueva cita
+                <Plus size={18} /> {t("dashboard.actions.newAppointment")}
               </button>
             ) : (
               <button
@@ -409,7 +411,7 @@ export default function AdminDashboard() {
                 className={styles.primaryButton}
                 onClick={() => setIsCreateWorkshopModalOpen(true)}
               >
-                <Plus size={18} /> Crear taller
+                <Plus size={18} /> {t("dashboard.actions.createWorkshop")}
               </button>
             )}
           </div>
@@ -423,13 +425,13 @@ export default function AdminDashboard() {
               setFilterWorkshopId(null);
             }}
           >
-            <CalendarDays size={18} /> Citas programadas
+            <CalendarDays size={18} /> {t("dashboard.tabs.appointments")}
           </button>
           <button
             className={`${styles.tabBtn} ${activeTab === "talleres" ? styles.activeTab : ""}`}
             onClick={() => setActiveTab("talleres")}
           >
-            <Briefcase size={18} /> Talleres del curso
+            <Briefcase size={18} /> {t("dashboard.tabs.workshops")}
           </button>
         </div>
 
@@ -441,7 +443,7 @@ export default function AdminDashboard() {
                   onClick={() => setCurrentDate(new Date())}
                   className={styles.todayBtn}
                 >
-                  Hoy
+                  {t("dashboard.filters.today")}
                 </button>
                 <div className={styles.navButtons}>
                   <button onClick={handlePrevWeek} className={styles.navBtn}>
@@ -449,12 +451,12 @@ export default function AdminDashboard() {
                   </button>
                   <div className={styles.currentRange}>
                     <span>
-                      {weekRange.monday.toLocaleDateString("es-ES", {
+                      {weekRange.monday.toLocaleDateString(i18n.language, {
                         day: "numeric",
                         month: "short",
                       })}
                       {" - "}
-                      {weekRange.sunday.toLocaleDateString("es-ES", {
+                      {weekRange.sunday.toLocaleDateString(i18n.language, {
                         day: "numeric",
                         month: "short",
                         year: "numeric",
@@ -472,7 +474,7 @@ export default function AdminDashboard() {
                   className={styles.clearFilterBtn}
                   onClick={() => setFilterWorkshopId(null)}
                 >
-                  Mostrando solo citas del taller seleccionado{" "}
+                  {t("dashboard.filters.clear")}
                   <FilterX size={14} />
                 </button>
               )}
@@ -482,27 +484,27 @@ export default function AdminDashboard() {
               <div className={styles.bulkActionsBar}>
                 <span className={styles.bulkText}>
                   <strong>{selectedIds.length}</strong>{" "}
-                  {selectedIds.length === 1 ? "seleccionada" : "seleccionadas"}
+                  {selectedIds.length === 1 ? t("dashboard.bulk.selected") : t("dashboard.bulk.selectedPlural")}
                 </span>
                 <div className={styles.bulkButtons}>
                   <button
                     onClick={() => handleBulkAction("PENDIENTE")}
                     className={`${styles.bulkBtn} ${styles.bulkUndo}`}
                   >
-                    <Clock size={16} /> Pendiente
+                    <Clock size={16} /> {t("dashboard.bulk.pending")}
                   </button>
                   <button
                     onClick={() => handleBulkAction("CONFIRMADA")}
                     className={`${styles.bulkBtn} ${styles.bulkConfirm}`}
                   >
-                    <CheckCheck size={16} /> Confirmar
+                    <CheckCheck size={16} /> {t("dashboard.bulk.confirm")}
                   </button>
 
                   <button
                     onClick={() => handleBulkAction("CANCELADA")}
                     className={`${styles.bulkBtn} ${styles.bulkCancel}`}
                   >
-                    <XCircle size={16} /> Cancelar
+                    <XCircle size={16} /> {t("dashboard.bulk.cancel")}
                   </button>
                 </div>
               </div>
@@ -525,15 +527,15 @@ export default function AdminDashboard() {
                 <CalendarX size={48} className={styles.noDataIcon} />
                 <h3 className={styles.noDataTitle}>
                   {filterWorkshopId
-                    ? "Este taller no tiene citas esta semana"
-                    : "Sin citas para esta semana"}
+                    ? t("dashboard.empty.filteredAppointments")
+                    : t("dashboard.empty.appointments")}
                 </h3>
                 <button
                   type="button"
                   className={styles.primaryButton}
                   onClick={() => setIsCreateAppointmentModalOpen(true)}
                 >
-                  <Plus size={18} /> Agendar cita
+                  <Plus size={18} /> {t("dashboard.empty.scheduleAppointment")}
                 </button>
               </div>
             )}
@@ -588,11 +590,11 @@ export default function AdminDashboard() {
                           {activeMenuWorkshopId === wsId && (
                             <div className={styles.dropdown}>
                               <button onClick={(e) => handleEditClick(e, workshop)} className={styles.dropdownItem}>
-                                <Edit3 size={16} /> Editar
+                                <Edit3 size={16} /> {t("dashboard.workshopCard.edit")}
                               </button>
                               <div className={styles.dropdownDivider} />
                               <button onClick={(e) => handleDeleteWorkshopClick(e, workshop)} className={`${styles.dropdownItem} ${styles.danger}`}>
-                                <Trash2 size={16} /> Eliminar
+                                <Trash2 size={16} /> {t("dashboard.workshopCard.delete")}
                               </button>
                             </div>
                           )}
@@ -603,16 +605,16 @@ export default function AdminDashboard() {
                         <div className={styles.infoItem}>
                           <Clock size={16} className={styles.infoIcon} />
                           <span>
-                            Duración:{" "}
-                            <strong>{workshop.duracionMinutos || 0} min</strong>
+                            {t("dashboard.workshopCard.duration")}{" "}
+                            <strong>{workshop.duracionMinutos || 0} {t("dashboard.workshopCard.min")}</strong>
                           </span>
                         </div>
                         <div className={styles.infoItem}>
                           <Users size={16} className={styles.infoIcon} />
                           <span>
-                            Aforo máximo:{" "}
+                            {t("dashboard.workshopCard.capacity")}{" "}
                             <strong>
-                              {workshop.capacidadMaxima || 15} clientes
+                              {workshop.capacidadMaxima || 15} {t("dashboard.workshopCard.clients")}
                             </strong>
                           </span>
                         </div>
@@ -622,8 +624,7 @@ export default function AdminDashboard() {
                             className={styles.infoIcon}
                           />
                           <span>
-                            <strong>{citasDelTaller.length}</strong> citas
-                            esta semana
+                            <strong>{citasDelTaller.length}</strong> {t("dashboard.workshopCard.appointments")}
                           </span>
                         </div>
                       </div>
@@ -633,7 +634,7 @@ export default function AdminDashboard() {
                           className={styles.linkTextBtn}
                           onClick={(e) => goToFilteredAppointments(e, wsId)}
                         >
-                          Ver citas de esta semana
+                          {t("dashboard.workshopCard.viewAppointments")}
                         </button>
                       </div>
                     </div>
@@ -644,17 +645,17 @@ export default function AdminDashboard() {
               <div className={styles.noDataContainer}>
                 <Briefcase size={48} className={styles.noDataIcon} />
                 <h3 className={styles.noDataTitle}>
-                  Aún no hay talleres creados
+                  {t("dashboard.empty.workshopsTitle")}
                 </h3>
                 <p className={styles.noDataSubtitle}>
-                  Crea un taller para poder empezar a agendar citas.
+                  {t("dashboard.empty.workshopsSub")}
                 </p>
                 <button
                   type="button"
                   className={styles.primaryButton}
                   onClick={() => setIsCreateWorkshopModalOpen(true)}
                 >
-                  <Plus size={18} /> Crear primer taller
+                  <Plus size={18} /> {t("dashboard.empty.createFirstWorkshop")}
                 </button>
               </div>
             )}
@@ -696,7 +697,7 @@ export default function AdminDashboard() {
       <Modal
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
-        title="Eliminar citas"
+        title={t("dashboard.deleteAppointmentsModal.title")}
         showAction={false}
       >
         <div className={styles.confirmWrapper}>
@@ -710,11 +711,10 @@ export default function AdminDashboard() {
 
           <div className={styles.confirmTextGroup}>
             <p className={styles.confirmQuestion}>
-              ¡Esta acción no se puede deshacer!
+              {t("dashboard.deleteAppointmentsModal.warning")}
             </p>
             <h3 className={styles.confirmTargetName}>
-              ¿Deseas eliminar <strong>{selectedIds.length}</strong> cita
-              {selectedIds.length > 1 ? "s" : ""} permanentemente?
+              {selectedIds.length === 1 ? t('dashboard.deleteAppointmentsModal.questionSingular') : t('dashboard.deleteAppointmentsModal.questionPlural', { count: selectedIds.length })}
             </h3>
           </div>
 
@@ -724,14 +724,14 @@ export default function AdminDashboard() {
               className={styles.confirmButton}
               onClick={confirmBulkDelete}
             >
-              Eliminar definitivamente
+              {t("dashboard.deleteAppointmentsModal.confirm")}
             </button>
             <button
               type="button"
               className={styles.secondaryButton}
               onClick={() => setIsDeleteDialogOpen(false)}
             >
-              Cancelar
+              {t("dashboard.deleteAppointmentsModal.cancel")}
             </button>
           </div>
         </div>
@@ -741,7 +741,7 @@ export default function AdminDashboard() {
       <Modal
         isOpen={isDeleteWorkshopDialogOpen}
         onClose={() => setIsDeleteWorkshopDialogOpen(false)}
-        title="Eliminar taller"
+        title={t("dashboard.deleteWorkshopModal.title")}
         showAction={false}
       >
         <div className={styles.confirmWrapper}>
@@ -755,13 +755,13 @@ export default function AdminDashboard() {
 
           <div className={styles.confirmTextGroup}>
             <p className={styles.confirmQuestion}>
-              ¡Esta acción no se puede deshacer!
+              {t("dashboard.deleteWorkshopModal.warning")}
             </p>
             <h3 className={styles.confirmTargetName}>
               {workshopToDelete?.nombreTaller}
             </h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>
-              (Solo se puede eliminar si no tiene citas asociadas)
+              {t("dashboard.deleteWorkshopModal.hint")}
             </p>
           </div>
 
@@ -771,14 +771,14 @@ export default function AdminDashboard() {
               className={styles.confirmButton}
               onClick={confirmDeleteWorkshop}
             >
-              Eliminar definitivamente
+              {t("dashboard.deleteWorkshopModal.confirm")}
             </button>
             <button
               type="button"
               className={styles.secondaryButton}
               onClick={() => setIsDeleteWorkshopDialogOpen(false)}
             >
-              Cancelar
+              {t("dashboard.deleteWorkshopModal.cancel")}
             </button>
           </div>
         </div>

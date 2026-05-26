@@ -1,36 +1,26 @@
 import { ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import styles from './FAQSection.module.css';
 
-const faqs = [
-    { q: "¿Quién realiza los tratamientos?", a: "Todos los servicios son realizados por nuestros alumnos en formación, siempre bajo la supervisión directa de profesores cualificados." },
-    { q: "¿Es seguro realizarse tratamientos aquí?", a: "Totalmente. Los profesores evalúan y guían cada paso del proceso para garantizar tu seguridad y un excelente resultado." },
-    { q: "¿Cuánto tiempo duran las citas?", a: "Al ser un entorno de aprendizaje, los tratamientos pueden llevar algo más de tiempo que en un salón convencional. Agradecemos tu paciencia." },
-    { q: "¿Los servicios tienen algún coste?", a: "Tienen precios muy reducidos, destinados únicamente a cubrir el coste de los materiales profesionales utilizados durante las prácticas." },
-    { q: "¿Qué ocurre si no estoy satisfecho?", a: "Nuestros profesores están presentes para intervenir en cualquier momento y asegurar que el resultado final cumpla con los estándares." },
-    { q: "¿Puedo elegir qué alumno me atiende?", a: "Las asignaciones se realizan en base a las rotaciones y necesidades de aprendizaje de los alumnos, por lo que no es posible elegir." },
-    { q: "¿Qué tipo de productos utilizáis?", a: "Empleamos exclusivamente productos profesionales de peluquería y estética de primeras marcas." },
-    { q: "¿Es obligatorio pedir cita previa?", a: "Sí, es imprescindible reservar tu plaza a través de esta plataforma para poder organizar las clases adecuadamente." },
-    { q: "¿Puedo cancelar mi cita si surge un imprevisto?", a: "Por supuesto. Te rogamos que lo hagas con la mayor antelación posible desde la aplicación para poder asignar el turno a otra persona." },
-    { q: "¿Tienen flexibilidad horaria?", a: "Nuestros horarios de atención están estrictamente vinculados a las horas lectivas del centro educativo y sus módulos." }
-];
-
 export default function FAQSection() {
+    const { t } = useTranslation('faq');
+    const faqItems = t('items', { returnObjects: true });
+
     return (
         <div className={styles.faqWrapper}>
             <div className={styles.faqBlock}>
                 <div className={styles.faqHeader}>
                     <h2 className={styles.title}>
-                        Preguntas <span className={styles.highlight}>frecuentes</span>
+                        {t('title1')}<span className={styles.highlight}>{t('title2')}</span>
                     </h2>
                     <p className={styles.faqDescription}>
-                        Si no ves tu pregunta en la lista, no dudes en{' '}
-                        ponerte en contacto con nosotros.
+                        {t('description')}
                     </p>
                 </div>
 
                 <div className={styles.faqSection}>
                     <div className={styles.faqList}>
-                        {faqs.map((faq, idx) => (
+                        {faqItems.map((faq, idx) => (
                             <details key={idx} name="faq-accordion" className={styles.faqItem}>
                                 <summary className={styles.faqSummary}>
                                     <span className={styles.faqText}>{faq.q}</span>

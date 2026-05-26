@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Plus, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import Modal from "../Modal";
 import { AVAILABLE_ICONS } from "../../constants/icons";
@@ -13,6 +14,7 @@ const INITIAL_FORM = {
 };
 
 const DEFAULT_HORARIO = { diaSemana: "Lunes", horaApertura: "09:00", horaCierre: "14:00" };
+const WEEKDAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const ICON_SCROLL_AMOUNT = 250;
 const ICON_SCROLL_DURATION = 420;
 
@@ -26,6 +28,7 @@ export default function CreateWorkshopModal({
   onSubmit,
   courseName,
 }) {
+  const { t } = useTranslation('admin');
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [horarios, setHorarios] = useState([{ ...DEFAULT_HORARIO }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -132,17 +135,15 @@ export default function CreateWorkshopModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      eyebrow="Panel administrativo"
-      title="Crear nuevo taller"
+      eyebrow={t('createWorkshop.eyebrow')}
+      title={t('createWorkshop.title')}
       showAction={false}
       modalClassName={styles.modal}
       contentClassName={styles.content}
     >
       <form className={styles.form} onSubmit={handleSubmit}>
-
-        {/* CAMPOS BÁSICOS DEL TALLER */}
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="nombreTaller">Nombre del taller</label>
+          <label className={styles.label} htmlFor="nombreTaller">{t('createWorkshop.nameLabel')}</label>
           <input
             id="nombreTaller" name="nombreTaller" type="text"
             className={styles.input} value={formData.nombreTaller}
@@ -151,13 +152,13 @@ export default function CreateWorkshopModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Icono representativo</label>
+          <label className={styles.label}>{t('createWorkshop.iconLabel')}</label>
           <div className={styles.iconCarousel}>
             <button
               type="button"
               className={styles.carouselButton}
               onClick={() => scrollIcons('left')}
-              aria-label="Desplazar a la izquierda"
+              aria-label={t('createWorkshop.ariaScrollLeft')}
             >
               <ChevronLeft size={20} strokeWidth={2} />
             </button>
@@ -171,7 +172,7 @@ export default function CreateWorkshopModal({
                     type="button"
                     className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
                     onClick={() => setFormData((current) => ({ ...current, icono: id }))}
-                    aria-label={`Seleccionar icono ${label}`}
+                    aria-label={`${t('createWorkshop.ariaSelectIcon')} ${label}`}
                   >
                     <Icon size={18} strokeWidth={1.8} />
                     <span>{label}</span>
@@ -183,7 +184,7 @@ export default function CreateWorkshopModal({
               type="button"
               className={styles.carouselButton}
               onClick={() => scrollIcons('right')}
-              aria-label="Desplazar a la derecha"
+              aria-label={t('createWorkshop.ariaScrollRight')}
             >
               <ChevronRight size={20} strokeWidth={2} />
             </button>
@@ -192,7 +193,7 @@ export default function CreateWorkshopModal({
 
         <div style={{ display: 'flex', gap: '1rem' }}>
           <div className={styles.field} style={{ flex: 1 }}>
-            <label className={styles.label} htmlFor="duracionMinutos">Duración (min)</label>
+            <label className={styles.label} htmlFor="duracionMinutos">{t('createWorkshop.durationLabel')}</label>
             <input
               id="duracionMinutos" name="duracionMinutos" type="number"
               className={styles.input} value={formData.duracionMinutos}
@@ -200,7 +201,7 @@ export default function CreateWorkshopModal({
             />
           </div>
           <div className={styles.field} style={{ flex: 1 }}>
-            <label className={styles.label} htmlFor="capacidadMaxima">Capacidad máx.</label>
+            <label className={styles.label} htmlFor="capacidadMaxima">{t('createWorkshop.capacityLabel')}</label>
             <input
               id="capacidadMaxima" name="capacidadMaxima" type="number"
               className={styles.input} value={formData.capacidadMaxima}
@@ -210,7 +211,7 @@ export default function CreateWorkshopModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="descripcion">Descripción</label>
+          <label className={styles.label} htmlFor="descripcion">{t('createWorkshop.descriptionLabel')}</label>
           <textarea
             id="descripcion" name="descripcion" className={styles.textarea} rows="3"
             value={formData.descripcion} onChange={handleChange} required
@@ -219,9 +220,8 @@ export default function CreateWorkshopModal({
 
         <hr style={{ margin: '1rem 0', borderColor: 'var(--color-border-field)', opacity: 0.3 }} />
 
-        {/* ZONA DE HORARIOS DINÁMICOS */}
         <div className={styles.field}>
-          <label className={styles.label}>Disponibilidad Semanal</label>
+          <label className={styles.label}>{t('createWorkshop.availabilityLabel')}</label>
 
           {horarios.map((horario, index) => (
             <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
@@ -231,8 +231,8 @@ export default function CreateWorkshopModal({
                 value={horario.diaSemana}
                 onChange={(e) => handleHorarioChange(index, "diaSemana", e.target.value)}
               >
-                {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map(dia => (
-                  <option key={dia} value={dia}>{dia}</option>
+                {WEEKDAYS.map(dia => (
+                  <option key={dia} value={dia}>{t(`createWorkshop.weekdays.${dia}`)}</option>
                 ))}
               </select>
 
@@ -242,7 +242,7 @@ export default function CreateWorkshopModal({
                 onChange={(e) => handleHorarioChange(index, "horaApertura", e.target.value)} required
               />
 
-              <span style={{ color: 'var(--color-text-muted)' }}>a</span>
+              <span style={{ color: 'var(--color-text-muted)' }}>{t('createWorkshop.timeSeparator')}</span>
 
               <input
                 type="time" className={styles.input} style={{ flex: 1 }}
@@ -253,6 +253,7 @@ export default function CreateWorkshopModal({
               {horarios.length > 1 && (
                 <button
                   type="button" onClick={() => handleRemoveHorario(index)}
+                  aria-label={t('createWorkshop.removeSchedule')}
                   style={{ background: 'transparent', border: 'none', color: '#e74c3c', cursor: 'pointer', padding: '0.5rem' }}
                 >
                   <Trash2 size={18} />
@@ -265,16 +266,16 @@ export default function CreateWorkshopModal({
             type="button" onClick={handleAddHorario}
             style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'transparent', border: 'none', color: 'var(--color-accent)', fontWeight: '600', cursor: 'pointer', marginTop: '0.5rem' }}
           >
-            <Plus size={16} /> Añadir otro día
+            <Plus size={16} /> {t('createWorkshop.addDay')}
           </button>
         </div>
 
         <div className={styles.actions} style={{ marginTop: '2rem' }}>
           <button type="button" className={styles.secondaryButton} onClick={onClose} disabled={isSubmitting}>
-            Cancelar
+            {t('createWorkshop.actions.cancel')}
           </button>
           <button type="submit" className={styles.primaryButton} disabled={isSubmitting}>
-            {isSubmitting ? "Creando..." : "Crear taller"}
+            {isSubmitting ? t('createWorkshop.actions.creating') : t('createWorkshop.actions.create')}
           </button>
         </div>
       </form>

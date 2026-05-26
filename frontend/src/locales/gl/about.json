@@ -1,0 +1,44 @@
+{
+    "header": {
+        "title1": "Sobre ",
+        "titleHighlight": "Nós",
+        "subtitle": "Servizos de estética e peiteado con selo de calidade, creados polo noso alumnado e guiados por docentes expertos."
+    },
+    "intro": {
+        "title": "O Noso Departamento",
+        "text": "O IES de Teis, a través do departamento de Imaxe Persoal, ofrece servizos de estética e peiteado abertos ao público xeral. Estes servizos son realizados polo alumnado dos diferentes Ciclos Formativos como parte da súa formación práctica, sempre baixo a supervisión do profesorado."
+    },
+    "services": {
+        "title": "Servizos",
+        "categories": [
+            {
+                "title": "Estética e Benestar",
+                "items": [
+                    "Tratamentos faciais: Hixiene facial, hidratación e tratamentos específicos",
+                    "Tratamentos corporais: Masaxes relaxantes, drenaxe linfática",
+                    "Manicura e Pedicura: Coidado de unllas e esmaltado",
+                    "Depilación: Cera e outros métodos",
+                    "Maquillaxe: Social, de día, noite ou eventos"
+                ]
+            },
+            {
+                "title": "Peiteado",
+                "items": [
+                    "Corte, peiteado e acabados",
+                    "Coloración: tinturas, mechas, balayage",
+                    "Tratamentos capilares específicos"
+                ]
+            }
+        ]
+    },
+    "booking": {
+        "title": "Cita Previa",
+        "description1": "Para gozar dos nosos servizos a prezos moi reducidos (destinados a cubrir o custo dos materiais), é obrigatorio solicitar cita previa.",
+        "description2": "Podes reservar a túa cita a través da nosa plataforma ou contactando directamente con calquera dos nosos obradoiros.",
+        "workshopPrefix": "Obradoiro"
+    },
+    "cta": {
+        "title": "Listo para reservar a túa cita?",
+        "button": "Reservar Agora"
+    }
+}

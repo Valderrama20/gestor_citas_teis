@@ -7,6 +7,7 @@ import appointmentService from "../../services/appointmentService";
 import availabilityService from "../../services/availabilityService";
 import workshopService from "../../services/workshopService";
 import styles from "./Booking.module.css";
+import { useTranslation } from "react-i18next";
 
 export default function Booking() {
   const location = useLocation();
@@ -26,6 +27,7 @@ export default function Booking() {
 
   const [talleres, setTalleres] = useState([]);
   const [horarios, setHorarios] = useState([]);
+  const { t, i18n } = useTranslation(['booking', 'common']);
 
   // Estado para manejar la lógica de la UI independientemente del Backend
   const [uiState, setUiState] = useState({
@@ -35,11 +37,11 @@ export default function Booking() {
   });
 
   const commonAllergies = [
-    { id: "Látex", label: "Látex", icon: Droplet },
-    { id: "Cosméticos", label: "Cosméticos", icon: Sparkles },
-    { id: "Níquel", label: "Níquel", icon: Magnet },
-    { id: "Acrílicos", label: "Acrílicos", icon: Brush },
-    { id: "Piel Atópica", label: "Piel Atópica", icon: Flower }
+    { id: "Látex", label: t('allergies.items.latex'), icon: Droplet },
+    { id: "Cosméticos", label: t('allergies.items.cosmetics'), icon: Sparkles },
+    { id: "Níquel", label: t('allergies.items.nickel'), icon: Magnet },
+    { id: "Acrílicos", label: t('allergies.items.acrylics'), icon: Brush },
+    { id: "Piel Atópica", label: t('allergies.items.atopic'), icon: Flower }
   ];
 
   const [formData, setFormData] = useState({
@@ -171,21 +173,21 @@ export default function Booking() {
     event.preventDefault();
 
     if (!formData.client.trim()) {
-      setClientError("Por favor, indícanos tu nombre completo.");
+      setClientError(t('form.clientError'));
       const el = document.getElementById("nombre");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (!formData.workshopId) {
-      setWorkshopError("Por favor, selecciona el taller al que deseas asistir.");
+      setWorkshopError(t('form.workshopError'));
       const el = document.getElementById("workshopId");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (!formData.date) {
-      setDateError("Por favor, selecciona una fecha en el calendario.");
+      setDateError(t('form.dateError'));
       const el = document.getElementById("dateBtn");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
@@ -193,7 +195,7 @@ export default function Booking() {
 
     // Validación UX: Al menos un método de contacto
     if (!formData.email && !formData.phone) {
-      setContactError("Por favor, facilítanos un correo electrónico o un teléfono de contacto.");
+      setContactError(t('form.contactError'));
       const el = document.getElementById("email");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
@@ -201,7 +203,7 @@ export default function Booking() {
 
     // Validación UX: Si tiene alergias, debe marcar o escribir al menos una
     if (uiState.hasAllergies === "yes" && uiState.selectedAllergies.length === 0 && uiState.otherAllergies.trim() === "") {
-      setAllergyError("Por favor, selecciona al menos una alergia o especifica en el campo 'Otro'.");
+      setAllergyError(t('allergies.error'));
       const el = document.getElementById("otherAllergies");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
@@ -248,16 +250,16 @@ export default function Booking() {
             type="button"
             className={styles.closeIconBtn}
             onClick={handleClose}
-            aria-label="Cerrar y volver"
+            aria-label={t('common:actions.close')}
           >
             <X size={20} strokeWidth={2} />
           </button>
 
           <div className={styles.header}>
-            <span className={styles.eyebrow}>Reserva</span>
-            <h2 className={styles.title}>Solicita tu cita</h2>
+            <span className={styles.eyebrow}>{t('eyebrow')}</span>
+            <h2 className={styles.title}>{t('title')}</h2>
             <p className={styles.description}>
-              Completa este formulario para gestionar tu asistencia. Nos aseguraremos de tener todo listo para ti.
+              {t('description')}
             </p>
           </div>
 
@@ -265,10 +267,10 @@ export default function Booking() {
 
             {/* --- DATOS PERSONALES --- */}
             <div className={styles.fieldGroup}>
-              <label className={styles.label} htmlFor="nombre">Nombre completo *</label>
+              <label className={styles.label} htmlFor="nombre">{t('form.clientLabel')}</label>
               <input
                 id="nombre" name="client" type="text" className={styles.input}
-                placeholder="Ej. María García" value={formData.client}
+                placeholder={t('form.clientPlaceholder')} value={formData.client}
                 onChange={handleChange} required
               />
             </div>
@@ -280,7 +282,7 @@ export default function Booking() {
             )}
 
             <div className={styles.fieldGroup}>
-              <label className={styles.label} htmlFor="workshopId">Taller de interés *</label>
+              <label className={styles.label} htmlFor="workshopId">{t('form.workshopLabel')}</label>
               <select
                 id="workshopId" name="workshopId" className={styles.select}
                 value={String(formData.workshopId)} onChange={handleChange} required
@@ -300,19 +302,19 @@ export default function Booking() {
             )}
 
             <div className={styles.fieldGroup}>
-              <label className={styles.label} htmlFor="email">Correo electrónico</label>
+              <label className={styles.label} htmlFor="email">{t('form.emailLabel')}</label>
               <input
                 id="email" name="email" type="email" className={styles.input}
-                placeholder="correo@ejemplo.com" value={formData.email}
+                placeholder={t('form.emailPlaceholder')} value={formData.email}
                 onChange={handleChange}
               />
             </div>
 
             <div className={styles.fieldGroup}>
-              <label className={styles.label} htmlFor="phone">Teléfono de contacto</label>
+              <label className={styles.label} htmlFor="phone">{t('form.phoneLabel')}</label>
               <input
                 id="phone" name="phone" type="tel" className={styles.input}
-                placeholder="Ej. 600 000 000" value={formData.phone}
+                placeholder={t('form.phonePlaceholder')} value={formData.phone}
                 onChange={handleChange}
               />
             </div>
@@ -324,7 +326,7 @@ export default function Booking() {
             )}
 
             <div className={`${styles.fieldGroup} ${styles.fullWidth}`}>
-              <label className={styles.label} htmlFor="dateBtn">Día y horario disponible *</label>
+              <label className={styles.label} htmlFor="dateBtn">{t('form.dateLabel')}</label>
               <button
                 id="dateBtn"
                 type="button"
@@ -342,8 +344,8 @@ export default function Booking() {
               >
                 <span style={{ color: formData.date ? "inherit" : "var(--color-text-muted)" }}>
                   {formData.date
-                    ? new Date(formData.date).toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" })
-                    : "Seleccionar día en el calendario..."}
+                    ? new Date(formData.date).toLocaleDateString(i18n.language, { weekday: "long", day: "numeric", month: "long" })
+                    : t('form.datePlaceholder')}
                 </span>
                 <Calendar size={18} color="var(--color-text-muted)" />
               </button>
@@ -357,8 +359,8 @@ export default function Booking() {
 
             {/* --- SECCIÓN ALERGIAS UX MEJORADA --- */}
             <div className={`${styles.fieldGroup} ${styles.fullWidth} ${styles.allergiesSection}`}>
-              <label className={styles.label}>Alergias o contraindicaciones importantes</label>
-              <p className={styles.helperText}>Selecciona si tienes alguna sensibilidad que debamos conocer.</p>
+              <label className={styles.label}>{t('allergies.label')}</label>
+              <p className={styles.helperText}>{t('allergies.helper')}</p>
 
               <div className={styles.cardSelector}>
                 <button
@@ -370,7 +372,7 @@ export default function Booking() {
                     setUiState({ ...uiState, hasAllergies: "no" });
                   }}
                 >
-                  <span>No tengo alergias conocidas</span>
+                  <span>{t('allergies.noAllergies')}</span>
                 </button>
                 <button
                   type="button"
@@ -381,7 +383,7 @@ export default function Booking() {
                     setUiState({ ...uiState, hasAllergies: "yes" });
                   }}
                 >
-                  <span>Sí, tengo alguna alergia</span>
+                  <span>{t('allergies.hasAllergies')}</span>
                 </button>
               </div>
 
@@ -401,10 +403,10 @@ export default function Booking() {
                     ))}
                   </div>
                   <div className={styles.otherAllergyGroup}>
-                    <label htmlFor="otherAllergies" className={styles.labelSmall}>Otro (especificar):</label>
+                    <label htmlFor="otherAllergies" className={styles.labelSmall}>{t('allergies.otherLabel')}</label>
                     <textarea
                       id="otherAllergies" className={styles.input}
-                      placeholder="Ej. Piel rosácea..."
+                      placeholder={t('allergies.otherPlaceholder')}
                       value={uiState.otherAllergies}
                       onChange={(e) => {
                         setIsDirty(true);
@@ -421,36 +423,36 @@ export default function Booking() {
             {/* --- BOTTOM CENTRADO --- */}
             <div className={styles.bottomSection}>
               <div className={styles.summary}>
-                <p className={styles.summaryTitle}>Resumen de tu selección</p>
+                <p className={styles.summaryTitle}>{t('summary.title')}</p>
                 <p className={styles.summaryText}>
-                  Taller: <strong>{tallerSeleccionado?.nombreTaller || "Sin seleccionar"}</strong>
+                  {t('summary.workshop')} <strong>{tallerSeleccionado?.nombreTaller || t('summary.unselected')}</strong>
                 </p>
                 <p className={styles.summaryText}>
-                  Correo electrónico: <strong>{formData.email || "No especificado"}</strong>
+                  {t('summary.email')} <strong>{formData.email || t('summary.unspecified')}</strong>
                 </p>
                 <p className={styles.summaryText}>
-                  Teléfono: <strong>{formData.phone || "No especificado"}</strong>
+                  {t('summary.phone')} <strong>{formData.phone || t('summary.unspecified')}</strong>
                 </p>
                 <p className={styles.summaryText}>
-                  Día agendado: <strong>
+                  {t('summary.date')} <strong>
                     {formData.date
-                      ? new Date(formData.date).toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" })
-                      : "Sin seleccionar"}
+                      ? new Date(formData.date).toLocaleDateString(i18n.language, { weekday: "long", day: "numeric", month: "long" })
+                      : t('summary.unselected')}
                   </strong>
                 </p>
                 <p className={styles.summaryText}>
-                  Alergias: <strong>
-                    {uiState.hasAllergies === "no" ? "Ninguna" : ([...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).length > 0 ? [...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).join(", ") : "No especificadas")}
+                  {t('summary.allergies')} <strong>
+                    {uiState.hasAllergies === "no" ? t('summary.none') : ([...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).length > 0 ? [...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).join(", ") : t('summary.notSpecified'))}
                   </strong>
                 </p>
               </div>
 
           <div className={styles.formActions}>
             <button type="button" className={styles.secondaryButton} onClick={handleClose} disabled={isSubmitting}>
-              Cancelar
+              {t('actions.cancel')}
             </button>
             <button type="submit" className={styles.buttonPrimary} disabled={isSubmitDisabled}>
-              {isSubmitting ? "Procesando..." : "Solicitar cita"}
+              {isSubmitting ? t('actions.submitting') : t('actions.submit')}
             </button>
           </div>
             </div>
@@ -461,22 +463,22 @@ export default function Booking() {
       <Modal
         isOpen={showSuccessModal}
         onClose={handleGoHome}
-        eyebrow="Solicitud completada"
-        title="Tu cita está en proceso"
+        eyebrow={t('successModal.eyebrow')}
+        title={t('successModal.title')}
         showAction={false}
       >
         <div className={styles.confirmWrapper} style={{ textAlign: "center" }}>
-          <p style={{ marginBottom: "1rem" }}>Hemos registrado la solicitud para el taller de <strong>{tallerSeleccionado?.nombreTaller}</strong>.</p>
-          <p style={{ marginBottom: "2rem" }}>En breve nos pondremos en contacto contigo a través de los datos facilitados para confirmar definitivamente tu plaza.</p>
+          <p style={{ marginBottom: "1rem" }}>{t('successModal.text1')} <strong>{tallerSeleccionado?.nombreTaller}</strong>.</p>
+          <p style={{ marginBottom: "2rem" }}>{t('successModal.text2')}</p>
           
-          <p className={styles.confirmQuestion} style={{ marginBottom: "1rem" }}>¿Deseas solicitar otra cita?</p>
+          <p className={styles.confirmQuestion} style={{ marginBottom: "1rem" }}>{t('successModal.question')}</p>
           
           <div className={styles.modalActionsVertical}>
             <button type="button" className={styles.buttonPrimary} onClick={handleAnotherBooking}>
-              Sí, solicitar otra cita
+              {t('successModal.yes')}
             </button>
             <button type="button" className={styles.secondaryButton} onClick={handleGoHome}>
-              No, volver al inicio
+              {t('successModal.no')}
             </button>
           </div>
         </div>
@@ -485,7 +487,7 @@ export default function Booking() {
       <Modal
         isOpen={showConfirmClose}
         onClose={() => setShowConfirmClose(false)}
-        title="Descartar reserva"
+        title={t('confirmModal.title')}
         showAction={false}
       >
         <div className={styles.confirmWrapper}>
@@ -494,16 +496,16 @@ export default function Booking() {
           </div>
 
           <div className={styles.confirmTextGroup}>
-            <p className={styles.confirmQuestion}>Tienes datos sin confirmar</p>
-            <h3 className={styles.confirmTargetName}>¿Seguro que quieres salir?</h3>
+            <p className={styles.confirmQuestion}>{t('confirmModal.question')}</p>
+            <h3 className={styles.confirmTargetName}>{t('confirmModal.target')}</h3>
           </div>
 
           <div className={styles.modalActionsVertical}>
             <button type="button" className={styles.confirmButton} onClick={confirmClose}>
-              Salir y perder datos
+              {t('confirmModal.exit')}
             </button>
             <button type="button" className={styles.secondaryButton} onClick={() => setShowConfirmClose(false)}>
-              Continuar reserva
+              {t('confirmModal.continue')}
             </button>
           </div>
         </div>

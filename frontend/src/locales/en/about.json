@@ -1,0 +1,44 @@
+{
+    "header": {
+        "title1": "About ",
+        "titleHighlight": "Us",
+        "subtitle": "High-quality beauty and hairdressing services, created by our students and guided by expert teachers."
+    },
+    "intro": {
+        "title": "Our Department",
+        "text": "IES de Teis, through the Personal Image department, offers beauty and hairdressing services to the general public. These services are performed by students from different Vocational Training Cycles as part of their practical training, always under the supervision of the teaching staff."
+    },
+    "services": {
+        "title": "Services",
+        "categories": [
+            {
+                "title": "Beauty & Wellness",
+                "items": [
+                    "Facial treatments: Facial hygiene, hydration, and specific treatments",
+                    "Body treatments: Relaxing massages, lymphatic drainage",
+                    "Manicure and Pedicure: Nail care and polishing",
+                    "Hair removal: Waxing and other methods",
+                    "Makeup: Social, daytime, evening, or events"
+                ]
+            },
+            {
+                "title": "Hairdressing",
+                "items": [
+                    "Cutting, styling, and finishing",
+                    "Coloring: dyes, highlights, balayage",
+                    "Specific hair treatments"
+                ]
+            }
+        ]
+    },
+    "booking": {
+        "title": "Booking",
+        "description1": "To enjoy our services at very reduced prices (intended to cover the cost of materials), an appointment is mandatory.",
+        "description2": "You can book your appointment through our platform or by contacting any of our workshops directly.",
+        "workshopPrefix": "Workshop"
+    },
+    "cta": {
+        "title": "Ready to book your appointment?",
+        "button": "Book Now"
+    }
+}

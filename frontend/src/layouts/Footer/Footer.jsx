@@ -9,6 +9,7 @@ import {
 import contactService from '../../services/contactService';
 import { useContext } from 'react';
 import { useToast } from '../../context/ToastContext';
+import { useTranslation } from 'react-i18next';
 
 export default function Footer() {
   const { addToast } = useToast();
@@ -19,6 +20,7 @@ export default function Footer() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const formRef = useRef(null);
+  const { t } = useTranslation('footer');
 
   const handleContactChange = (e) => {
     const { name, value } = e.target;
@@ -33,15 +35,15 @@ export default function Footer() {
 
     // Validación
     if (!formData.nombre.trim()) {
-      addToast('Por favor, ingresa tu nombre', 'error');
+      addToast(t('form.errors.nameRequired'), 'error');
       return;
     }
     if (!formData.email.trim()) {
-      addToast('Por favor, ingresa tu correo electrónico', 'error');
+      addToast(t('form.errors.emailRequired'), 'error');
       return;
     }
     if (!formData.mensaje.trim()) {
-      addToast('Por favor, escribe un mensaje', 'error');
+      addToast(t('form.errors.messageRequired'), 'error');
       return;
     }
 
@@ -54,10 +56,10 @@ export default function Footer() {
         mensaje: formData.mensaje,
       });
 
-      addToast('¡Mensaje enviado correctamente! Nos pondremos en contacto pronto.', 'success');
+      addToast(t('form.success'), 'success');
       setFormData({ nombre: '', email: '', mensaje: '' });
     } catch (error) {
-      addToast('Error al enviar el mensaje. Por favor, intenta de nuevo.', 'error');
+      addToast(t('form.errors.sendError'), 'error');
       console.error('Error:', error);
     } finally {
       setIsSubmitting(false);
@@ -72,20 +74,20 @@ export default function Footer() {
 
           {/* Izquierda: Info de contacto */}
           <div className={styles.contactInfoSide}>
-            <h3 className={styles.sectionTitleLeft}>Contacto</h3>
+            <h3 className={styles.sectionTitleLeft}>{t('contact.title')}</h3>
 
             <div className={styles.infoGroup}>
-              <span className={styles.infoLabel}>Email:</span>
+              <span className={styles.infoLabel}>{t('contact.email')}</span>
               <a href="mailto:ies.teis@edu.xunta.gal" className={styles.infoValue}>ies.teis@edu.xunta.gal</a>
             </div>
 
             <div className={styles.infoGroup}>
-              <span className={styles.infoLabel}>Teléfono:</span>
+              <span className={styles.infoLabel}>{t('contact.phone')}</span>
               <a href="tel:+34886120464" className={styles.infoValue}>+34 886 12 04 64</a>
             </div>
 
             <div className={styles.infoGroup}>
-              <span className={styles.infoLabel}>Dirección:</span>
+              <span className={styles.infoLabel}>{t('contact.address')}</span>
               <a
                 href="https://www.google.com/maps/search/?api=1&query=IES+Teis,+Av.+de+Galicia,+101,+36216,+Vigo,+Pontevedra,+España"
                 target="_blank"
@@ -94,7 +96,7 @@ export default function Footer() {
               >
                 Av. de Galicia, 101, 36216<br />
                 Teis, Vigo, Pontevedra<br />
-                España
+                {t('contact.country')}
               </a>
             </div>
           </div>
@@ -107,22 +109,22 @@ export default function Footer() {
             <form className={styles.contactForm} onSubmit={handleContactSubmit} ref={formRef}>
               <div className={styles.formRow}>
                 <div className={styles.inputGroup}>
-                  <label>Tu Nombre</label>
+                  <label>{t('form.nameLabel')}</label>
                   <input
                     type="text"
                     name="nombre"
-                    placeholder="Tu nombre completo"
+                    placeholder={t('form.namePlaceholder')}
                     value={formData.nombre}
                     onChange={handleContactChange}
                     disabled={isSubmitting}
                   />
                 </div>
                 <div className={styles.inputGroup}>
-                  <label>Correo electrónico</label>
+                  <label>{t('form.emailLabel')}</label>
                   <input
                     type="email"
                     name="email"
-                    placeholder="Tu correo electrónico"
+                    placeholder={t('form.emailPlaceholder')}
                     value={formData.email}
                     onChange={handleContactChange}
                     disabled={isSubmitting}
@@ -130,10 +132,10 @@ export default function Footer() {
                 </div>
               </div>
               <div className={styles.inputGroup}>
-                <label>Mensaje</label>
+                <label>{t('form.messageLabel')}</label>
                 <textarea
                   name="mensaje"
-                  placeholder="Escribe algo..."
+                  placeholder={t('form.messagePlaceholder')}
                   rows="5"
                   value={formData.mensaje}
                   onChange={handleContactChange}
@@ -145,7 +147,7 @@ export default function Footer() {
                 className={styles.submitBtn}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
+                {isSubmitting ? t('form.submitting') : t('form.submit')}
               </button>
             </form>
           </div>
@@ -155,7 +157,7 @@ export default function Footer() {
       {/* --- BLOQUE INFERIOR: COPYRIGHT Y REDES SOCIALES --- */}
       <div className={styles.bottomBlock}>
         <p className={styles.copyright}>
-          &copy; {new Date().getFullYear()} IES Teis. Todos los derechos reservados.
+          &copy; {new Date().getFullYear()} IES Teis. {t('legal.rights')}
         </p>
 
         <div className={styles.socialLinks}>
@@ -174,9 +176,9 @@ export default function Footer() {
         </div>
 
         <div className={styles.legalLinks}>
-          <a href="#privacidad">Política de Privacidad</a>
-          <a href="#terminos">Términos y Condiciones</a>
-          <a href="#cookies">Política de Cookies</a>
+          <a href="#privacidad">{t('legal.privacy')}</a>
+          <a href="#terminos">{t('legal.terms')}</a>
+          <a href="#cookies">{t('legal.cookies')}</a>
         </div>
       </div>
 

@@ -1,0 +1,9 @@
+{
+    "badge": "Error 404",
+    "title": "This page is",
+    "titleHighlight": "lost",
+    "description": "The route you tried to open doesn't exist or is no longer available. You can return home, explore specialties or resume a booking.",
+    "backHome": "Back to home",
+    "book": "Go to booking",
+    "helpText": "If you got here from an old link, let's check the route together."
+}

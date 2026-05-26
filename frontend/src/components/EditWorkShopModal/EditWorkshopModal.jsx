@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import Modal from "../Modal"; 
+import { useTranslation } from "react-i18next";
+import Modal from "../Modal";
 import workshopService from "../../services/workshopService";
 import { useToast } from "../../context/ToastContext";
-import styles from "./EditWorkShopModal.module.css"; 
+import styles from "./EditWorkShopModal.module.css";
 
 export default function EditWorkshopModal({ isOpen, onClose, onUpdate, workshop }) {
+  const { t } = useTranslation('admin');
   // 1. Usamos los nombres exactos de tu Taller.java
   const [formData, setFormData] = useState({
     nombreTaller: "",
@@ -28,10 +30,10 @@ export default function EditWorkshopModal({ isOpen, onClose, onUpdate, workshop 
   const handleChange = (e) => {
     const { name, value } = e.target;
     // Si es un número, lo convertimos para que no lo envíe como texto a Java
-    const finalValue = (name === "capacidadMaxima" || name === "duracionMinutos") 
-      ? Number(value) 
+    const finalValue = (name === "capacidadMaxima" || name === "duracionMinutos")
+      ? Number(value)
       : value;
-      
+
     setFormData(prev => ({ ...prev, [name]: finalValue }));
   };
 
@@ -40,7 +42,7 @@ export default function EditWorkshopModal({ isOpen, onClose, onUpdate, workshop 
     setIsSubmitting(true);
     try {
       const id = workshop.idTaller;
-      
+
       // Juntamos el taller original con los datos cambiados 
       // (así no perdemos el idCurso ni otros datos que no estamos editando aquí)
       const payload = { ...workshop, ...formData };
@@ -48,12 +50,12 @@ export default function EditWorkshopModal({ isOpen, onClose, onUpdate, workshop 
       if (workshopService.updateWorkshop) {
         await workshopService.updateWorkshop(id, payload);
       }
-      
-      addToast("Taller actualizado correctamente", "success");
-      onUpdate(); 
-      onClose();  
+
+      addToast(t('editWorkshop.toasts.success'), "success");
+      onUpdate();
+      onClose();
     } catch (error) {
-      addToast("Error al actualizar el taller", "error");
+      addToast(t('editWorkshop.toasts.error'), "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -62,53 +64,53 @@ export default function EditWorkshopModal({ isOpen, onClose, onUpdate, workshop 
   if (!workshop) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} eyebrow="EDICIÓN" title="Editar Taller" showAction={false}>
+    <Modal isOpen={isOpen} onClose={onClose} eyebrow={t('editWorkshop.eyebrow')} title={t('editWorkshop.title')} showAction={false}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.field}>
-          <label className={styles.label}>Nombre del Taller</label>
-          <input 
-            name="nombreTaller" 
-            className={styles.input} 
-            value={formData.nombreTaller} 
-            onChange={handleChange} 
-            required 
+          <label className={styles.label}>{t('editWorkshop.nameLabel')}</label>
+          <input
+            name="nombreTaller"
+            className={styles.input}
+            value={formData.nombreTaller}
+            onChange={handleChange}
+            required
           />
         </div>
-        
+
         {/* Añadimos la duración ya que ahora la mostramos en la UI */}
         <div className={styles.field}>
-          <label className={styles.label}>Duración (minutos)</label>
-          <input 
-            type="number" 
-            name="duracionMinutos" 
-            className={styles.input} 
-            value={formData.duracionMinutos} 
-            onChange={handleChange} 
-            required 
-            min="1" 
+          <label className={styles.label}>{t('editWorkshop.durationLabel')}</label>
+          <input
+            type="number"
+            name="duracionMinutos"
+            className={styles.input}
+            value={formData.duracionMinutos}
+            onChange={handleChange}
+            required
+            min="1"
             step="5"
           />
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Capacidad (Aforo máximo)</label>
-          <input 
-            type="number" 
-            name="capacidadMaxima" 
-            className={styles.input} 
-            value={formData.capacidadMaxima} 
-            onChange={handleChange} 
-            required 
-            min="1" 
+          <label className={styles.label}>{t('editWorkshop.capacityLabel')}</label>
+          <input
+            type="number"
+            name="capacidadMaxima"
+            className={styles.input}
+            value={formData.capacidadMaxima}
+            onChange={handleChange}
+            required
+            min="1"
           />
         </div>
 
         <div className={styles.actions}>
           <button type="button" className={styles.secondaryButton} onClick={onClose} disabled={isSubmitting}>
-            Cancelar
+            {t('editWorkshop.cancel')}
           </button>
           <button type="submit" className={styles.primaryButton} disabled={isSubmitting}>
-            {isSubmitting ? "Guardando..." : "Guardar cambios"}
+            {isSubmitting ? t('editWorkshop.saving') : t('editWorkshop.save')}
           </button>
         </div>
       </form>

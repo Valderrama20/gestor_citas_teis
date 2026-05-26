@@ -26,6 +26,7 @@
   from {
     transform: translateX(-100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -35,6 +36,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -54,10 +56,6 @@
   margin-bottom: 1rem;
 }
 
-.closeBtn:hover {
-  opacity: 0.7;
-}
-
 .nav {
   display: flex;
   flex-direction: column;
@@ -74,13 +72,34 @@
   font-weight: 500;
   transition: all var(--transition-fast);
   cursor: pointer;
-  border-left: 3px solid transparent;
 }
 
-.menuItem:hover {
-  background: var(--color-accent-wash);
-  color: var(--color-text);
-  border-left-color: var(--color-accent);
+/* SELECTOR DE IDIOMA */
+.langSelectorWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  padding: 1rem 1.2rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: 0.5rem;
+}
+
+.langText {
+  white-space: nowrap;
+  flex: 1;
+  /* Permite que el texto empuje la flecha a la derecha */
+}
+
+.langIcon {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .logoutBtn {
@@ -92,10 +111,4 @@
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
-  margin-top: auto;
-}
-
-.logoutBtn:hover {
-  background: var(--color-accent);
-  color: var(--color-white);
 }

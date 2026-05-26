@@ -10,7 +10,7 @@
   background-color: var(--color-white);
   box-shadow: var(--shadow-soft-md);
   gap: var(--space-4);
-    border-bottom: 1px solid var(--color-accent-border); 
+  border-bottom: 1px solid var(--color-accent-border);
 }
 
 .logoGroup {
@@ -137,6 +137,49 @@
 
 .btnReserveSecondary:active {
   background-color: var(--color-accent-border);
+}
+
+/* SELECTOR DE IDIOMA */
+.langSelectorWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.langSelectorWrapper:hover,
+.langSelectorWrapper:focus-within {
+  background: var(--color-accent-wash);
+  color: var(--color-accent-strong);
+}
+
+.langText {
+  white-space: nowrap;
+}
+
+.langIcon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.langSelectHidden {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  appearance: none;
 }
 
 .menuContainer {

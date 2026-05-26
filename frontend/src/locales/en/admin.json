@@ -1,0 +1,333 @@
+{
+    "login": {
+        "title": "Teacher Login",
+        "subtitle": "Manage IES TEIS appointments",
+        "emailPlaceholder": "Institutional email",
+        "passwordPlaceholder": "Password",
+        "error": "Invalid credentials or connection error.",
+        "submit": "Enter dashboard",
+        "submitting": "Logging in..."
+    },
+    "courses": {
+        "topbar": "Admin Dashboard",
+        "createBtn": "Create course",
+        "logoutBtn": "Logout",
+        "greeting": "Hello",
+        "defaultUser": "teacher",
+        "subtitle": "Select a course to manage its appointments.",
+        "loading": "Loading courses...",
+        "toasts": {
+            "updated": "Course updated successfully!",
+            "created": "Course created successfully!",
+            "saveError": "Error saving the course. Please try again.",
+            "deleted": "Course deleted",
+            "deleteError": "Error deleting",
+            "loadError": "Error loading course data.",
+            "duplicated": "Course duplicated successfully!",
+            "duplicateError": "Error duplicating course."
+        },
+        "deleteModal": {
+            "title": "Delete course",
+            "warning": "This action cannot be undone!",
+            "confirm": "Delete permanently",
+            "cancel": "Cancel"
+        }
+    },
+    "dashboard": {
+        "back": "Back to courses",
+        "brand": "IES TEIS | ",
+        "titlePrefix": "Dashboard for ",
+        "subtitle": "Manage appointments and workshops for this course.",
+        "tabs": {
+            "appointments": "Scheduled appointments",
+            "workshops": "Course workshops"
+        },
+        "actions": {
+            "newAppointment": "New appointment",
+            "createWorkshop": "Create workshop"
+        },
+        "filters": {
+            "today": "Today",
+            "clear": "Showing only appointments for selected workshop"
+        },
+        "bulk": {
+            "selected": "selected",
+            "selectedPlural": "selected",
+            "pending": "Pending",
+            "confirm": "Confirm",
+            "cancel": "Cancel"
+        },
+        "empty": {
+            "filteredAppointments": "This workshop has no appointments this week",
+            "appointments": "No appointments for this week",
+            "scheduleAppointment": "Schedule appointment",
+            "workshopsTitle": "No workshops created yet",
+            "workshopsSub": "Create a workshop to start scheduling appointments.",
+            "createFirstWorkshop": "Create first workshop"
+        },
+        "workshopCard": {
+            "duration": "Duration:",
+            "min": "min",
+            "capacity": "Max capacity:",
+            "clients": "clients",
+            "appointments": "appointments this week",
+            "viewAppointments": "View this week's appointments",
+            "edit": "Edit",
+            "delete": "Delete"
+        },
+        "toasts": {
+            "wsDeleted": "Workshop deleted successfully",
+            "wsDeleteError": "Cannot delete a workshop with associated appointments",
+            "appConfirmed": "Appointment confirmed",
+            "appCancelled": "Appointment cancelled",
+            "appUndo": "Appointment restored to pending",
+            "appsUpdated": "{{count}} appointments updated",
+            "appsUpdateError": "Error updating appointments",
+            "appsDeleted": "{{count}} appointments deleted",
+            "appsDeleteError": "Error deleting appointments",
+            "appCreated": "Appointment created",
+            "appCreateError": "Error creating appointment",
+            "wsCreated": "Workshop created successfully",
+            "wsCreateError": "Error creating workshop"
+        },
+        "deleteAppointmentsModal": {
+            "title": "Delete appointments",
+            "warning": "This action cannot be undone!",
+            "questionSingular": "Do you want to permanently delete 1 appointment?",
+            "questionPlural": "Do you want to permanently delete {{count}} appointments?",
+            "confirm": "Delete permanently",
+            "cancel": "Cancel"
+        },
+        "deleteWorkshopModal": {
+            "title": "Delete workshop",
+            "warning": "This action cannot be undone!",
+            "hint": "(Can only be deleted if it has no associated appointments)",
+            "confirm": "Delete permanently",
+            "cancel": "Cancel"
+        }
+    },
+    "profile": {
+        "back": "Back",
+        "brand": "IES TEIS | Profile",
+        "title": "My Profile",
+        "subtitle": "Manage your account information and security.",
+        "personal": {
+            "title": "Personal Information",
+            "subtitle": "View and edit your account details",
+            "ariaPhoto": "Change profile picture",
+            "name": "Full name",
+            "email": "Email address",
+            "save": "Save",
+            "saving": "Saving..."
+        },
+        "security": {
+            "title": "Security",
+            "subtitle": "Update your login password",
+            "current": "Current password",
+            "new": "New password",
+            "update": "Update"
+        },
+        "alerts": {
+            "success": "Simulation: Profile updated successfully.",
+            "error": "Error updating profile."
+        }
+    },
+    "courseCard": {
+        "options": "Options",
+        "edit": "Edit",
+        "duplicate": "Duplicate",
+        "delete": "Delete",
+        "students": "students"
+    },
+    "createWorkshop": {
+        "eyebrow": "Admin dashboard",
+        "title": "Create new workshop",
+        "nameLabel": "Workshop name",
+        "iconLabel": "Representative icon",
+        "durationLabel": "Duration (min)",
+        "capacityLabel": "Max capacity",
+        "descriptionLabel": "Description",
+        "availabilityLabel": "Weekly availability",
+        "timeSeparator": "to",
+        "addDay": "Add another day",
+        "removeSchedule": "Remove schedule",
+        "ariaScrollLeft": "Scroll left",
+        "ariaScrollRight": "Scroll right",
+        "ariaSelectIcon": "Select icon",
+        "weekdays": {
+            "Lunes": "Monday",
+            "Martes": "Tuesday",
+            "Miércoles": "Wednesday",
+            "Jueves": "Thursday",
+            "Viernes": "Friday"
+        },
+        "actions": {
+            "cancel": "Cancel",
+            "create": "Create workshop",
+            "creating": "Creating..."
+        }
+    },
+    "createCourse": {
+        "eyebrow": "Admin dashboard",
+        "titleCreate": "Create new course",
+        "titleEdit": "Edit course",
+        "nameLabel": "Course name",
+        "namePlaceholder": "E.g. Advanced hairdressing",
+        "levelLabel": "Level",
+        "levels": {
+            "medium": "Intermediate vocational training",
+            "higher": "Higher vocational training"
+        },
+        "periodLabel": "Period",
+        "periodPlaceholder": "2025/2026",
+        "studentsLabel": "Number of students",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Brief course description",
+        "iconLabel": "Representative icon",
+        "ariaScrollLeft": "Scroll left",
+        "ariaScrollRight": "Scroll right",
+        "ariaSelectIcon": "Select icon",
+        "errors": {
+            "name": "The name is required.",
+            "period": "The period is required.",
+            "students": "Enter a valid number.",
+            "description": "The description is required.",
+            "submit": "An error occurred while processing the form."
+        },
+        "actions": {
+            "cancel": "Cancel",
+            "saving": "Saving...",
+            "save": "Save changes",
+            "create": "Create course"
+        },
+        "confirmClose": {
+            "title": "Discard changes?",
+            "subtitle": "You have unsaved changes",
+            "confirm": "Yes, discard",
+            "cancel": "No, keep editing"
+        }
+    },
+    "createAppointment": {
+        "eyebrow": "Admin dashboard",
+        "titleCreate": "Create new appointment",
+        "courseLabel": "Course",
+        "clientLabel": "Full name",
+        "clientPlaceholder": "E.g. Maria Garcia",
+        "workshopLabel": "Workshop",
+        "workshopPlaceholder": "Select a workshop",
+        "dateLabel": "Available day",
+        "datePlaceholder": "Select a day in the calendar...",
+        "emailLabel": "Email address",
+        "emailPlaceholder": "email@example.com",
+        "phoneLabel": "Contact phone",
+        "phonePlaceholder": "E.g. 600 000 000",
+        "allergiesLabel": "Important allergies or contraindications",
+        "allergiesHelper": "Select whether the person has any sensitivity we should know about.",
+        "allergiesNo": "No known allergies",
+        "allergiesYes": "Yes, has an allergy",
+        "allergiesOther": "Other (specify):",
+        "allergiesOtherPlaceholder": "E.g. Rosacea-prone skin...",
+        "allergiesItems": {
+            "LÃ¡tex": "Latex",
+            "CosmÃ©ticos": "Cosmetics",
+            "NÃ­quel": "Nickel",
+            "AcrÃ­licos": "Acrylics",
+            "Piel AtÃ³pica": "Atopic skin"
+        },
+        "errors": {
+            "client": "Please enter the full name.",
+            "workshop": "Please select a workshop.",
+            "date": "Please select a date in the calendar.",
+            "contact": "Please provide an email address or contact phone.",
+            "allergies": "Select at least one allergy or specify one in the Other field."
+        },
+        "summary": {
+            "title": "Appointment summary",
+            "workshop": "Workshop:",
+            "email": "Email address:",
+            "phone": "Phone:",
+            "date": "Scheduled day:",
+            "allergies": "Allergies:",
+            "unselected": "Not selected",
+            "unspecified": "Not specified",
+            "none": "None",
+            "notSpecified": "Not specified"
+        },
+        "actions": {
+            "cancel": "Cancel",
+            "save": "Create appointment",
+            "saving": "Creating..."
+        },
+        "confirmClose": {
+            "title": "Discard appointment",
+            "question": "You have unsaved data",
+            "target": "Are you sure you want to leave?",
+            "confirm": "Leave and discard data",
+            "cancel": "Keep editing"
+        }
+    },
+    "editWorkshop": {
+        "eyebrow": "Admin dashboard",
+        "title": "Edit workshop",
+        "nameLabel": "Workshop name",
+        "durationLabel": "Duration (min)",
+        "capacityLabel": "Max capacity",
+        "cancel": "Cancel",
+        "save": "Save changes",
+        "saving": "Saving...",
+        "toasts": {
+            "success": "Workshop updated successfully",
+            "error": "Error updating workshop"
+        }
+    },
+    "appointmentsTable": {
+        "headers": {
+            "client": "Client",
+            "workshop": "Workshop",
+            "dateTime": "Date and time",
+            "status": "Status",
+            "action": "Action"
+        },
+        "status": {
+            "PENDIENTE": "Pending",
+            "CONFIRMADA": "Confirmed",
+            "CANCELADA": "Cancelled"
+        },
+        "defaults": {
+            "noId": "No reference",
+            "unknownClient": "Unknown client",
+            "notSpecified": "Not specified",
+            "workshopNotFound": "Workshop not found",
+            "noNotes": "No notes"
+        },
+        "actions": {
+            "confirm": "Confirm",
+            "cancel": "Cancel",
+            "undo": "Restore",
+            "undoTitle": "Restore to pending",
+            "view": "View"
+        },
+        "details": {
+            "modalTitle": "Appointment details",
+            "status": "Status",
+            "reference": "Reference",
+            "client": "Client",
+            "email": "Email address",
+            "phone": "Phone",
+            "workshop": "Workshop",
+            "date": "Date",
+            "time": "Time",
+            "notes": "Notes",
+            "close": "Close"
+        }
+    },
+    "workshopDetails": {
+        "eyebrow": "INFORMATION",
+        "statusLabel": "Current status",
+        "statusActive": "Active",
+        "capacityLabel": "Max capacity",
+        "capacitySuffix": "clients",
+        "slotsLabel": "Assigned slots",
+        "noSlots": "There are no slots registered in the database for this workshop."
+    }
+}

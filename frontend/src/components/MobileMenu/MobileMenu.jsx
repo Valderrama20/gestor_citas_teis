@@ -1,8 +1,20 @@
-import { X } from "lucide-react";
+import { X, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import styles from "./MobileMenu.module.css";
+import { useTranslation } from "react-i18next";
 
 export default function MobileMenu({ isOpen, onClose, menuItems = [], onLogout = null }) {
+    const { i18n } = useTranslation('common');
+    const languageNames = { es: "Español", gl: "Galego", en: "English" };
+
+    // Función para rotar entre los idiomas al hacer click
+    const toggleLanguage = () => {
+        const langs = ["es", "gl", "en"];
+        const currentLang = i18n.language || "es";
+        const nextIndex = (langs.indexOf(currentLang) + 1) % langs.length;
+        i18n.changeLanguage(langs[nextIndex]);
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -57,6 +69,10 @@ export default function MobileMenu({ isOpen, onClose, menuItems = [], onLogout =
                         )
                     ))}
                 </nav>
+                <div className={styles.langSelectorWrapper} onClick={toggleLanguage}>
+                    <Globe className={styles.langIcon} strokeWidth={1.8} />
+                    <span className={styles.langText}>{languageNames[i18n.language] || "Español"}</span>
+                </div>
 
                 {/* Logout Button (si existe) */}
                 {onLogout && (

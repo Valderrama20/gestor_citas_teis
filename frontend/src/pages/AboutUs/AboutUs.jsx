@@ -1,36 +1,25 @@
 import { Phone, Scissors, Sparkles, Wind, Zap } from "lucide-react";
 import FAQSection from "../../components/FAQSection";
 import styles from "./AboutUs.module.css";
+import { useTranslation } from "react-i18next";
 
 export default function AboutUs() {
-    const services = [
-        {
-            icon: Sparkles,
-            title: "Estética y Bienestar",
-            items: [
-                "Tratamientos faciales: Higiene facial, hidratación y tratamientos específicos",
-                "Tratamientos corporales: Masajes relajantes, drenaje linfático",
-                "Manicura y Pedicura: Cuidado de uñas y esmaltado",
-                "Depilación: Cera y otros métodos",
-                "Maquillaje: Social, de día, noche o eventos",
-            ],
-        },
-        {
-            icon: Scissors,
-            title: "Peluquería",
-            items: [
-                "Corte, peinado y acabados",
-                "Coloración: tintes, mechas, balayage",
-                "Tratamientos capilares específicos",
-            ],
-        },
-    ];
+    const { t } = useTranslation('about');
+
+    const serviceCategories = t('services.categories', { returnObjects: true });
+    const serviceIcons = [Sparkles, Scissors];
+
+    const services = serviceCategories.map((cat, idx) => ({
+        icon: serviceIcons[idx] || Sparkles,
+        title: cat.title,
+        items: cat.items
+    }));
 
     const workshops = [
-        { name: "Taller 1", phone: "886 120 469" },
-        { name: "Taller 2", phone: "886 120 468" },
-        { name: "Taller 3", phone: "886 120 461" },
-        { name: "Taller 4", phone: "886 120 463" },
+        { name: `${t('booking.workshopPrefix')} 1`, phone: "886 120 469" },
+        { name: `${t('booking.workshopPrefix')} 2`, phone: "886 120 468" },
+        { name: `${t('booking.workshopPrefix')} 3`, phone: "886 120 461" },
+        { name: `${t('booking.workshopPrefix')} 4`, phone: "886 120 463" },
     ];
 
     return (
@@ -39,10 +28,10 @@ export default function AboutUs() {
             <section className={styles.header}>
                 <div className={styles.headerContent}>
                     <h1 className={styles.title}>
-                        Sobre <span className={styles.highlight}>Nosotros</span>
+                        {t('header.title1')}<span className={styles.highlight}>{t('header.titleHighlight')}</span>
                     </h1>
                     <p className={styles.subtitle}>
-                        Servicios de estética y peluquería con sello de calidad, creados por nuestros alumnos y guiados por docentes expertos.
+                        {t('header.subtitle')}
                     </p>
                 </div>
                 <div className={styles.glowTop} />
@@ -51,19 +40,16 @@ export default function AboutUs() {
             {/* Introducción */}
             <section className={styles.intro}>
                 <div className={styles.introContent}>
-                    <h2 className={styles.sectionTitle}>Nuestro Departamento</h2>
+                    <h2 className={styles.sectionTitle}>{t('intro.title')}</h2>
                     <p className={styles.introText}>
-                        El IES de Teis, a través del departamento de Imagen Personal, ofrece servicios
-                        de estética y peluquería abiertos al público general. Estos servicios son
-                        realizados por el alumnado de los diferentes Ciclos Formativos como parte de su
-                        formación práctica, siempre bajo la supervisión del profesorado.
+                        {t('intro.text')}
                     </p>
                 </div>
             </section>
 
             {/* Servicios */}
             <section className={styles.services}>
-                <h2 className={styles.sectionTitle}>Servicios</h2>
+                <h2 className={styles.sectionTitle}>{t('services.title')}</h2>
                 <div className={styles.servicesGrid}>
                     {services.map((service) => {
                         const IconComponent = service.icon;
@@ -90,14 +76,12 @@ export default function AboutUs() {
             <section className={styles.booking}>
                 <div className={styles.bookingContent}>
                     <div className={styles.bookingText}>
-                        <h2 className={styles.sectionTitle}>Cita Previa</h2>
+                        <h2 className={styles.sectionTitle}>{t('booking.title')}</h2>
                         <p className={styles.bookingDescription}>
-                            Para disfrutar de nuestros servicios a precios muy reducidos (destinados
-                            a cubrir el coste de los materiales), es obligatorio solicitar cita previa.
+                            {t('booking.description1')}
                         </p>
                         <p className={styles.bookingSubtext}>
-                            Puedes reservar tu cita a través de nuestra plataforma o contactando
-                            directamente con cualquiera de nuestros talleres.
+                            {t('booking.description2')}
                         </p>
                     </div>
 
@@ -119,10 +103,10 @@ export default function AboutUs() {
             {/* CTA */}
             <section className={styles.cta}>
                 <h2 className={styles.ctaTitle}>
-                    ¿Listo para reservar tu cita?
+                    {t('cta.title')}
                 </h2>
                 <a href="/reservar" className={styles.ctaButton}>
-                    Reservar Ahora
+                    {t('cta.button')}
                 </a>
             </section>
 

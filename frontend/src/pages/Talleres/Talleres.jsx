@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import ServiceCard from "../../components/ServiceCard";
 import { workshopIconMap } from "../../constants/icons";
 import { Home, ScissorsLineDashed, Sparkles } from "lucide-react";
@@ -9,6 +10,7 @@ import styles from "./Talleres.module.css";
 
 export default function Talleres() {
   const { courseId } = useParams();
+  const { t } = useTranslation('workshops');
   const [course, setCourse] = useState(undefined);
   const [workshops, setWorkshops] = useState([]);
 
@@ -40,7 +42,7 @@ export default function Talleres() {
     return (
       <section className={styles.main}>
         <div className={styles.hero}>
-          <h2 className={styles.title}>Cargando talleres...</h2>
+          <h2 className={styles.title}>{t('loading')}</h2>
         </div>
       </section>
     );
@@ -50,9 +52,9 @@ export default function Talleres() {
     return (
       <section className={styles.main}>
         <div className={styles.hero}>
-          <h2 className={styles.title}>Especialidad no encontrada</h2>
+          <h2 className={styles.title}>{t('notFoundTitle')}</h2>
           <Link to="/" className={styles.backBtn}>
-            Volver a especialidades
+            {t('backToSpecialties')}
           </Link>
         </div>
       </section>
@@ -63,13 +65,13 @@ export default function Talleres() {
     <section className={styles.main}>
       <div className={styles.header}>
         <Link to="/" className={styles.backBtn}>
-          Volver a especialidades
+          {t('backToSpecialties')}
         </Link>
       </div>
 
       <div className={styles.hero}>
-        <span className={styles.eyebrow}>Taller educativo</span>
-        <h2 className={styles.title}>Talleres de {course.nombreCurso}</h2>
+        <span className={styles.eyebrow}>{t('eyebrow')}</span>
+        <h2 className={styles.title}>{t('title', { courseName: course.nombreCurso })}</h2>
         <p className={styles.description}>{course.workshopPageDescription}</p>
       </div>
 
@@ -77,23 +79,22 @@ export default function Talleres() {
         <section className={styles.emptyCard}>
           <div className={styles.emptyBadge}>
             <ScissorsLineDashed className={styles.emptyBadgeIcon} strokeWidth={1.8} />
-            Sin talleres
+            {t('emptyBadge')}
           </div>
 
           <p className={styles.emptyCode}>0</p>
 
           <h3 className={styles.emptyTitle}>
-            Aun no hay <span className={styles.emptyTitleHighlight}>talleres disponibles</span>
+            {t('emptyTitle')} <span className={styles.emptyTitleHighlight}>{t('emptyTitleHighlight')}</span>
           </h3>
 
           <p className={styles.emptyDescription}>
-            Esta especialidad todavia no tiene talleres publicados. Vuelve a especialidades
-            para elegir otra opcion disponible.
+            {t('emptyDescription')}
           </p>
 
           <Link to="/" className={styles.emptyAction}>
             <Home className={styles.emptyActionIcon} strokeWidth={1.8} />
-            Volver a especialidades
+            {t('backToSpecialties')}
           </Link>
         </section>
       ) : (

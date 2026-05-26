@@ -1,0 +1,32 @@
+{
+    "contact": {
+        "title": "Contacto",
+        "email": "Email:",
+        "phone": "Teléfono:",
+        "address": "Enderezo:",
+        "country": "España"
+    },
+    "form": {
+        "nameLabel": "O teu Nome",
+        "namePlaceholder": "O teu nome completo",
+        "emailLabel": "Correo electrónico",
+        "emailPlaceholder": "O teu correo electrónico",
+        "messageLabel": "Mensaxe",
+        "messagePlaceholder": "Escribe algo...",
+        "submit": "Enviar Mensaxe",
+        "submitting": "Enviando...",
+        "errors": {
+            "nameRequired": "Por favor, introduce o teu nome",
+            "emailRequired": "Por favor, introduce o teu correo electrónico",
+            "messageRequired": "Por favor, escribe unha mensaxe",
+            "sendError": "Erro ao enviar a mensaxe. Por favor, inténteo de novo."
+        },
+        "success": "Mensaxe enviada correctamente! Porémonos en contacto pronto."
+    },
+    "legal": {
+        "rights": "Todos os dereitos reservados.",
+        "privacy": "Política de Privacidade",
+        "terms": "Termos e Condicións",
+        "cookies": "Política de Cookies"
+    }
+}

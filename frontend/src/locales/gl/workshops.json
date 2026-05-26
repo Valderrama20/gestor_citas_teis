@@ -1,0 +1,11 @@
+{
+    "loading": "Cargando obradoiros...",
+    "notFoundTitle": "Especialidade non atopada",
+    "backToSpecialties": "Volver a especialidades",
+    "eyebrow": "Obradoiro educativo",
+    "title": "Obradoiros de {{courseName}}",
+    "emptyBadge": "Sen obradoiros",
+    "emptyTitle": "Aínda non hai",
+    "emptyTitleHighlight": "obradoiros dispoñibles",
+    "emptyDescription": "Esta especialidade aínda non ten obradoiros publicados. Volve a especialidades para elixir outra opción dispoñible."
+}

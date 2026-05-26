@@ -1,11 +1,13 @@
 import { ArrowRight, Copy, Edit3, GraduationCap, MoreVertical, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styles from "./AdminCourseCard.module.css";
 
 export default function AdminCourseCard({ course, icon: Icon, onDelete, onEdit, onDuplicate }) {
+  const { t } = useTranslation('admin');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+
   const toggleMenu = (e) => {
     e.preventDefault();
     setIsMenuOpen(!isMenuOpen);
@@ -31,21 +33,21 @@ export default function AdminCourseCard({ course, icon: Icon, onDelete, onEdit, 
         </div>
 
         <div className={styles.menuContainer}>
-          <button onClick={toggleMenu} className={styles.menuTrigger} title="Opciones">
+          <button onClick={toggleMenu} className={styles.menuTrigger} title={t('courseCard.options')}>
             <MoreVertical strokeWidth={1.8} size={20} />
           </button>
 
           {isMenuOpen && (
             <div className={styles.dropdown}>
               <button onClick={(e) => handleAction(e, 'edit')} className={styles.dropdownItem}>
-                <Edit3 size={16} /> Editar
+                <Edit3 size={16} /> {t('courseCard.edit')}
               </button>
               <button onClick={(e) => handleAction(e, 'duplicate')} className={styles.dropdownItem}>
-                <Copy size={16} /> Duplicar
+                <Copy size={16} /> {t('courseCard.duplicate')}
               </button>
               <div className={styles.dropdownDivider} />
               <button onClick={(e) => handleAction(e, 'delete')} className={`${styles.dropdownItem} ${styles.danger}`}>
-                <Trash2 size={16} /> Eliminar
+                <Trash2 size={16} /> {t('courseCard.delete')}
               </button>
             </div>
           )}
@@ -57,7 +59,7 @@ export default function AdminCourseCard({ course, icon: Icon, onDelete, onEdit, 
         {course.nivel || course.level} | {course.cursoAcademico || course.period}
       </p>
       <div className={styles.footer}>
-        <span>{course.alumnos || course.studentCount || 0} alumnos</span>
+        <span>{course.alumnos || course.studentCount || 0} {t('courseCard.students')}</span>
         <ArrowRight className={styles.arrow} strokeWidth={1.8} />
       </div>
     </Link >

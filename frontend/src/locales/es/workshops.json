@@ -1,0 +1,11 @@
+{
+    "loading": "Cargando talleres...",
+    "notFoundTitle": "Especialidad no encontrada",
+    "backToSpecialties": "Volver a especialidades",
+    "eyebrow": "Taller educativo",
+    "title": "Talleres de {{courseName}}",
+    "emptyBadge": "Sin talleres",
+    "emptyTitle": "Aún no hay",
+    "emptyTitleHighlight": "talleres disponibles",
+    "emptyDescription": "Esta especialidad todavía no tiene talleres publicados. Vuelve a especialidades para elegir otra opción disponible."
+}

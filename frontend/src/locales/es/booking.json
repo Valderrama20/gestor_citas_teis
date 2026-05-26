@@ -1,0 +1,81 @@
+{
+    "eyebrow": "Reserva",
+    "title": "Solicita tu cita",
+    "description": "Completa este formulario para gestionar tu asistencia. Nos aseguraremos de tener todo listo para ti.",
+    "form": {
+        "clientLabel": "Nombre completo *",
+        "clientPlaceholder": "Ej. María García",
+        "clientError": "Por favor, indícanos tu nombre completo.",
+        "workshopLabel": "Taller de interés *",
+        "workshopError": "Por favor, selecciona el taller al que deseas asistir.",
+        "emailLabel": "Correo electrónico",
+        "emailPlaceholder": "correo@ejemplo.com",
+        "phoneLabel": "Teléfono de contacto",
+        "phonePlaceholder": "Ej. 600 000 000",
+        "contactError": "Por favor, facilítanos un correo electrónico o un teléfono de contacto.",
+        "dateLabel": "Día y horario disponible *",
+        "datePlaceholder": "Seleccionar día en el calendario...",
+        "dateError": "Por favor, selecciona una fecha en el calendario."
+    },
+    "allergies": {
+        "label": "Alergias o contraindicaciones importantes",
+        "helper": "Selecciona si tienes alguna sensibilidad que debamos conocer.",
+        "noAllergies": "No tengo alergias conocidas",
+        "hasAllergies": "Sí, tengo alguna alergia",
+        "error": "Por favor, selecciona al menos una alergia o especifica en el campo 'Otro'.",
+        "otherLabel": "Otro (especificar):",
+        "otherPlaceholder": "Ej. Piel rosácea...",
+        "items": {
+            "latex": "Látex",
+            "cosmetics": "Cosméticos",
+            "nickel": "Níquel",
+            "acrylics": "Acrílicos",
+            "atopic": "Piel Atópica"
+        }
+    },
+    "summary": {
+        "title": "Resumen de tu selección",
+        "workshop": "Taller:",
+        "email": "Correo electrónico:",
+        "phone": "Teléfono:",
+        "date": "Día agendado:",
+        "allergies": "Alergias:",
+        "unselected": "Sin seleccionar",
+        "unspecified": "No especificado",
+        "none": "Ninguna",
+        "notSpecified": "No especificadas"
+    },
+    "actions": {
+        "cancel": "Cancelar",
+        "submit": "Solicitar cita",
+        "submitting": "Procesando..."
+    },
+    "successModal": {
+        "eyebrow": "Solicitud completada",
+        "title": "Tu cita está en proceso",
+        "text1": "Hemos registrado la solicitud para el taller de",
+        "text2": "En breve nos pondremos en contacto contigo a través de los datos facilitados para confirmar definitivamente tu plaza.",
+        "question": "¿Deseas solicitar otra cita?",
+        "yes": "Sí, solicitar otra cita",
+        "no": "No, volver al inicio"
+    },
+    "confirmModal": {
+        "title": "Descartar reserva",
+        "question": "Tienes datos sin confirmar",
+        "target": "¿Seguro que quieres salir?",
+        "exit": "Salir y perder datos",
+        "continue": "Continuar reserva"
+    },
+    "cancelPage": {
+        "eyebrow": "Gestión de citas",
+        "loading": { "title": "Procesando cancelación", "description": "Estamos anulando tu cita. Esto puede tardar unos segundos." },
+        "cancelada": { "title": "Cita cancelada", "description": "Tu cita ha sido cancelada correctamente. Si quieres, puedes reservar un nuevo horario." },
+        "ya_cancelada": { "title": "La cita ya estaba cancelada", "description": "No es necesario hacer nada más. Si deseas, puedes reservar una nueva cita." },
+        "expirada": { "title": "El enlace ha expirado", "description": "La cita ya no se puede cancelar porque la fecha ya pasó." },
+        "invalid": { "title": "Enlace no válido", "description": "El enlace de cancelación no es válido o está incompleto." },
+        "not_found": { "title": "Cita no encontrada", "description": "No encontramos la cita asociada a este enlace." },
+        "error": { "title": "No pudimos cancelar la cita", "description": "Ocurrió un error inesperado. Intenta de nuevo más tarde." },
+        "actions": { "bookNew": "Reservar nueva cita", "backHome": "Volver al inicio" },
+        "helper": "No cierres esta ventana hasta terminar."
+    }
+}

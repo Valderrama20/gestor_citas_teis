@@ -1,0 +1,333 @@
+{
+    "login": {
+        "title": "Acceso Profesor",
+        "subtitle": "Xestiona as citas do IES TEIS",
+        "emailPlaceholder": "Email institucional",
+        "passwordPlaceholder": "Contrasinal",
+        "error": "Credenciais inválidas ou erro de conexión.",
+        "submit": "Entrar ao panel",
+        "submitting": "Entrando..."
+    },
+    "courses": {
+        "topbar": "Panel administrativo",
+        "createBtn": "Crear curso",
+        "logoutBtn": "Saír",
+        "greeting": "Ola",
+        "defaultUser": "profesor",
+        "subtitle": "Selecciona un curso para xestionar as súas citas.",
+        "loading": "Cargando cursos...",
+        "toasts": {
+            "updated": "Curso actualizado correctamente!",
+            "created": "Curso creado correctamente!",
+            "saveError": "Erro ao gardar o curso. Inténtao de novo.",
+            "deleted": "Curso eliminado",
+            "deleteError": "Erro ao borrar",
+            "loadError": "Erro ao cargar os datos do curso.",
+            "duplicated": "Curso duplicado correctamente!",
+            "duplicateError": "Erro ao duplicar o curso."
+        },
+        "deleteModal": {
+            "title": "Eliminar curso",
+            "warning": "Esta acción non se pode desfacer!",
+            "confirm": "Eliminar definitivamente",
+            "cancel": "Cancelar"
+        }
+    },
+    "dashboard": {
+        "back": "Volver a cursos",
+        "brand": "IES TEIS | ",
+        "titlePrefix": "Panel de ",
+        "subtitle": "Xestiona as citas e os obradoiros dispoñibles deste curso.",
+        "tabs": {
+            "appointments": "Citas programadas",
+            "workshops": "Obradoiros do curso"
+        },
+        "actions": {
+            "newAppointment": "Nova cita",
+            "createWorkshop": "Crear obradoiro"
+        },
+        "filters": {
+            "today": "Hoxe",
+            "clear": "Mostrando só citas do obradoiro seleccionado"
+        },
+        "bulk": {
+            "selected": "seleccionada",
+            "selectedPlural": "seleccionadas",
+            "pending": "Pendente",
+            "confirm": "Confirmar",
+            "cancel": "Cancelar"
+        },
+        "empty": {
+            "filteredAppointments": "Este obradoiro non ten citas esta semana",
+            "appointments": "Sen citas para esta semana",
+            "scheduleAppointment": "Axendar cita",
+            "workshopsTitle": "Aínda non hai obradoiros creados",
+            "workshopsSub": "Crea un obradoiro para poder empezar a axendar citas.",
+            "createFirstWorkshop": "Crear primeiro obradoiro"
+        },
+        "workshopCard": {
+            "duration": "Duración:",
+            "min": "min",
+            "capacity": "Aforo máximo:",
+            "clients": "clientes",
+            "appointments": "citas esta semana",
+            "viewAppointments": "Ver citas desta semana",
+            "edit": "Editar",
+            "delete": "Eliminar"
+        },
+        "toasts": {
+            "wsDeleted": "Obradoiro eliminado con éxito",
+            "wsDeleteError": "Non se pode eliminar un obradoiro con citas asociadas",
+            "appConfirmed": "Cita confirmada",
+            "appCancelled": "Cita cancelada",
+            "appUndo": "Cita restaurada a pendente",
+            "appsUpdated": "{{count}} citas actualizadas",
+            "appsUpdateError": "Erro ao actualizar citas",
+            "appsDeleted": "{{count}} citas eliminadas",
+            "appsDeleteError": "Erro ao eliminar citas",
+            "appCreated": "Cita creada",
+            "appCreateError": "Erro creando cita",
+            "wsCreated": "Obradoiro creado con éxito",
+            "wsCreateError": "Erro ao crear obradoiro"
+        },
+        "deleteAppointmentsModal": {
+            "title": "Eliminar citas",
+            "warning": "Esta acción non se pode desfacer!",
+            "questionSingular": "Desexas eliminar 1 cita permanentemente?",
+            "questionPlural": "Desexas eliminar {{count}} citas permanentemente?",
+            "confirm": "Eliminar definitivamente",
+            "cancel": "Cancelar"
+        },
+        "deleteWorkshopModal": {
+            "title": "Eliminar obradoiro",
+            "warning": "Esta acción non se pode desfacer!",
+            "hint": "(Só se pode eliminar se non ten citas asociadas)",
+            "confirm": "Eliminar definitivamente",
+            "cancel": "Cancelar"
+        }
+    },
+    "profile": {
+        "back": "Volver",
+        "brand": "IES TEIS | Perfil",
+        "title": "O meu Perfil",
+        "subtitle": "Xestiona a información e seguridade da túa conta.",
+        "personal": {
+            "title": "Información Persoal",
+            "subtitle": "Visualiza e edita os datos da túa conta",
+            "ariaPhoto": "Cambiar foto de perfil",
+            "name": "Nome completo",
+            "email": "Correo electrónico",
+            "save": "Gardar",
+            "saving": "Gardando..."
+        },
+        "security": {
+            "title": "Seguridade",
+            "subtitle": "Actualiza o teu contrasinal de acceso",
+            "current": "Contrasinal actual",
+            "new": "Novo contrasinal",
+            "update": "Actualizar"
+        },
+        "alerts": {
+            "success": "Simulación: Actualización do perfil exitosa.",
+            "error": "Erro ao actualizar o perfil."
+        }
+    },
+    "courseCard": {
+        "options": "Opcións",
+        "edit": "Editar",
+        "duplicate": "Duplicar",
+        "delete": "Eliminar",
+        "students": "alumnos"
+    },
+    "createWorkshop": {
+        "eyebrow": "Panel administrativo",
+        "title": "Crear novo obradoiro",
+        "nameLabel": "Nome do obradoiro",
+        "iconLabel": "Icona representativa",
+        "durationLabel": "Duración (min)",
+        "capacityLabel": "Capacidade máx.",
+        "descriptionLabel": "Descrición",
+        "availabilityLabel": "Dispoñibilidade semanal",
+        "timeSeparator": "a",
+        "addDay": "Engadir outro día",
+        "removeSchedule": "Eliminar horario",
+        "ariaScrollLeft": "Desprazar á esquerda",
+        "ariaScrollRight": "Desprazar á dereita",
+        "ariaSelectIcon": "Seleccionar icona",
+        "weekdays": {
+            "Lunes": "Luns",
+            "Martes": "Martes",
+            "Miércoles": "Mércores",
+            "Jueves": "Xoves",
+            "Viernes": "Venres"
+        },
+        "actions": {
+            "cancel": "Cancelar",
+            "create": "Crear obradoiro",
+            "creating": "Creando..."
+        }
+    },
+    "createCourse": {
+        "eyebrow": "Panel administrativo",
+        "titleCreate": "Crear novo curso",
+        "titleEdit": "Editar curso",
+        "nameLabel": "Nome do curso",
+        "namePlaceholder": "Ex. Perrucaría avanzada",
+        "levelLabel": "Nivel",
+        "levels": {
+            "medium": "Grao medio",
+            "higher": "Grao superior"
+        },
+        "periodLabel": "Período",
+        "periodPlaceholder": "2025/2026",
+        "studentsLabel": "Número de alumnos",
+        "descriptionLabel": "Descrición",
+        "descriptionPlaceholder": "Breve descrición do curso",
+        "iconLabel": "Icona representativa",
+        "ariaScrollLeft": "Desprazar á esquerda",
+        "ariaScrollRight": "Desprazar á dereita",
+        "ariaSelectIcon": "Seleccionar icona",
+        "errors": {
+            "name": "O nome é obrigatorio.",
+            "period": "O período é obrigatorio.",
+            "students": "Debe ser un número válido.",
+            "description": "A descrición é obrigatoria.",
+            "submit": "Produciuse un erro ao procesar o formulario."
+        },
+        "actions": {
+            "cancel": "Cancelar",
+            "saving": "Gardando...",
+            "save": "Gardar cambios",
+            "create": "Crear curso"
+        },
+        "confirmClose": {
+            "title": "Descartar cambios?",
+            "subtitle": "Tes cambios sen gardar",
+            "confirm": "Si, descartar",
+            "cancel": "Non, continuar editando"
+        }
+    },
+    "createAppointment": {
+        "eyebrow": "Panel administrativo",
+        "titleCreate": "Crear nova cita",
+        "courseLabel": "Curso",
+        "clientLabel": "Nome completo",
+        "clientPlaceholder": "Ex. María García",
+        "workshopLabel": "Obradoiro",
+        "workshopPlaceholder": "Selecciona un obradoiro",
+        "dateLabel": "Día dispoñible",
+        "datePlaceholder": "Seleccionar día no calendario...",
+        "emailLabel": "Correo electrónico",
+        "emailPlaceholder": "correo@exemplo.com",
+        "phoneLabel": "Teléfono de contacto",
+        "phonePlaceholder": "Ex. 600 000 000",
+        "allergiesLabel": "Alerxias ou contraindicacións importantes",
+        "allergiesHelper": "Selecciona se a persoa ten algunha sensibilidade que debamos coñecer.",
+        "allergiesNo": "Non ten alerxias coñecidas",
+        "allergiesYes": "Si, ten algunha alerxia",
+        "allergiesOther": "Outro (especificar):",
+        "allergiesOtherPlaceholder": "Ex. Pel rosácea...",
+        "allergiesItems": {
+            "LÃ¡tex": "Látex",
+            "CosmÃ©ticos": "Cosméticos",
+            "NÃ­quel": "Níquel",
+            "AcrÃ­licos": "Acrílicos",
+            "Piel AtÃ³pica": "Pel atópica"
+        },
+        "errors": {
+            "client": "Por favor, indica o nome completo.",
+            "workshop": "Por favor, selecciona un obradoiro.",
+            "date": "Por favor, selecciona unha data no calendario.",
+            "contact": "Por favor, facilita un correo electrónico ou un teléfono de contacto.",
+            "allergies": "Selecciona polo menos unha alerxia ou especifica unha no campo Outro."
+        },
+        "summary": {
+            "title": "Resumo da cita",
+            "workshop": "Obradoiro:",
+            "email": "Correo electrónico:",
+            "phone": "Teléfono:",
+            "date": "Día axendado:",
+            "allergies": "Alerxias:",
+            "unselected": "Sen seleccionar",
+            "unspecified": "Non especificado",
+            "none": "Ningunha",
+            "notSpecified": "Non especificadas"
+        },
+        "actions": {
+            "cancel": "Cancelar",
+            "save": "Crear cita",
+            "saving": "Creando..."
+        },
+        "confirmClose": {
+            "title": "Descartar cita",
+            "question": "Tes datos sen gardar",
+            "target": "Seguro que queres saír?",
+            "confirm": "Saír e perder datos",
+            "cancel": "Continuar editando"
+        }
+    },
+    "editWorkshop": {
+        "eyebrow": "Panel administrativo",
+        "title": "Editar obradoiro",
+        "nameLabel": "Nome do obradoiro",
+        "durationLabel": "Duración (min)",
+        "capacityLabel": "Capacidade máxima",
+        "cancel": "Cancelar",
+        "save": "Gardar cambios",
+        "saving": "Gardando...",
+        "toasts": {
+            "success": "Obradoiro actualizado con éxito",
+            "error": "Erro ao actualizar o obradoiro"
+        }
+    },
+    "appointmentsTable": {
+        "headers": {
+            "client": "Cliente",
+            "workshop": "Obradoiro",
+            "dateTime": "Data e hora",
+            "status": "Estado",
+            "action": "Acción"
+        },
+        "status": {
+            "PENDIENTE": "Pendente",
+            "CONFIRMADA": "Confirmada",
+            "CANCELADA": "Cancelada"
+        },
+        "defaults": {
+            "noId": "Sen referencia",
+            "unknownClient": "Cliente sen identificar",
+            "notSpecified": "Non especificado",
+            "workshopNotFound": "Obradoiro non atopado",
+            "noNotes": "Sen notas"
+        },
+        "actions": {
+            "confirm": "Confirmar",
+            "cancel": "Cancelar",
+            "undo": "Restaurar",
+            "undoTitle": "Restaurar a pendente",
+            "view": "Ver"
+        },
+        "details": {
+            "modalTitle": "Detalle da cita",
+            "status": "Estado",
+            "reference": "Referencia",
+            "client": "Cliente",
+            "email": "Correo electrónico",
+            "phone": "Teléfono",
+            "workshop": "Obradoiro",
+            "date": "Data",
+            "time": "Hora",
+            "notes": "Notas",
+            "close": "Pechar"
+        }
+    },
+    "workshopDetails": {
+        "eyebrow": "INFORMACIÓN",
+        "statusLabel": "Estado actual",
+        "statusActive": "Activo",
+        "capacityLabel": "Aforo máximo",
+        "capacitySuffix": "clientes",
+        "slotsLabel": "Quendas asignadas",
+        "noSlots": "Non hai quendas rexistradas na base de datos para este obradoiro."
+    }
+}

@@ -1,34 +1,37 @@
 import Modal from "../Modal";
 import styles from "./WorkshopDetailsModal.module.css"; 
+import { useTranslation } from "react-i18next";
 
 export default function WorkshopDetailsModal({ isOpen, onClose, workshop }) {
+  const { t } = useTranslation('admin');
+
   if (!workshop) return null;
 
   return (
     <Modal 
       isOpen={isOpen} 
       onClose={onClose} 
-      eyebrow="INFORMACIÓN" 
+      eyebrow={t('workshopDetails.eyebrow')} 
       title={workshop.nombre_taller || workshop.nombreTaller || workshop.title} 
       showAction={false}
     >
       <div className={styles.form}>
         <div className={styles.grid}>
           <div className={styles.field}>
-            <label className={styles.label}>Estado actual</label>
-            <input className={styles.readonlyInput} value="Activo" readOnly />
+            <label className={styles.label}>{t('workshopDetails.statusLabel')}</label>
+            <input className={styles.readonlyInput} value={t('workshopDetails.statusActive')} readOnly />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>Aforo máximo</label>
-            <input className={styles.readonlyInput} value={`${workshop.capacidad || 15} clientes`} readOnly />
+            <label className={styles.label}>{t('workshopDetails.capacityLabel')}</label>
+            <input className={styles.readonlyInput} value={`${workshop.capacidad || 15} ${t('workshopDetails.capacitySuffix')}`} readOnly />
           </div>
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Turnos asignados</label>
+          <label className={styles.label}>{t('workshopDetails.slotsLabel')}</label>
           <textarea 
             className={styles.readonlyInput} 
-            value={workshop.turnos || "No hay turnos registrados en la base de datos para este taller."} 
+            value={workshop.turnos || t('workshopDetails.noSlots')} 
             readOnly 
             rows="3"
           />

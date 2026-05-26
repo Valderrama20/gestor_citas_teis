@@ -1,0 +1,29 @@
+{
+    "nav": {
+        "home": "Inicio",
+        "about": "Sobre nós",
+        "contact": "Contacto",
+        "reserve": "Reservar",
+        "back": "Volver",
+        "openMenu": "Abrir menú"
+    },
+    "adminNav": {
+        "editProfile": "Editar perfil",
+        "logout": "Saír",
+        "userMenu": "Menú de usuario",
+        "defaultUser": "Usuario"
+    },
+    "actions": {
+        "close": "Pechar"
+    },
+    "modal": {
+        "close": "Pechar",
+        "closeAria": "Pechar modal"
+    },
+    "calendar": {
+        "title": "Seleccionar data",
+        "weekdays": ["Lun", "Mar", "Mér", "Xov", "Ven", "Sáb", "Dom"],
+        "previousMonth": "Mes anterior",
+        "nextMonth": "Mes seguinte"
+    }
+}

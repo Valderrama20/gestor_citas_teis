@@ -1,0 +1,47 @@
+{
+    "title1": "Preguntas ",
+    "title2": "frecuentes",
+    "description": "Se non ves a túa pregunta na lista, non dubides en poñerte en contacto connosco.",
+    "items": [
+        {
+            "q": "Quen realiza os tratamentos?",
+            "a": "Todos os servizos son realizados polos nosos alumnos en formación, sempre baixo a supervisión directa de profesores cualificados."
+        },
+        {
+            "q": "É seguro realizarse tratamentos aquí?",
+            "a": "Totalmente. Os profesores avalían e guían cada paso do proceso para garantir a túa seguridade e un excelente resultado."
+        },
+        {
+            "q": "Canto tempo duran as citas?",
+            "a": "Ao ser un contorno de aprendizaxe, os tratamentos poden levar algo máis de tempo que nun salón convencional. Agradecemos a túa paciencia."
+        },
+        {
+            "q": "Os servizos teñen algún custo?",
+            "a": "Teñen prezos moi reducidos, destinados unicamente a cubrir o custo dos materiais profesionais utilizados durante as prácticas."
+        },
+        {
+            "q": "Que ocorre se non estou satisfeito?",
+            "a": "Os nosos profesores están presentes para intervir en calquera momento e asegurar que o resultado final cumpra cos estándares."
+        },
+        {
+            "q": "Podo elixir que alumno me atende?",
+            "a": "As asignacións realízanse en base ás rotacións e necesidades de aprendizaxe dos alumnos, polo que non é posible elixir."
+        },
+        {
+            "q": "Que tipo de produtos utilizades?",
+            "a": "Empregamos exclusivamente produtos profesionais de peiteado e estética de primeiras marcas."
+        },
+        {
+            "q": "É obrigatorio pedir cita previa?",
+            "a": "Si, é imprescindible reservar a túa praza a través desta plataforma para poder organizar as clases adecuadamente."
+        },
+        {
+            "q": "Podo cancelar a miña cita se xorde un imprevisto?",
+            "a": "Por suposto. Rogámosche que o fagas coa maior antelación posible desde a aplicación para poder asignar a quenda a outra persoa."
+        },
+        {
+            "q": "Teñen flexibilidade horaria?",
+            "a": "Os nosos horarios de atención están estritamente vinculados ás horas lectivas do centro educativo e aos seus módulos."
+        }
+    ]
+}

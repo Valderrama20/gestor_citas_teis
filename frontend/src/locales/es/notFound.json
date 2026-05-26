@@ -1,0 +1,9 @@
+{
+    "badge": "Error 404",
+    "title": "Esta página se ha",
+    "titleHighlight": "perdido",
+    "description": "La ruta que intentabas abrir no existe o ya no está disponible. Puedes volver al inicio, explorar especialidades o retomar una reserva.",
+    "backHome": "Volver al inicio",
+    "book": "Ir a reservar",
+    "helpText": "Si llegaste aquí desde un enlace antiguo, revisamos la ruta contigo."
+}

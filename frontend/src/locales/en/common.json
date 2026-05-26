@@ -1,0 +1,29 @@
+{
+    "nav": {
+        "home": "Home",
+        "about": "About us",
+        "contact": "Contact",
+        "reserve": "Book Now",
+        "back": "Back",
+        "openMenu": "Open menu"
+    },
+    "adminNav": {
+        "editProfile": "Edit profile",
+        "logout": "Logout",
+        "userMenu": "User menu",
+        "defaultUser": "User"
+    },
+    "actions": {
+        "close": "Close"
+    },
+    "modal": {
+        "close": "Close",
+        "closeAria": "Close modal"
+    },
+    "calendar": {
+        "title": "Select date",
+        "weekdays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        "previousMonth": "Previous month",
+        "nextMonth": "Next month"
+    }
+}

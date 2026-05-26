@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Modal from "../Modal";
 import styles from "./CalendarModal.module.css";
+import { useTranslation } from "react-i18next";
 
 export default function CalendarModal({
   isOpen,
@@ -10,6 +11,7 @@ export default function CalendarModal({
   allowedDaysOfWeek = [],
   allowedDates = [],
 }) {
+  const { t, i18n } = useTranslation('common');
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -19,7 +21,7 @@ export default function CalendarModal({
   const currentYear = currentDate.getFullYear();
 
   // Días de la semana (Lunes a Domingo)
-  const weekDays = ["L", "M", "X", "J", "V", "S", "D"];
+  const weekDays = t('calendar.weekdays', { returnObjects: true });
 
   const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
   const getFirstDayOfMonth = (month, year) => {
@@ -136,16 +138,27 @@ export default function CalendarModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Seleccionar Fecha" showAction={false}>
+    <Modal isOpen={isOpen} onClose={onClose} title={t('calendar.title')} showAction={false}>
       <div className={styles.calendarContainer}>
         <div className={styles.calendarHeader}>
-          <button type="button" onClick={handlePrevMonth} disabled={isPrevDisabled} className={styles.navBtn}>
+          <button
+            type="button"
+            onClick={handlePrevMonth}
+            disabled={isPrevDisabled}
+            className={styles.navBtn}
+            aria-label={t('calendar.previousMonth')}
+          >
             <ChevronLeft size={20} />
           </button>
           <h3 className={styles.monthTitle}>
-            {currentDate.toLocaleDateString("es-ES", { month: "long", year: "numeric" })}
+            {currentDate.toLocaleDateString(i18n.language, { month: "long", year: "numeric" })}
           </h3>
-          <button type="button" onClick={handleNextMonth} className={styles.navBtn}>
+          <button
+            type="button"
+            onClick={handleNextMonth}
+            className={styles.navBtn}
+            aria-label={t('calendar.nextMonth')}
+          >
             <ChevronRight size={20} />
           </button>
         </div>

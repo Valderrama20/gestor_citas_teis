@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import Modal from "../Modal";
+import { useTranslation } from "react-i18next";
 import styles from "./AdminAppointmentsTable.module.css";
 
 const STATUS_LABELS = {
@@ -30,9 +31,9 @@ function getStatusKey(rawStatus) {
   return STATUS_LABELS[normalized] ? normalized : normalized;
 }
 
-function getStatusLabel(rawStatus) {
+function getStatusLabel(rawStatus, t) {
   const key = getStatusKey(rawStatus);
-  return STATUS_LABELS[key] ?? String(rawStatus);
+  return t(`appointmentsTable.status.${key}`, { defaultValue: STATUS_LABELS[key] ?? String(rawStatus) });
 }
 
 function formatTime(rawTime) {
@@ -41,7 +42,7 @@ function formatTime(rawTime) {
   return text.length >= 5 ? text.slice(0, 5) : text;
 }
 
-function getAppointmentDetails(appointment) {
+function getAppointmentDetails(appointment, t) {
   const original = appointment?.original ?? {};
   const cliente = appointment?.cliente ?? original.cliente ?? {};
   const taller = appointment?.taller ?? original.taller ?? {};
@@ -51,41 +52,41 @@ function getAppointmentDetails(appointment) {
   const status = appointment?.estado ?? appointment?.status ?? original.estado;
 
   return {
-    id: appointment?.id ?? appointment?.idCita ?? original.idCita ?? "Sin identificador",
+    id: appointment?.id ?? appointment?.idCita ?? original.idCita ?? t('appointmentsTable.defaults.noId'),
     clientName:
       cliente.nombre ||
       appointment?.client ||
       appointment?.nombre ||
       cliente.email ||
-      "Cliente desconocido",
-    email: cliente.email || appointment?.email || "No especificado",
+      t('appointmentsTable.defaults.unknownClient'),
+    email: cliente.email || appointment?.email || t('appointmentsTable.defaults.notSpecified'),
     phone:
       cliente.telefono ||
       cliente.phone ||
       appointment?.telefono ||
       appointment?.phone ||
-      "No especificado",
+      t('appointmentsTable.defaults.notSpecified'),
     workshopTitle:
       taller.nombreTaller ||
       appointment?.workshopTitle ||
       appointment?.nombreTaller ||
-      "Taller no encontrado",
+      t('appointmentsTable.defaults.workshopNotFound'),
     workshopId:
       taller.idTaller ||
       taller.id_taller ||
       appointment?.workshopId ||
       appointment?.idTaller ||
-      "No especificado",
-    date: date || "No especificada",
-    time: time || "No especificada",
+      t('appointmentsTable.defaults.notSpecified'),
+    date: date || t('appointmentsTable.defaults.notSpecified'),
+    time: time || t('appointmentsTable.defaults.notSpecified'),
     statusKey: getStatusKey(status),
-    statusLabel: getStatusLabel(status),
+    statusLabel: getStatusLabel(status, t),
     notes:
       cliente.notasAlergias ||
       appointment?.allergies ||
       appointment?.alergias ||
       appointment?.notes ||
-      "Sin notas registradas",
+      t('appointmentsTable.defaults.noNotes'),
   };
 }
 
@@ -100,17 +101,18 @@ export default function AdminAppointmentsTable({
   requestSort, // 🆕 Prop para manejar el clic en cabeceras
   sortConfig,  // 🆕 Prop para saber qué columna está ordenada
 }) {
+  const { t } = useTranslation('admin');
   const [detailsAppointment, setDetailsAppointment] = useState(null);
   const isAllSelected = appointments.length > 0 && selectedIds.length === appointments.length;
-  const appointmentDetails = detailsAppointment ? getAppointmentDetails(detailsAppointment) : null;
+  const appointmentDetails = detailsAppointment ? getAppointmentDetails(detailsAppointment, t) : null;
 
   // Función para renderizar el icono de ordenación según el estado
   const renderSortIcon = (key) => {
     if (sortConfig.key !== key) {
       return <ArrowUpDown size={14} className={styles.sortIconPlaceholder} />;
     }
-    return sortConfig.direction === 'asc' 
-      ? <ArrowUp size={14} className={styles.sortIconActive} /> 
+    return sortConfig.direction === 'asc'
+      ? <ArrowUp size={14} className={styles.sortIconActive} />
       : <ArrowDown size={14} className={styles.sortIconActive} />;
   };
 
@@ -130,25 +132,25 @@ export default function AdminAppointmentsTable({
             {/* Cabeceras clicables para ordenar */}
             <th onClick={() => requestSort('cliente')} className={styles.sortableHeader}>
               <div className={styles.headerContent}>
-                Cliente {renderSortIcon('cliente')}
+                {t('appointmentsTable.headers.client')} {renderSortIcon('cliente')}
               </div>
             </th>
             <th onClick={() => requestSort('taller')} className={styles.sortableHeader}>
               <div className={styles.headerContent}>
-                Taller {renderSortIcon('taller')}
+                {t('appointmentsTable.headers.workshop')} {renderSortIcon('taller')}
               </div>
             </th>
             <th onClick={() => requestSort('fecha')} className={styles.sortableHeader}>
               <div className={styles.headerContent}>
-                Fecha / Hora {renderSortIcon('fecha')}
+                {t('appointmentsTable.headers.dateTime')} {renderSortIcon('fecha')}
               </div>
             </th>
             <th onClick={() => requestSort('estado')} className={styles.sortableHeader}>
               <div className={styles.headerContent}>
-                Estado {renderSortIcon('estado')}
+                {t('appointmentsTable.headers.status')} {renderSortIcon('estado')}
               </div>
             </th>
-            <th>Acción</th>
+            <th>{t('appointmentsTable.headers.action')}</th>
           </tr>
         </thead>
         <tbody>
@@ -157,13 +159,13 @@ export default function AdminAppointmentsTable({
             const taller = appointment.taller ?? {};
 
             const statusKey = getStatusKey(appointment.estado ?? appointment.status);
-            const statusLabel = getStatusLabel(appointment.estado ?? appointment.status);
-            
-            const clientName = cliente.nombre || appointment.client || cliente.email || "Cliente desconocido";
-            const workshopTitle = taller.nombreTaller || appointment.workshopTitle || "Taller no encontrado";
+            const statusLabel = getStatusLabel(appointment.estado ?? appointment.status, t);
+
+            const clientName = cliente.nombre || appointment.client || cliente.email || t('appointmentsTable.defaults.unknownClient');
+            const workshopTitle = taller.nombreTaller || appointment.workshopTitle || t('appointmentsTable.defaults.workshopNotFound');
             const date = appointment.fecha ?? appointment.date ?? "";
             const time = formatTime(appointment.hora ?? appointment.time);
-            
+
             const rowId = appointment.idCita ?? appointment.id ?? `${clientName}-${date}-${time}`;
             const isSelected = selectedIds.includes(rowId);
 
@@ -210,7 +212,7 @@ export default function AdminAppointmentsTable({
                         className={`${styles.actionButton} ${styles.confirmButton}`}
                         onClick={() => onConfirm(actionPayload)}
                       >
-                        <CheckCheck size={14} strokeWidth={1.8} /> Confirmar
+                        <CheckCheck size={14} strokeWidth={1.8} /> {t('appointmentsTable.actions.confirm')}
                       </button>
                     )}
 
@@ -221,13 +223,13 @@ export default function AdminAppointmentsTable({
                           className={`${styles.actionButton} ${styles.cancelButton}`}
                           onClick={() => onCancel(actionPayload)}
                         >
-                          <XCircle size={14} strokeWidth={1.8} /> Cancelar
+                          <XCircle size={14} strokeWidth={1.8} /> {t('appointmentsTable.actions.cancel')}
                         </button>
                         {/* <button
                           type="button"
                           className={`${styles.actionButton} ${styles.undoButton}`}
                           onClick={() => onUndo(actionPayload)}
-                          title="Volver a pendiente"
+                          title={t('appointmentsTable.actions.undoTitle')}
                         >
                           <RotateCcw size={14} strokeWidth={1.8} />
                         </button> */}
@@ -240,7 +242,7 @@ export default function AdminAppointmentsTable({
                         className={`${styles.actionButton} ${styles.undoButton}`}
                         onClick={() => onUndo(actionPayload)}
                       >
-                        <RotateCcw size={14} strokeWidth={1.8} /> Deshacer
+                    <RotateCcw size={14} strokeWidth={1.8} /> {t('appointmentsTable.actions.undo')}
                       </button>
                     )} */}
 
@@ -249,7 +251,7 @@ export default function AdminAppointmentsTable({
                       className={`${styles.actionButton} ${styles.detailsButton}`}
                       onClick={() => setDetailsAppointment(actionPayload)}
                     >
-                      <Eye size={14} strokeWidth={1.8} /> Ver
+                      <Eye size={14} strokeWidth={1.8} /> {t('appointmentsTable.actions.view')}
                     </button>
                   </div>
                 </td>
@@ -262,7 +264,7 @@ export default function AdminAppointmentsTable({
       <Modal
         isOpen={Boolean(appointmentDetails)}
         onClose={() => setDetailsAppointment(null)}
-        title="Detalles de cita"
+        title={t('appointmentsTable.details.modalTitle')}
         showAction={false}
         modalClassName={styles.detailsModal}
       >
@@ -270,7 +272,7 @@ export default function AdminAppointmentsTable({
           <div className={styles.detailsContent}>
             <div className={styles.detailsSummary}>
               <div>
-                <span className={styles.detailsLabel}>Estado actual</span>
+                <span className={styles.detailsLabel}>{t('appointmentsTable.details.status')}</span>
                 <span
                   className={`${styles.badge} ${styles[appointmentDetails.statusKey.toLowerCase()]}`}
                 >
@@ -278,7 +280,7 @@ export default function AdminAppointmentsTable({
                 </span>
               </div>
               <div>
-                <span className={styles.detailsLabel}>Referencia</span>
+                <span className={styles.detailsLabel}>{t('appointmentsTable.details.reference')}</span>
                 <strong>#{appointmentDetails.id}</strong>
               </div>
             </div>
@@ -287,42 +289,42 @@ export default function AdminAppointmentsTable({
               <div className={styles.detailsItem}>
                 <User size={17} strokeWidth={1.8} />
                 <div>
-                  <span className={styles.detailsLabel}>Cliente</span>
+                  <span className={styles.detailsLabel}>{t('appointmentsTable.details.client')}</span>
                   <strong>{appointmentDetails.clientName}</strong>
                 </div>
               </div>
               <div className={styles.detailsItem}>
                 <Mail size={17} strokeWidth={1.8} />
                 <div>
-                  <span className={styles.detailsLabel}>Correo electronico</span>
+                  <span className={styles.detailsLabel}>{t('appointmentsTable.details.email')}</span>
                   <strong>{appointmentDetails.email}</strong>
                 </div>
               </div>
               <div className={styles.detailsItem}>
                 <Phone size={17} strokeWidth={1.8} />
                 <div>
-                  <span className={styles.detailsLabel}>Telefono</span>
+                  <span className={styles.detailsLabel}>{t('appointmentsTable.details.phone')}</span>
                   <strong>{appointmentDetails.phone}</strong>
                 </div>
               </div>
               <div className={styles.detailsItem}>
                 <MapPin size={17} strokeWidth={1.8} />
                 <div>
-                  <span className={styles.detailsLabel}>Taller</span>
+                  <span className={styles.detailsLabel}>{t('appointmentsTable.details.workshop')}</span>
                   <strong>{appointmentDetails.workshopTitle}</strong>
                 </div>
               </div>
               <div className={styles.detailsItem}>
                 <Calendar size={17} strokeWidth={1.8} />
                 <div>
-                  <span className={styles.detailsLabel}>Fecha</span>
+                  <span className={styles.detailsLabel}>{t('appointmentsTable.details.date')}</span>
                   <strong>{appointmentDetails.date}</strong>
                 </div>
               </div>
               <div className={styles.detailsItem}>
                 <Clock3 size={17} strokeWidth={1.8} />
                 <div>
-                  <span className={styles.detailsLabel}>Hora</span>
+                  <span className={styles.detailsLabel}>{t('appointmentsTable.details.time')}</span>
                   <strong>{appointmentDetails.time}</strong>
                 </div>
               </div>
@@ -331,7 +333,7 @@ export default function AdminAppointmentsTable({
             <div className={styles.detailsNotes}>
               <NotebookText size={17} strokeWidth={1.8} />
               <div>
-                <span className={styles.detailsLabel}>Notas y alergias</span>
+                <span className={styles.detailsLabel}>{t('appointmentsTable.details.notes')}</span>
                 <p>{appointmentDetails.notes}</p>
               </div>
             </div>
@@ -342,7 +344,7 @@ export default function AdminAppointmentsTable({
                 className={styles.closeDetailsButton}
                 onClick={() => setDetailsAppointment(null)}
               >
-                Cerrar ventana
+                {t('appointmentsTable.details.close')}
               </button>
             </div>
           </div>

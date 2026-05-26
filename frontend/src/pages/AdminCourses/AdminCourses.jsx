@@ -10,6 +10,7 @@ import { useToast } from "../../context/ToastContext";
 import Modal from "../../components/Modal";
 import { useAuthStore } from "../../store/authStore";
 import { courseIconMap } from "../../constants/icons";
+import { useTranslation } from "react-i18next";
 
 export default function AdminCourses() {
   const { usuario, logout } = useAuthStore();
@@ -19,6 +20,7 @@ export default function AdminCourses() {
   const [courseToEdit, setCourseToEdit] = useState(null);
   const [courseToDelete, setCourseToDelete] = useState(null);
   const { addToast } = useToast();
+  const { t } = useTranslation('admin');
 
   useEffect(() => {
     let isMounted = true;
@@ -48,10 +50,10 @@ export default function AdminCourses() {
     try {
       if (courseToEdit) {
         await courseService.updateCourse(courseData);
-        addToast("¡Curso actualizado correctamente!", "success");
+        addToast(t("courses.toasts.updated"), "success");
       } else {
         await courseService.createCourse(courseData);
-        addToast("¡Curso creado correctamente!", "success");
+        addToast(t("courses.toasts.created"), "success");
       }
       const nextCourses = await courseService.getAdminCourses();
       setCourses(nextCourses);
@@ -59,7 +61,7 @@ export default function AdminCourses() {
       setCourseToEdit(null);
     } catch (error) {
       console.error(error);
-      addToast("Error al guardar el curso. Inténtalo de nuevo.", "error");
+      addToast(t("courses.toasts.saveError"), "error");
     }
   }
 
@@ -72,10 +74,10 @@ export default function AdminCourses() {
       await courseService.deleteCourse(courseToDelete.id);
 
       setCourses(prev => prev.filter(c => c.id !== courseToDelete.id));
-      addToast("Curso eliminado", "success");
+      addToast(t("courses.toasts.deleted"), "success");
     } catch (error) {
       console.error(error);
-      addToast("Error al borrar", "error");
+      addToast(t("courses.toasts.deleteError"), "error");
     } finally {
       setCourseToDelete(null);
     }
@@ -88,7 +90,7 @@ export default function AdminCourses() {
       setIsCreateModalOpen(true);
     } catch (error) {
       console.error("Error al cargar los datos:", error);
-      addToast("Error al cargar los datos del curso.", "error");
+      addToast(t("courses.toasts.loadError"), "error");
     }
   }
 
@@ -100,12 +102,12 @@ export default function AdminCourses() {
         idCurso: null,
         nombreCurso: fullCourse.nombreCurso + " (Copia)"
       });
-      addToast("¡Curso duplicado correctamente!", "success");
+      addToast(t("courses.toasts.duplicated"), "success");
       const nextCourses = await courseService.getAdminCourses();
       setCourses(nextCourses);
     } catch (error) {
       console.error("Error al duplicar:", error);
-      addToast("Error al duplicar el curso.", "error");
+      addToast(t("courses.toasts.duplicateError"), "error");
     }
   }
 
@@ -116,7 +118,7 @@ export default function AdminCourses() {
           startContent={
             <div className={styles.textButton}>
               <Settings className={styles.brandIcon} strokeWidth={1.8} />
-              <span>Panel administrativo</span>
+              <span>{t("courses.topbar")}</span>
             </div>
           }
           endContent={
@@ -127,11 +129,11 @@ export default function AdminCourses() {
                 onClick={() => setIsCreateModalOpen(true)}
               >
                 <Plus className={styles.primaryButtonIcon} strokeWidth={1.8} />
-                Crear curso
+                {t("courses.createBtn")}
               </button>
               <button type="button" className={styles.textButton} onClick={logout}>
                 <LogOut className={styles.textButtonIcon} strokeWidth={1.8} />
-                Salir
+                {t("courses.logoutBtn")}
               </button>
             </div>
           }
@@ -139,14 +141,14 @@ export default function AdminCourses() {
 
         <section className={styles.container}>
           <header className={styles.header}>
-            <h1 className={styles.title}>Hola, {usuario?.nombre || "profesor"}</h1>
+            <h1 className={styles.title}>{t("courses.greeting")}, {usuario?.nombre || t("courses.defaultUser")}</h1>
             <p className={styles.subtitle}>
-              Selecciona un curso para gestionar sus citas.
+              {t("courses.subtitle")}
             </p>
           </header>
 
           {isLoading ? (
-            <p>Cargando cursos...</p>
+            <p>{t("courses.loading")}</p>
           ) : (
             <div className={styles.grid}>
               {courses.map((course) => {
@@ -183,7 +185,7 @@ export default function AdminCourses() {
       <Modal
         isOpen={courseToDelete !== null}
         onClose={() => setCourseToDelete(null)}
-        title="Eliminar curso"
+        title={t("courses.deleteModal.title")}
         showAction={false}
       >
         <div className={styles.confirmWrapper}>
@@ -192,8 +194,9 @@ export default function AdminCourses() {
           </div>
 
           <div className={styles.confirmTextGroup}>
-            <p className={styles.confirmQuestion}>¡Esta acción no se puede deshacer!</p>
+            <p className={styles.confirmQuestion}>{t("courses.deleteModal.warning")}</p>
             <h3 className={styles.confirmTargetName}>{courseToDelete?.name}</h3>
+            <h3 className={styles.confirmTargetName}>{courseToDelete?.nombreCurso || courseToDelete?.name}</h3>
           </div>
 
           <div className={styles.modalActionsVertical}>
@@ -202,14 +205,14 @@ export default function AdminCourses() {
               className={styles.confirmButton}
               onClick={handleConfirmDelete}
             >
-              Eliminar definitivamente
+              {t("courses.deleteModal.confirm")}
             </button>
             <button
               type="button"
               className={styles.secondaryButton}
               onClick={() => setCourseToDelete(null)}
             >
-              Cancelar
+              {t("courses.deleteModal.cancel")}
             </button>
           </div>
         </div>

@@ -1,0 +1,47 @@
+{
+    "title1": "Preguntas ",
+    "title2": "frecuentes",
+    "description": "Si no ves tu pregunta en la lista, no dudes en ponerte en contacto con nosotros.",
+    "items": [
+        {
+            "q": "¿Quién realiza los tratamientos?",
+            "a": "Todos los servicios son realizados por nuestros alumnos en formación, siempre bajo la supervisión directa de profesores cualificados."
+        },
+        {
+            "q": "¿Es seguro realizarse tratamientos aquí?",
+            "a": "Totalmente. Los profesores evalúan y guían cada paso del proceso para garantizar tu seguridad y un excelente resultado."
+        },
+        {
+            "q": "¿Cuánto tiempo duran las citas?",
+            "a": "Al ser un entorno de aprendizaje, los tratamientos pueden llevar algo más de tiempo que en un salón convencional. Agradecemos tu paciencia."
+        },
+        {
+            "q": "¿Los servicios tienen algún coste?",
+            "a": "Tienen precios muy reducidos, destinados únicamente a cubrir el coste de los materiales profesionales utilizados durante las prácticas."
+        },
+        {
+            "q": "¿Qué ocurre si no estoy satisfecho?",
+            "a": "Nuestros profesores están presentes para intervenir en cualquier momento y asegurar que el resultado final cumpla con los estándares."
+        },
+        {
+            "q": "¿Puedo elegir qué alumno me atiende?",
+            "a": "Las asignaciones se realizan en base a las rotaciones y necesidades de aprendizaje de los alumnos, por lo que no es posible elegir."
+        },
+        {
+            "q": "¿Qué tipo de productos utilizáis?",
+            "a": "Empleamos exclusivamente productos profesionales de peluquería y estética de primeras marcas."
+        },
+        {
+            "q": "¿Es obligatorio pedir cita previa?",
+            "a": "Sí, es imprescindible reservar tu plaza a través de esta plataforma para poder organizar las clases adecuadamente."
+        },
+        {
+            "q": "¿Puedo cancelar mi cita si surge un imprevisto?",
+            "a": "Por supuesto. Te rogamos que lo hagas con la mayor antelación posible desde la aplicación para poder asignar el turno a otra persona."
+        },
+        {
+            "q": "¿Tienen flexibilidad horaria?",
+            "a": "Nuestros horarios de atención están estrictamente vinculados a las horas lectivas del centro educativo y sus módulos."
+        }
+    ]
+}

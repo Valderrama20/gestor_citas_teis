@@ -1,0 +1,333 @@
+{
+    "login": {
+        "title": "Acceso Profesor",
+        "subtitle": "Gestiona las citas del IES TEIS",
+        "emailPlaceholder": "Email institucional",
+        "passwordPlaceholder": "Contraseña",
+        "error": "Credenciales inválidas o error de conexión.",
+        "submit": "Entrar al panel",
+        "submitting": "Entrando..."
+    },
+    "courses": {
+        "topbar": "Panel administrativo",
+        "createBtn": "Crear curso",
+        "logoutBtn": "Salir",
+        "greeting": "Hola",
+        "defaultUser": "profesor",
+        "subtitle": "Selecciona un curso para gestionar sus citas.",
+        "loading": "Cargando cursos...",
+        "toasts": {
+            "updated": "¡Curso actualizado correctamente!",
+            "created": "¡Curso creado correctamente!",
+            "saveError": "Error al guardar el curso. Inténtalo de nuevo.",
+            "deleted": "Curso eliminado",
+            "deleteError": "Error al borrar",
+            "loadError": "Error al cargar los datos del curso.",
+            "duplicated": "¡Curso duplicado correctamente!",
+            "duplicateError": "Error al duplicar el curso."
+        },
+        "deleteModal": {
+            "title": "Eliminar curso",
+            "warning": "¡Esta acción no se puede deshacer!",
+            "confirm": "Eliminar definitivamente",
+            "cancel": "Cancelar"
+        }
+    },
+    "dashboard": {
+        "back": "Volver a cursos",
+        "brand": "IES TEIS | ",
+        "titlePrefix": "Panel de ",
+        "subtitle": "Gestiona las citas y los talleres disponibles de este curso.",
+        "tabs": {
+            "appointments": "Citas programadas",
+            "workshops": "Talleres del curso"
+        },
+        "actions": {
+            "newAppointment": "Nueva cita",
+            "createWorkshop": "Crear taller"
+        },
+        "filters": {
+            "today": "Hoy",
+            "clear": "Mostrando solo citas del taller seleccionado"
+        },
+        "bulk": {
+            "selected": "seleccionada",
+            "selectedPlural": "seleccionadas",
+            "pending": "Pendiente",
+            "confirm": "Confirmar",
+            "cancel": "Cancelar"
+        },
+        "empty": {
+            "filteredAppointments": "Este taller no tiene citas esta semana",
+            "appointments": "Sin citas para esta semana",
+            "scheduleAppointment": "Agendar cita",
+            "workshopsTitle": "Aún no hay talleres creados",
+            "workshopsSub": "Crea un taller para poder empezar a agendar citas.",
+            "createFirstWorkshop": "Crear primer taller"
+        },
+        "workshopCard": {
+            "duration": "Duración:",
+            "min": "min",
+            "capacity": "Aforo máximo:",
+            "clients": "clientes",
+            "appointments": "citas esta semana",
+            "viewAppointments": "Ver citas de esta semana",
+            "edit": "Editar",
+            "delete": "Eliminar"
+        },
+        "toasts": {
+            "wsDeleted": "Taller eliminado con éxito",
+            "wsDeleteError": "No se puede eliminar un taller con citas asociadas",
+            "appConfirmed": "Cita confirmada",
+            "appCancelled": "Cita cancelada",
+            "appUndo": "Cita restaurada a pendiente",
+            "appsUpdated": "{{count}} citas actualizadas",
+            "appsUpdateError": "Error al actualizar citas",
+            "appsDeleted": "{{count}} citas eliminadas",
+            "appsDeleteError": "Error al eliminar citas",
+            "appCreated": "Cita creada",
+            "appCreateError": "Error creando cita",
+            "wsCreated": "Taller creado con éxito",
+            "wsCreateError": "Error al crear taller"
+        },
+        "deleteAppointmentsModal": {
+            "title": "Eliminar citas",
+            "warning": "¡Esta acción no se puede deshacer!",
+            "questionSingular": "¿Deseas eliminar 1 cita permanentemente?",
+            "questionPlural": "¿Deseas eliminar {{count}} citas permanentemente?",
+            "confirm": "Eliminar definitivamente",
+            "cancel": "Cancelar"
+        },
+        "deleteWorkshopModal": {
+            "title": "Eliminar taller",
+            "warning": "¡Esta acción no se puede deshacer!",
+            "hint": "(Solo se puede eliminar si no tiene citas asociadas)",
+            "confirm": "Eliminar definitivamente",
+            "cancel": "Cancelar"
+        }
+    },
+    "profile": {
+        "back": "Volver",
+        "brand": "IES TEIS | Perfil",
+        "title": "Mi Perfil",
+        "subtitle": "Gestiona la información y seguridad de tu cuenta.",
+        "personal": {
+            "title": "Información Personal",
+            "subtitle": "Visualiza y edita los datos de tu cuenta",
+            "ariaPhoto": "Cambiar foto de perfil",
+            "name": "Nombre completo",
+            "email": "Correo electrónico",
+            "save": "Guardar",
+            "saving": "Guardando..."
+        },
+        "security": {
+            "title": "Seguridad",
+            "subtitle": "Actualiza tu contraseña de acceso",
+            "current": "Contraseña actual",
+            "new": "Nueva contraseña",
+            "update": "Actualizar"
+        },
+        "alerts": {
+            "success": "Simulación: Actualización del perfil exitosa.",
+            "error": "Error al actualizar el perfil."
+        }
+    },
+    "courseCard": {
+        "options": "Opciones",
+        "edit": "Editar",
+        "duplicate": "Duplicar",
+        "delete": "Eliminar",
+        "students": "alumnos"
+    },
+    "createWorkshop": {
+        "eyebrow": "Panel administrativo",
+        "title": "Crear nuevo taller",
+        "nameLabel": "Nombre del taller",
+        "iconLabel": "Icono representativo",
+        "durationLabel": "Duración (min)",
+        "capacityLabel": "Capacidad máx.",
+        "descriptionLabel": "Descripción",
+        "availabilityLabel": "Disponibilidad semanal",
+        "timeSeparator": "a",
+        "addDay": "Añadir otro día",
+        "removeSchedule": "Eliminar horario",
+        "ariaScrollLeft": "Desplazar a la izquierda",
+        "ariaScrollRight": "Desplazar a la derecha",
+        "ariaSelectIcon": "Seleccionar icono",
+        "weekdays": {
+            "Lunes": "Lunes",
+            "Martes": "Martes",
+            "Miércoles": "Miércoles",
+            "Jueves": "Jueves",
+            "Viernes": "Viernes"
+        },
+        "actions": {
+            "cancel": "Cancelar",
+            "create": "Crear taller",
+            "creating": "Creando..."
+        }
+    },
+    "createCourse": {
+        "eyebrow": "Panel administrativo",
+        "titleCreate": "Crear nuevo curso",
+        "titleEdit": "Editar curso",
+        "nameLabel": "Nombre del curso",
+        "namePlaceholder": "Ej. Peluquería avanzada",
+        "levelLabel": "Nivel",
+        "levels": {
+            "medium": "Grado Medio",
+            "higher": "Grado Superior"
+        },
+        "periodLabel": "Periodo",
+        "periodPlaceholder": "2025/2026",
+        "studentsLabel": "Número de alumnos",
+        "descriptionLabel": "Descripción",
+        "descriptionPlaceholder": "Breve descripción del curso",
+        "iconLabel": "Icono representativo",
+        "ariaScrollLeft": "Desplazar a la izquierda",
+        "ariaScrollRight": "Desplazar a la derecha",
+        "ariaSelectIcon": "Seleccionar icono",
+        "errors": {
+            "name": "El nombre es obligatorio.",
+            "period": "El periodo es obligatorio.",
+            "students": "Debe ser un número válido.",
+            "description": "La descripción es obligatoria.",
+            "submit": "Ha ocurrido un error al procesar el formulario."
+        },
+        "actions": {
+            "cancel": "Cancelar",
+            "saving": "Guardando...",
+            "save": "Guardar cambios",
+            "create": "Crear curso"
+        },
+        "confirmClose": {
+            "title": "¿Descartar cambios?",
+            "subtitle": "Tienes cambios sin guardar",
+            "confirm": "Sí, descartar",
+            "cancel": "No, continuar editando"
+        }
+    },
+    "createAppointment": {
+        "eyebrow": "Panel administrativo",
+        "titleCreate": "Crear nueva cita",
+        "courseLabel": "Curso",
+        "clientLabel": "Nombre completo",
+        "clientPlaceholder": "Ej. María García",
+        "workshopLabel": "Taller",
+        "workshopPlaceholder": "Selecciona un taller",
+        "dateLabel": "Día disponible",
+        "datePlaceholder": "Seleccionar día en el calendario...",
+        "emailLabel": "Correo electrónico",
+        "emailPlaceholder": "correo@ejemplo.com",
+        "phoneLabel": "Teléfono de contacto",
+        "phonePlaceholder": "Ej. 600 000 000",
+        "allergiesLabel": "Alergias o contraindicaciones importantes",
+        "allergiesHelper": "Selecciona si la persona tiene alguna sensibilidad que debamos conocer.",
+        "allergiesNo": "No tiene alergias conocidas",
+        "allergiesYes": "Sí, tiene alguna alergia",
+        "allergiesOther": "Otro (especificar):",
+        "allergiesOtherPlaceholder": "Ej. Piel rosácea...",
+        "allergiesItems": {
+            "LÃ¡tex": "Látex",
+            "CosmÃ©ticos": "Cosméticos",
+            "NÃ­quel": "Níquel",
+            "AcrÃ­licos": "Acrílicos",
+            "Piel AtÃ³pica": "Piel atópica"
+        },
+        "errors": {
+            "client": "Por favor, indica el nombre completo.",
+            "workshop": "Por favor, selecciona un taller.",
+            "date": "Por favor, selecciona una fecha en el calendario.",
+            "contact": "Por favor, facilita un correo electrónico o un teléfono de contacto.",
+            "allergies": "Selecciona al menos una alergia o especifica una en el campo Otro."
+        },
+        "summary": {
+            "title": "Resumen de la cita",
+            "workshop": "Taller:",
+            "email": "Correo electrónico:",
+            "phone": "Teléfono:",
+            "date": "Día agendado:",
+            "allergies": "Alergias:",
+            "unselected": "Sin seleccionar",
+            "unspecified": "No especificado",
+            "none": "Ninguna",
+            "notSpecified": "No especificadas"
+        },
+        "actions": {
+            "cancel": "Cancelar",
+            "save": "Crear cita",
+            "saving": "Creando..."
+        },
+        "confirmClose": {
+            "title": "Descartar cita",
+            "question": "Tienes datos sin guardar",
+            "target": "¿Seguro que quieres salir?",
+            "confirm": "Salir y perder datos",
+            "cancel": "Continuar editando"
+        }
+    },
+    "editWorkshop": {
+        "eyebrow": "Panel administrativo",
+        "title": "Editar taller",
+        "nameLabel": "Nombre del taller",
+        "durationLabel": "Duración (min)",
+        "capacityLabel": "Capacidad máxima",
+        "cancel": "Cancelar",
+        "save": "Guardar cambios",
+        "saving": "Guardando...",
+        "toasts": {
+            "success": "Taller actualizado con éxito",
+            "error": "Error al actualizar el taller"
+        }
+    },
+    "appointmentsTable": {
+        "headers": {
+            "client": "Cliente",
+            "workshop": "Taller",
+            "dateTime": "Fecha y hora",
+            "status": "Estado",
+            "action": "Acción"
+        },
+        "status": {
+            "PENDIENTE": "Pendiente",
+            "CONFIRMADA": "Confirmada",
+            "CANCELADA": "Cancelada"
+        },
+        "defaults": {
+            "noId": "Sin referencia",
+            "unknownClient": "Cliente sin identificar",
+            "notSpecified": "No especificado",
+            "workshopNotFound": "Taller no encontrado",
+            "noNotes": "Sin notas"
+        },
+        "actions": {
+            "confirm": "Confirmar",
+            "cancel": "Cancelar",
+            "undo": "Restaurar",
+            "undoTitle": "Restaurar a pendiente",
+            "view": "Ver"
+        },
+        "details": {
+            "modalTitle": "Detalle de la cita",
+            "status": "Estado",
+            "reference": "Referencia",
+            "client": "Cliente",
+            "email": "Correo electrónico",
+            "phone": "Teléfono",
+            "workshop": "Taller",
+            "date": "Fecha",
+            "time": "Hora",
+            "notes": "Notas",
+            "close": "Cerrar"
+        }
+    },
+    "workshopDetails": {
+        "eyebrow": "INFORMACIÓN",
+        "statusLabel": "Estado actual",
+        "statusActive": "Activo",
+        "capacityLabel": "Aforo máximo",
+        "capacitySuffix": "clientes",
+        "slotsLabel": "Turnos asignados",
+        "noSlots": "No hay turnos registrados en la base de datos para este taller."
+    }
+}

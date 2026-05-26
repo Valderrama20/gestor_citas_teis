@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Droplet, Sparkles, Magnet, Brush, Flower, AlertCircle, Calendar } from "lucide-react";
 import availabilityService from "../../services/availabilityService";
 import Modal from "../Modal";
@@ -22,6 +23,7 @@ export default function CreateAppointmentModal({
   courseName,
   workshops,
 }) {
+  const { t, i18n } = useTranslation('admin');
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [slots, setSlots] = useState([]);
@@ -144,35 +146,35 @@ export default function CreateAppointmentModal({
     event.preventDefault();
 
     if (!formData.client.trim()) {
-      setClientError("Por favor, introduce el nombre completo del cliente.");
+      setClientError(t('createAppointment.errors.client'));
       const el = document.getElementById("client");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (!formData.workshopId) {
-      setWorkshopError("Por favor, selecciona un taller de la lista.");
+      setWorkshopError(t('createAppointment.errors.workshop'));
       const el = document.getElementById("workshopId");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (!formData.date) {
-      setDateError("Por favor, selecciona una fecha en el calendario.");
+      setDateError(t('createAppointment.errors.date'));
       const el = document.getElementById("dateBtn");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (!formData.email && !formData.phone) {
-      setContactError("Por favor, facilita un correo electrónico o un teléfono de contacto.");
+      setContactError(t('createAppointment.errors.contact'));
       const el = document.getElementById("email");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (uiState.hasAllergies === "yes" && uiState.selectedAllergies.length === 0 && uiState.otherAllergies.trim() === "") {
-      setAllergyError("Por favor, selecciona al menos una alergia o especifica en el campo 'Otro'.");
+      setAllergyError(t('createAppointment.errors.allergies'));
       const el = document.getElementById("otherAllergies");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
@@ -184,7 +186,7 @@ export default function CreateAppointmentModal({
     if (uiState.hasAllergies === "yes") {
       const allergiesList = [...uiState.selectedAllergies];
       if (uiState.otherAllergies.trim() !== "") allergiesList.push(uiState.otherAllergies);
-      finalAllergies = allergiesList.length > 0 ? allergiesList.join(", ") : "No especificadas";
+      finalAllergies = allergiesList.length > 0 ? allergiesList.join(", ") : t('createAppointment.summary.notSpecified');
     }
 
     try {
@@ -206,8 +208,8 @@ export default function CreateAppointmentModal({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      eyebrow="Panel administrativo"
-      title="Agregar cita manual"
+      eyebrow={t('createAppointment.eyebrow')}
+      title={t('createAppointment.titleCreate')}
       showAction={false}
       modalClassName={styles.modal}
       contentClassName={styles.content}
@@ -216,7 +218,7 @@ export default function CreateAppointmentModal({
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="course">
-            Curso asociado
+            {t('createAppointment.courseLabel')}
           </label>
           <input
             id="course"
@@ -229,7 +231,7 @@ export default function CreateAppointmentModal({
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="client">
-            Nombre completo *
+            {t('createAppointment.clientLabel')}
           </label>
           <input
             id="client"
@@ -238,7 +240,7 @@ export default function CreateAppointmentModal({
             className={styles.input}
             value={formData.client}
             onChange={handleChange}
-            placeholder="Ej. María García"
+            placeholder={t('createAppointment.clientPlaceholder')}
             required
           />
         </div>
@@ -251,13 +253,13 @@ export default function CreateAppointmentModal({
 
         <div className={styles.fieldGroup}>
           <label className={styles.label}>
-            Taller *
+            {t('createAppointment.workshopLabel')}
           </label>
           <select
             id="workshopId" name="workshopId" className={styles.select}
             value={String(formData.workshopId)} onChange={handleChange} required
           >
-            <option value="" disabled>Selecciona un taller</option>
+            <option value="" disabled>{t('createAppointment.workshopPlaceholder')}</option>
             {workshops.map((workshop) => {
               const wId = workshop.id || workshop.idTaller;
               const wTitle = workshop.title || workshop.nombreTaller;
@@ -279,7 +281,7 @@ export default function CreateAppointmentModal({
         {/* --- NUEVO SELECTOR DE FECHA (CALENDARIO) --- */}
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="dateBtn">
-            Día y horario disponible *
+            {t('createAppointment.dateLabel')}
           </label>
           <button 
             id="dateBtn"
@@ -298,8 +300,8 @@ export default function CreateAppointmentModal({
           >
             <span style={{ color: formData.date ? 'inherit' : 'var(--color-text-muted)' }}>
               {formData.date 
-                ? new Date(formData.date).toLocaleDateString("es-ES", { weekday: 'long', day: 'numeric', month: 'long' }) 
-                : "Seleccionar día en el calendario..."}
+                ? new Date(formData.date).toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long' }) 
+                : t('createAppointment.datePlaceholder')}
             </span>
             <Calendar size={18} color="var(--color-text-muted)" />
           </button>
@@ -313,7 +315,7 @@ export default function CreateAppointmentModal({
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="email">
-            Correo electrónico
+            {t('createAppointment.emailLabel')}
           </label>
           <input
             id="email"
@@ -322,13 +324,13 @@ export default function CreateAppointmentModal({
             className={styles.input}
             value={formData.email}
             onChange={handleChange}
-            placeholder="correo@ejemplo.com"
+            placeholder={t('createAppointment.emailPlaceholder')}
           />
         </div>
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="phone">
-            Teléfono de contacto
+            {t('createAppointment.phoneLabel')}
           </label>
           <input
             id="phone"
@@ -337,7 +339,7 @@ export default function CreateAppointmentModal({
             className={styles.input}
             value={formData.phone}
             onChange={handleChange}
-            placeholder="Ej. 600 000 000"
+            placeholder={t('createAppointment.phonePlaceholder')}
           />
         </div>
 
@@ -349,10 +351,10 @@ export default function CreateAppointmentModal({
 
         <div className={`${styles.fieldGroup} ${styles.fullWidth} ${styles.allergiesSection}`}>
           <label className={styles.label}>
-            Alergias o contraindicaciones importantes
+            {t('createAppointment.allergiesLabel')}
           </label>
           <p className={styles.helperText}>
-            Selecciona si tiene alguna sensibilidad relevante.
+            {t('createAppointment.allergiesHelper')}
           </p>
 
           <div className={styles.cardSelector}>
@@ -365,7 +367,7 @@ export default function CreateAppointmentModal({
                 setUiState({ ...uiState, hasAllergies: "no" });
               }}
             >
-              <span>No tiene alergias conocidas</span>
+              <span>{t('createAppointment.allergiesNo')}</span>
             </button>
             <button
               type="button"
@@ -376,7 +378,7 @@ export default function CreateAppointmentModal({
                 setUiState({ ...uiState, hasAllergies: "yes" });
               }}
             >
-              <span>Sí, tiene alguna alergia</span>
+              <span>{t('createAppointment.allergiesYes')}</span>
             </button>
           </div>
 
@@ -391,15 +393,15 @@ export default function CreateAppointmentModal({
                     onClick={() => handleAllergyToggle(id)}
                   >
                     <Icon size={18} strokeWidth={1.8} />
-                    <span>{label}</span>
+                    <span>{t(`createAppointment.allergiesItems.${id}`, { defaultValue: label })}</span>
                   </button>
                 ))}
               </div>
               <div className={styles.otherAllergyGroup}>
-                <label htmlFor="otherAllergies" className={styles.labelSmall}>Otro (especificar):</label>
+                <label htmlFor="otherAllergies" className={styles.labelSmall}>{t('createAppointment.allergiesOther')}</label>
                 <textarea
                   id="otherAllergies" type="text" className={styles.input}
-                  placeholder="Ej. Piel rosácea..."
+                  placeholder={t('createAppointment.allergiesOtherPlaceholder')}
                   value={uiState.otherAllergies}
                   onChange={(e) => {
                     setIsDirty(true);
@@ -419,36 +421,36 @@ export default function CreateAppointmentModal({
 
         <div className={`${styles.bottomSection} ${styles.fullWidth}`}>
           <div className={styles.summary}>
-            <p className={styles.summaryTitle}>Resumen de la cita</p>
+            <p className={styles.summaryTitle}>{t('createAppointment.summary.title')}</p>
             <p className={styles.summaryText}>
-              Taller: <strong>{tallerSeleccionado ? (tallerSeleccionado.title || tallerSeleccionado.nombreTaller) : "Sin seleccionar"}</strong>
+              {t('createAppointment.summary.workshop')} <strong>{tallerSeleccionado ? (tallerSeleccionado.title || tallerSeleccionado.nombreTaller) : t('createAppointment.summary.unselected')}</strong>
             </p>
             <p className={styles.summaryText}>
-              Correo electrónico: <strong>{formData.email || "No especificado"}</strong>
+              {t('createAppointment.summary.email')} <strong>{formData.email || t('createAppointment.summary.unspecified')}</strong>
             </p>
             <p className={styles.summaryText}>
-              Teléfono: <strong>{formData.phone || "No especificado"}</strong>
+              {t('createAppointment.summary.phone')} <strong>{formData.phone || t('createAppointment.summary.unspecified')}</strong>
             </p>
             <p className={styles.summaryText}>
-              Día agendado: <strong>
+              {t('createAppointment.summary.date')} <strong>
                 {formData.date 
-                  ? new Date(formData.date).toLocaleDateString("es-ES", { weekday: 'long', day: 'numeric', month: 'long' })
-                  : "Sin seleccionar"}
+                  ? new Date(formData.date).toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long' })
+                  : t('createAppointment.summary.unselected')}
               </strong>
             </p>
             <p className={styles.summaryText}>
-              Alergias: <strong>
-                {uiState.hasAllergies === "no" ? "Ninguna" : ([...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).length > 0 ? [...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).join(", ") : "No especificadas")}
+              {t('createAppointment.summary.allergies')} <strong>
+                {uiState.hasAllergies === "no" ? t('createAppointment.summary.none') : ([...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).length > 0 ? [...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).join(", ") : t('createAppointment.summary.notSpecified'))}
               </strong>
             </p>
           </div>
 
           <div className={styles.actions}>
             <button type="button" className={styles.secondaryButton} onClick={handleClose} disabled={isSubmitting}>
-              Cancelar
+              {t('createAppointment.actions.cancel')}
             </button>
             <button type="submit" className={styles.buttonPrimary} disabled={isSubmitDisabled}>
-              {isSubmitting ? "Guardando..." : "Guardar cita"}
+              {isSubmitting ? t('createAppointment.actions.saving') : t('createAppointment.actions.save')}
             </button>
           </div>
         </div>
@@ -458,7 +460,7 @@ export default function CreateAppointmentModal({
     <Modal
       isOpen={showConfirmClose}
       onClose={() => setShowConfirmClose(false)}
-      title="Descartar cambios"
+      title={t('createAppointment.confirmClose.title')}
       showAction={false}
     >
       <div className={styles.confirmWrapper}>
@@ -467,16 +469,16 @@ export default function CreateAppointmentModal({
         </div>
 
         <div className={styles.confirmTextGroup}>
-          <p className={styles.confirmQuestion}>Tienes cambios sin guardar</p>
-          <h3 className={styles.confirmTargetName}>¿Seguro que quieres salir?</h3>
+          <p className={styles.confirmQuestion}>{t('createAppointment.confirmClose.question')}</p>
+          <h3 className={styles.confirmTargetName}>{t('createAppointment.confirmClose.target')}</h3>
         </div>
 
         <div className={styles.modalActionsVertical}>
           <button type="button" className={styles.confirmButton} onClick={confirmClose}>
-            Salir y perder cambios
+            {t('createAppointment.confirmClose.confirm')}
           </button>
           <button type="button" className={styles.secondaryButton} onClick={() => setShowConfirmClose(false)}>
-            Continuar editando
+            {t('createAppointment.confirmClose.cancel')}
           </button>
         </div>
       </div>

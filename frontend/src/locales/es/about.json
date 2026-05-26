@@ -1,0 +1,44 @@
+{
+    "header": {
+        "title1": "Sobre ",
+        "titleHighlight": "Nosotros",
+        "subtitle": "Servicios de estética y peluquería con sello de calidad, creados por nuestros alumnos y guiados por docentes expertos."
+    },
+    "intro": {
+        "title": "Nuestro Departamento",
+        "text": "El IES de Teis, a través del departamento de Imagen Personal, ofrece servicios de estética y peluquería abiertos al público general. Estos servicios son realizados por el alumnado de los diferentes Ciclos Formativos como parte de su formación práctica, siempre bajo la supervisión del profesorado."
+    },
+    "services": {
+        "title": "Servicios",
+        "categories": [
+            {
+                "title": "Estética y Bienestar",
+                "items": [
+                    "Tratamientos faciales: Higiene facial, hidratación y tratamientos específicos",
+                    "Tratamientos corporales: Masajes relajantes, drenaje linfático",
+                    "Manicura y Pedicura: Cuidado de uñas y esmaltado",
+                    "Depilación: Cera y otros métodos",
+                    "Maquillaje: Social, de día, noche o eventos"
+                ]
+            },
+            {
+                "title": "Peluquería",
+                "items": [
+                    "Corte, peinado y acabados",
+                    "Coloración: tintes, mechas, balayage",
+                    "Tratamientos capilares específicos"
+                ]
+            }
+        ]
+    },
+    "booking": {
+        "title": "Cita Previa",
+        "description1": "Para disfrutar de nuestros servicios a precios muy reducidos (destinados a cubrir el coste de los materiales), es obligatorio solicitar cita previa.",
+        "description2": "Puedes reservar tu cita a través de nuestra plataforma o contactando directamente con cualquiera de nuestros talleres.",
+        "workshopPrefix": "Taller"
+    },
+    "cta": {
+        "title": "¿Listo para reservar tu cita?",
+        "button": "Reservar Ahora"
+    }
+}

@@ -1,0 +1,47 @@
+{
+    "title1": "Frequently Asked ",
+    "title2": "Questions",
+    "description": "If you don't see your question in the list, feel free to contact us.",
+    "items": [
+        {
+            "q": "Who performs the treatments?",
+            "a": "All services are performed by our students in training, always under the direct supervision of qualified teachers."
+        },
+        {
+            "q": "Is it safe to get treatments here?",
+            "a": "Absolutely. Teachers evaluate and guide every step of the process to ensure your safety and an excellent result."
+        },
+        {
+            "q": "How long do appointments take?",
+            "a": "Since it is a learning environment, treatments may take a bit longer than in a conventional salon. We appreciate your patience."
+        },
+        {
+            "q": "Do the services have any cost?",
+            "a": "They have very reduced prices, intended solely to cover the cost of professional materials used during practices."
+        },
+        {
+            "q": "What happens if I'm not satisfied?",
+            "a": "Our teachers are present to intervene at any time and ensure the final result meets standards."
+        },
+        {
+            "q": "Can I choose which student attends me?",
+            "a": "Assignments are based on rotations and the students' learning needs, so it is not possible to choose."
+        },
+        {
+            "q": "What kind of products do you use?",
+            "a": "We exclusively use top-brand professional hairdressing and aesthetic products."
+        },
+        {
+            "q": "Is it mandatory to book in advance?",
+            "a": "Yes, it is essential to reserve your spot through this platform to properly organize the classes."
+        },
+        {
+            "q": "Can I cancel my appointment if something comes up?",
+            "a": "Of course. We kindly ask you to do so as far in advance as possible from the application so we can assign the turn to someone else."
+        },
+        {
+            "q": "Do you have flexible hours?",
+            "a": "Our opening hours are strictly linked to the school's teaching hours and modules."
+        }
+    ]
+}

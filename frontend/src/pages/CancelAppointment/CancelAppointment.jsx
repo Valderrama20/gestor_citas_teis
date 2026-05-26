@@ -10,51 +10,7 @@ import {
 } from "lucide-react";
 import appointmentService from "../../services/appointmentService";
 import styles from "./CancelAppointment.module.css";
-
-const STATUS_UI = {
-  loading: {
-    title: "Procesando cancelacion",
-    description: "Estamos anulando tu cita. Esto puede tardar unos segundos.",
-    icon: Loader2,
-    tone: "info",
-  },
-  cancelada: {
-    title: "Cita cancelada",
-    description: "Tu cita ha sido cancelada correctamente. Si quieres, puedes reservar un nuevo horario.",
-    icon: CheckCircle2,
-    tone: "success",
-  },
-  ya_cancelada: {
-    title: "La cita ya estaba cancelada",
-    description: "No es necesario hacer nada mas. Si deseas, puedes reservar una nueva cita.",
-    icon: CheckCircle2,
-    tone: "success",
-  },
-  expirada: {
-    title: "El enlace ha expirado",
-    description: "La cita ya no se puede cancelar porque la fecha ya paso.",
-    icon: Clock,
-    tone: "warning",
-  },
-  invalid: {
-    title: "Enlace no valido",
-    description: "El enlace de cancelacion no es valido o esta incompleto.",
-    icon: AlertTriangle,
-    tone: "danger",
-  },
-  not_found: {
-    title: "Cita no encontrada",
-    description: "No encontramos la cita asociada a este enlace.",
-    icon: XCircle,
-    tone: "danger",
-  },
-  error: {
-    title: "No pudimos cancelar la cita",
-    description: "Ocurrio un error inesperado. Intenta de nuevo mas tarde.",
-    icon: XCircle,
-    tone: "danger",
-  },
-};
+import { useTranslation } from "react-i18next";
 
 function mapStatus(apiStatus) {
   switch (apiStatus) {
@@ -79,6 +35,52 @@ export default function CancelAppointment() {
   const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("");
   const requestSent = useRef(false);
+  const { t } = useTranslation('booking');
+
+  const STATUS_UI = {
+    loading: {
+      title: t("cancelPage.loading.title"),
+      description: t("cancelPage.loading.description"),
+      icon: Loader2,
+      tone: "info",
+    },
+    cancelada: {
+      title: t("cancelPage.cancelada.title"),
+      description: t("cancelPage.cancelada.description"),
+      icon: CheckCircle2,
+      tone: "success",
+    },
+    ya_cancelada: {
+      title: t("cancelPage.ya_cancelada.title"),
+      description: t("cancelPage.ya_cancelada.description"),
+      icon: CheckCircle2,
+      tone: "success",
+    },
+    expirada: {
+      title: t("cancelPage.expirada.title"),
+      description: t("cancelPage.expirada.description"),
+      icon: Clock,
+      tone: "warning",
+    },
+    invalid: {
+      title: t("cancelPage.invalid.title"),
+      description: t("cancelPage.invalid.description"),
+      icon: AlertTriangle,
+      tone: "danger",
+    },
+    not_found: {
+      title: t("cancelPage.not_found.title"),
+      description: t("cancelPage.not_found.description"),
+      icon: XCircle,
+      tone: "danger",
+    },
+    error: {
+      title: t("cancelPage.error.title"),
+      description: t("cancelPage.error.description"),
+      icon: XCircle,
+      tone: "danger",
+    },
+  };
 
   useEffect(() => {
     if (requestSent.current) {
@@ -113,7 +115,7 @@ export default function CancelAppointment() {
   return (
     <section className={styles.main}>
       <div className={styles.card}>
-        <span className={styles.eyebrow}>Gestion de citas</span>
+        <span className={styles.eyebrow}>{t("cancelPage.eyebrow")}</span>
         <div className={`${styles.statusIcon} ${styles[ui.tone]}`}>
           <Icon className={`${styles.statusIconSvg} ${status === "loading" ? styles.spinner : ""}`} strokeWidth={1.8} />
         </div>
@@ -123,17 +125,17 @@ export default function CancelAppointment() {
         {showActions && (
           <div className={styles.actions}>
             <Link to="/reservar" className={styles.primaryAction}>
-              Reservar nueva cita
+              {t("cancelPage.actions.bookNew")}
               <ArrowRight className={styles.actionIcon} strokeWidth={1.8} />
             </Link>
             <Link to="/" className={styles.secondaryAction}>
-              Volver al inicio
+              {t("cancelPage.actions.backHome")}
             </Link>
           </div>
         )}
 
         {status === "loading" && (
-          <p className={styles.helper}>No cierres esta ventana hasta terminar.</p>
+          <p className={styles.helper}>{t("cancelPage.helper")}</p>
         )}
       </div>
     </section>

@@ -1,5 +1,6 @@
 import { Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import ServiceCard from "../../components/ServiceCard";
 import courseService from "../../services/courseService";
 import FAQSection from "../../components/FAQSection";
@@ -8,6 +9,7 @@ import { courseIconMap } from "../../constants/icons";
 
 export default function Home() {
   const [specialties, setSpecialties] = useState([]);
+  const { t } = useTranslation('home');
 
   useEffect(() => {
     let isMounted = true;
@@ -32,13 +34,13 @@ export default function Home() {
   return (
     <section className={styles.main}>
       <div className={styles.header}>
-        <span className={styles.tagline}>Ciclo Formativo de Grado Medio y Superior</span>
+        <span className={styles.tagline}>{t("hero.tagline")}</span>
         <h1 className={styles.title}>
-          Realza tu <span className={styles.titleHighlight}>belleza natural</span>
-          <span className={styles.breakDesktop}> con el talento de nuestr@s alumn@s</span>
+          {t("hero.title1")}<span className={styles.titleHighlight}>{t("hero.titleHighlight")}</span>
+          <span className={styles.breakDesktop}>{t("hero.title2")}</span>
         </h1>
         <p className={styles.subtitle}>
-          Tratamientos de peluquería y estética bajo supervisión de docentes experimentad@s. Elige una especialidad.
+          {t("hero.subtitle")}
         </p>
       </div>
 

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import adminAuthService from "../../services/adminAuthService";
 import { useAuthStore } from "../../store/authStore";
 import styles from "./AdminLogin.module.css";
+import { useTranslation } from "react-i18next";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function AdminLogin() {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useTranslation('admin');
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -35,7 +37,7 @@ export default function AdminLogin() {
       navigate("/admin/cursos");
     } catch (error) {
       console.error(error);
-      setErrorMessage("Credenciales invalidas o error de conexión.");
+      setErrorMessage(t('login.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -48,8 +50,8 @@ export default function AdminLogin() {
           <Sparkles className={styles.logoIcon} strokeWidth={1.8} />
         </div>
 
-        <h1 className={styles.title}>Acceso Profesor</h1>
-        <p className={styles.subtitle}>Gestiona las citas del IES TEIS</p>
+        <h1 className={styles.title}>{t('login.title')}</h1>
+        <p className={styles.subtitle}>{t('login.subtitle')}</p>
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
@@ -58,7 +60,7 @@ export default function AdminLogin() {
               className={styles.input}
               type="email"
               name="email"
-              placeholder="Email institucional"
+              placeholder={t('login.emailPlaceholder')}
               value={credentials.email}
               onChange={handleChange}
               required
@@ -71,7 +73,7 @@ export default function AdminLogin() {
               className={styles.input}
               type="password"
               name="password"
-              placeholder="Contrasena"
+              placeholder={t('login.passwordPlaceholder')}
               value={credentials.password}
               onChange={handleChange}
               required
@@ -81,7 +83,7 @@ export default function AdminLogin() {
           {errorMessage && <p className={styles.error}>{errorMessage}</p>}
 
           <button type="submit" className={styles.button} disabled={isSubmitting}>
-            {isSubmitting ? "Entrando..." : "Entrar al panel"}
+            {isSubmitting ? t('login.submitting') : t('login.submit')}
           </button>
         </form>
       </section>

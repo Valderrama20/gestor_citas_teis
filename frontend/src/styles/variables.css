@@ -5,7 +5,7 @@
     --font-body: 'Nunito', sans-serif;
 
     --color-background: #fcf9f8;
-    --color-background-error:#ffebee;
+    --color-background-error: #ffebee;
     --color-background-soft: rgba(255, 248, 246, 0.95);
     --color-surface: rgba(255, 255, 255, 0.82);
     --color-surface-strong: rgba(255, 255, 255, 1);
@@ -29,26 +29,18 @@
     --color-text-faint: rgba(58, 46, 50, 0.5);
     --color-white: #ffffff;
 
-    --gradient-page: linear-gradient(
-        180deg,
-        var(--color-background-soft),
-        var(--color-background)
-    );
-    --gradient-accent-text: linear-gradient(
-        90deg,
-        var(--color-accent),
-        var(--color-accent-soft)
-    );
-    --gradient-blob-top: radial-gradient(
-        circle,
-        rgba(246, 213, 213, 0.48) 0%,
-        rgba(255, 255, 255, 0) 70%
-    );
-    --gradient-blob-bottom: radial-gradient(
-        circle,
-        rgba(238, 228, 218, 0.6) 0%,
-        rgba(255, 255, 255, 0) 72%
-    );
+    --gradient-page: linear-gradient(180deg,
+            var(--color-background-soft),
+            var(--color-background));
+    --gradient-accent-text: linear-gradient(90deg,
+            var(--color-accent),
+            var(--color-accent-soft));
+    --gradient-blob-top: radial-gradient(circle,
+            rgba(246, 213, 213, 0.48) 0%,
+            rgba(255, 255, 255, 0) 70%);
+    --gradient-blob-bottom: radial-gradient(circle,
+            rgba(238, 228, 218, 0.6) 0%,
+            rgba(255, 255, 255, 0) 72%);
 
     --shadow-soft: 0 18px 40px rgba(58, 46, 50, 0.08);
     --shadow-soft-sm: 0 8px 24px rgba(58, 46, 50, 0.08);
@@ -87,8 +79,8 @@
     --grid-gap: 1.5rem;
     --grid-gap-lg: 2rem;
 
-    --transition-fast: 0.3s ease;
-    --transition-base: 0.35s ease;
+    --transition-fast: 0.2s ease;
+    --transition-base: 0.3s ease;
 
     --tracking-eyebrow: 0.18em;
     --tracking-title: -0.04em;

@@ -1,0 +1,81 @@
+{
+    "eyebrow": "Booking",
+    "title": "Book your appointment",
+    "description": "Fill out this form to manage your attendance. We'll make sure to have everything ready for you.",
+    "form": {
+        "clientLabel": "Full name *",
+        "clientPlaceholder": "e.g., Mary Smith",
+        "clientError": "Please provide your full name.",
+        "workshopLabel": "Workshop of interest *",
+        "workshopError": "Please select the workshop you wish to attend.",
+        "emailLabel": "Email address",
+        "emailPlaceholder": "email@example.com",
+        "phoneLabel": "Contact phone",
+        "phonePlaceholder": "e.g., +44 7700 900077",
+        "contactError": "Please provide an email address or a contact phone number.",
+        "dateLabel": "Available day and time *",
+        "datePlaceholder": "Select day on calendar...",
+        "dateError": "Please select a date on the calendar."
+    },
+    "allergies": {
+        "label": "Allergies or important contraindications",
+        "helper": "Select if you have any sensitivities we should know about.",
+        "noAllergies": "I have no known allergies",
+        "hasAllergies": "Yes, I have an allergy",
+        "error": "Please select at least one allergy or specify in the 'Other' field.",
+        "otherLabel": "Other (specify):",
+        "otherPlaceholder": "e.g., Rosacea skin...",
+        "items": {
+            "latex": "Latex",
+            "cosmetics": "Cosmetics",
+            "nickel": "Nickel",
+            "acrylics": "Acrylics",
+            "atopic": "Atopic Skin"
+        }
+    },
+    "summary": {
+        "title": "Summary of your selection",
+        "workshop": "Workshop:",
+        "email": "Email address:",
+        "phone": "Phone:",
+        "date": "Scheduled day:",
+        "allergies": "Allergies:",
+        "unselected": "Not selected",
+        "unspecified": "Not specified",
+        "none": "None",
+        "notSpecified": "Not specified"
+    },
+    "actions": {
+        "cancel": "Cancel",
+        "submit": "Request appointment",
+        "submitting": "Processing..."
+    },
+    "successModal": {
+        "eyebrow": "Request completed",
+        "title": "Your appointment is in progress",
+        "text1": "We have registered the request for the workshop",
+        "text2": "We will contact you shortly using the details provided to fully confirm your spot.",
+        "question": "Do you want to request another appointment?",
+        "yes": "Yes, request another appointment",
+        "no": "No, back to home"
+    },
+    "confirmModal": {
+        "title": "Discard booking",
+        "question": "You have unconfirmed data",
+        "target": "Are you sure you want to leave?",
+        "exit": "Leave and lose data",
+        "continue": "Continue booking"
+    },
+    "cancelPage": {
+        "eyebrow": "Appointment management",
+        "loading": { "title": "Processing cancellation", "description": "We are cancelling your appointment. This may take a few seconds." },
+        "cancelada": { "title": "Appointment cancelled", "description": "Your appointment has been successfully cancelled. If you want, you can book a new time." },
+        "ya_cancelada": { "title": "Appointment was already cancelled", "description": "No further action is required. If you wish, you can book a new appointment." },
+        "expirada": { "title": "Link expired", "description": "The appointment can no longer be cancelled because the date has passed." },
+        "invalid": { "title": "Invalid link", "description": "The cancellation link is invalid or incomplete." },
+        "not_found": { "title": "Appointment not found", "description": "We could not find the appointment associated with this link." },
+        "error": { "title": "We could not cancel the appointment", "description": "An unexpected error occurred. Please try again later." },
+        "actions": { "bookNew": "Book new appointment", "backHome": "Back to home" },
+        "helper": "Do not close this window until finished."
+    }
+}

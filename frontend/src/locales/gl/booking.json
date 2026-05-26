@@ -1,0 +1,81 @@
+{
+    "eyebrow": "Reserva",
+    "title": "Solicita a túa cita",
+    "description": "Completa este formulario para xestionar a túa asistencia. Asegurarémonos de ter todo listo para ti.",
+    "form": {
+        "clientLabel": "Nome completo *",
+        "clientPlaceholder": "Ex. María García",
+        "clientError": "Por favor, indícanos o teu nome completo.",
+        "workshopLabel": "Obradoiro de interese *",
+        "workshopError": "Por favor, selecciona o obradoiro ao que desexas asistir.",
+        "emailLabel": "Correo electrónico",
+        "emailPlaceholder": "correo@exemplo.com",
+        "phoneLabel": "Teléfono de contacto",
+        "phonePlaceholder": "Ex. 600 000 000",
+        "contactError": "Por favor, facilítanos un correo electrónico ou un teléfono de contacto.",
+        "dateLabel": "Día e horario dispoñible *",
+        "datePlaceholder": "Seleccionar día no calendario...",
+        "dateError": "Por favor, selecciona unha data no calendario."
+    },
+    "allergies": {
+        "label": "Alerxias ou contraindicacións importantes",
+        "helper": "Selecciona se tes algunha sensibilidade que debamos coñecer.",
+        "noAllergies": "Non teño alerxias coñecidas",
+        "hasAllergies": "Si, teño algunha alerxia",
+        "error": "Por favor, selecciona polo menos unha alerxia ou especifica no campo 'Outro'.",
+        "otherLabel": "Outro (especificar):",
+        "otherPlaceholder": "Ex. Pel rosácea...",
+        "items": {
+            "latex": "Látex",
+            "cosmetics": "Cosméticos",
+            "nickel": "Níquel",
+            "acrylics": "Acrílicos",
+            "atopic": "Pel Atópica"
+        }
+    },
+    "summary": {
+        "title": "Resumo da túa selección",
+        "workshop": "Obradoiro:",
+        "email": "Correo electrónico:",
+        "phone": "Teléfono:",
+        "date": "Día axendado:",
+        "allergies": "Alerxias:",
+        "unselected": "Sen seleccionar",
+        "unspecified": "Non especificado",
+        "none": "Ningunha",
+        "notSpecified": "Non especificadas"
+    },
+    "actions": {
+        "cancel": "Cancelar",
+        "submit": "Solicitar cita",
+        "submitting": "Procesando..."
+    },
+    "successModal": {
+        "eyebrow": "Solicitude completada",
+        "title": "A túa cita está en proceso",
+        "text1": "Rexistramos a solicitude para o obradoiro de",
+        "text2": "En breve porémonos en contacto contigo a través dos datos facilitados para confirmar definitivamente a túa praza.",
+        "question": "Desexas solicitar outra cita?",
+        "yes": "Si, solicitar outra cita",
+        "no": "Non, volver ao inicio"
+    },
+    "confirmModal": {
+        "title": "Descartar reserva",
+        "question": "Tes datos sen confirmar",
+        "target": "Seguro que queres saír?",
+        "exit": "Saír e perder datos",
+        "continue": "Continuar reserva"
+    },
+    "cancelPage": {
+        "eyebrow": "Xestión de citas",
+        "loading": { "title": "Procesando cancelación", "description": "Estamos anulando a túa cita. Isto pode tardar uns segundos." },
+        "cancelada": { "title": "Cita cancelada", "description": "A túa cita foi cancelada correctamente. Se queres, podes reservar un novo horario." },
+        "ya_cancelada": { "title": "A cita xa estaba cancelada", "description": "Non é necesario facer nada máis. Se o desexas, podes reservar unha nova cita." },
+        "expirada": { "title": "A ligazón expirou", "description": "A cita xa non se pode cancelar porque a data xa pasou." },
+        "invalid": { "title": "Ligazón non válida", "description": "A ligazón de cancelación non é válida ou está incompleta." },
+        "not_found": { "title": "Cita non atopada", "description": "Non atopamos a cita asociada a esta ligazón." },
+        "error": { "title": "Non puidemos cancelar a cita", "description": "Ocorreu un erro inesperado. Inténtao de novo máis tarde." },
+        "actions": { "bookNew": "Reservar nova cita", "backHome": "Volver ao inicio" },
+        "helper": "Non peches esta xanela ata rematar."
+    }
+}

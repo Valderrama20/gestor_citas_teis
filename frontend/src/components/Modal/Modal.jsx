@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import styles from "./Modal.module.css";
 
 export default function Modal({
@@ -8,11 +9,13 @@ export default function Modal({
   eyebrow,
   title,
   children,
-  actionLabel = "Cerrar",
+  actionLabel,
   showAction = true,
   modalClassName = "",
   contentClassName = "",
 }) {
+  const { t } = useTranslation('common');
+
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === "Escape" && isOpen) {
@@ -40,7 +43,7 @@ export default function Modal({
           type="button"
           className={styles.closeIconBtn}
           onClick={onClose}
-          aria-label="Cerrar modal"
+          aria-label={t('modal.closeAria')}
         >
           <X size={20} strokeWidth={2} />
         </button>
@@ -55,7 +58,7 @@ export default function Modal({
         </div>
         {showAction && (
           <button type="button" className={styles.button} onClick={onClose}>
-            {actionLabel}
+            {actionLabel || t('modal.close')}
           </button>
         )}
       </div>

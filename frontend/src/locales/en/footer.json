@@ -1,0 +1,32 @@
+{
+    "contact": {
+        "title": "Contact",
+        "email": "Email:",
+        "phone": "Phone:",
+        "address": "Address:",
+        "country": "Spain"
+    },
+    "form": {
+        "nameLabel": "Your Name",
+        "namePlaceholder": "Your full name",
+        "emailLabel": "Email address",
+        "emailPlaceholder": "Your email address",
+        "messageLabel": "Message",
+        "messagePlaceholder": "Write something...",
+        "submit": "Send Message",
+        "submitting": "Sending...",
+        "errors": {
+            "nameRequired": "Please enter your name",
+            "emailRequired": "Please enter your email address",
+            "messageRequired": "Please write a message",
+            "sendError": "Error sending message. Please try again."
+        },
+        "success": "Message sent successfully! We will contact you soon."
+    },
+    "legal": {
+        "rights": "All rights reserved.",
+        "privacy": "Privacy Policy",
+        "terms": "Terms and Conditions",
+        "cookies": "Cookies Policy"
+    }
+}

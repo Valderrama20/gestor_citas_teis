@@ -1,0 +1,11 @@
+{
+    "loading": "Loading workshops...",
+    "notFoundTitle": "Specialty not found",
+    "backToSpecialties": "Back to specialties",
+    "eyebrow": "Educational workshop",
+    "title": "{{courseName}} workshops",
+    "emptyBadge": "No workshops",
+    "emptyTitle": "There are no",
+    "emptyTitleHighlight": "workshops available yet",
+    "emptyDescription": "This specialty does not have any published workshops yet. Return to specialties to choose another available option."
+}
