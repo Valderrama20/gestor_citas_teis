@@ -8,7 +8,7 @@ services:
     env_file:
       - ./backend/.env
     ports:
-      - "3306:3306"
+      - "${DB_HOST_PORT:-3306}:3306"
     volumes:
       # Este volumen asegura que tus datos no se borren al apagar el contenedor
       - mariadb_data:/var/lib/mysql
@@ -17,10 +17,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-https://api-citas-teis.duckdns.org}
     container_name: gestor_citas_frontend_container
     restart: always
-    env_file:
-      - ./frontend/.env
 
   backend:
     build:
