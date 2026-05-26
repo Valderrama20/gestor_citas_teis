@@ -207,65 +207,6 @@
             "cancel": "No, continuar editando"
         }
     },
-    "createAppointment": {
-        "eyebrow": "Panel administrativo",
-        "titleCreate": "Crear nueva cita",
-        "courseLabel": "Curso",
-        "clientLabel": "Nombre completo",
-        "clientPlaceholder": "Ej. María García",
-        "workshopLabel": "Taller",
-        "workshopPlaceholder": "Selecciona un taller",
-        "dateLabel": "Día disponible",
-        "datePlaceholder": "Seleccionar día en el calendario...",
-        "emailLabel": "Correo electrónico",
-        "emailPlaceholder": "correo@ejemplo.com",
-        "phoneLabel": "Teléfono de contacto",
-        "phonePlaceholder": "Ej. 600 000 000",
-        "allergiesLabel": "Alergias o contraindicaciones importantes",
-        "allergiesHelper": "Selecciona si la persona tiene alguna sensibilidad que debamos conocer.",
-        "allergiesNo": "No tiene alergias conocidas",
-        "allergiesYes": "Sí, tiene alguna alergia",
-        "allergiesOther": "Otro (especificar):",
-        "allergiesOtherPlaceholder": "Ej. Piel rosácea...",
-        "allergiesItems": {
-            "LÃ¡tex": "Látex",
-            "CosmÃ©ticos": "Cosméticos",
-            "NÃ­quel": "Níquel",
-            "AcrÃ­licos": "Acrílicos",
-            "Piel AtÃ³pica": "Piel atópica"
-        },
-        "errors": {
-            "client": "Por favor, indica el nombre completo.",
-            "workshop": "Por favor, selecciona un taller.",
-            "date": "Por favor, selecciona una fecha en el calendario.",
-            "contact": "Por favor, facilita un correo electrónico o un teléfono de contacto.",
-            "allergies": "Selecciona al menos una alergia o especifica una en el campo Otro."
-        },
-        "summary": {
-            "title": "Resumen de la cita",
-            "workshop": "Taller:",
-            "email": "Correo electrónico:",
-            "phone": "Teléfono:",
-            "date": "Día agendado:",
-            "allergies": "Alergias:",
-            "unselected": "Sin seleccionar",
-            "unspecified": "No especificado",
-            "none": "Ninguna",
-            "notSpecified": "No especificadas"
-        },
-        "actions": {
-            "cancel": "Cancelar",
-            "save": "Crear cita",
-            "saving": "Creando..."
-        },
-        "confirmClose": {
-            "title": "Descartar cita",
-            "question": "Tienes datos sin guardar",
-            "target": "¿Seguro que quieres salir?",
-            "confirm": "Salir y perder datos",
-            "cancel": "Continuar editando"
-        }
-    },
     "editWorkshop": {
         "eyebrow": "Panel administrativo",
         "title": "Editar taller",

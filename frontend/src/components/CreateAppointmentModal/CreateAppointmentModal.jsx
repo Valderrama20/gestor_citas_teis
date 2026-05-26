@@ -11,10 +11,18 @@ const INITIAL_FORM = {
   email: "",
   phone: "",
   workshopId: "",
-  slotId: "", // Mantengo slotId por compatibilidad, aunque ahora uses fecha directa
-  date: "", // NUEVO: Guardaremos la fecha real aquí
+  slotId: "",
+  date: "",
   allergies: "",
 };
+
+const COMMON_ALLERGIES = [
+  { id: "latex", backendValue: "Látex", icon: Droplet },
+  { id: "cosmetics", backendValue: "Cosméticos", icon: Sparkles },
+  { id: "nickel", backendValue: "Níquel", icon: Magnet },
+  { id: "acrylics", backendValue: "Acrílicos", icon: Brush },
+  { id: "atopic", backendValue: "Piel atópica", icon: Flower },
+];
 
 export default function CreateAppointmentModal({
   isOpen,
@@ -23,7 +31,7 @@ export default function CreateAppointmentModal({
   courseName,
   workshops,
 }) {
-  const { t, i18n } = useTranslation('admin');
+  const { t, i18n } = useTranslation('appointmentForm');
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [slots, setSlots] = useState([]);
@@ -33,9 +41,7 @@ export default function CreateAppointmentModal({
   const [showConfirmClose, setShowConfirmClose] = useState(false);
   const [clientError, setClientError] = useState("");
   const [workshopError, setWorkshopError] = useState("");
-  const [dateError, setDateError] = useState(""); // Cambiado de slotError a dateError
-  
-  // NUEVO: Estado para abrir el modal del calendario
+  const [dateError, setDateError] = useState("");
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const [uiState, setUiState] = useState({
@@ -43,14 +49,6 @@ export default function CreateAppointmentModal({
     selectedAllergies: [],
     otherAllergies: ""
   });
-
-  const commonAllergies = [
-    { id: "Látex", label: "Látex", icon: Droplet },
-    { id: "Cosméticos", label: "Cosméticos", icon: Sparkles },
-    { id: "Níquel", label: "Níquel", icon: Magnet },
-    { id: "Acrílicos", label: "Acrílicos", icon: Brush },
-    { id: "Piel Atópica", label: "Piel Atópica", icon: Flower }
-  ];
 
   useEffect(() => {
     if (!isOpen) {
@@ -69,7 +67,6 @@ export default function CreateAppointmentModal({
     setDateError("");
   }, [isOpen, workshops]);
 
-  // Si sigues usando slots para la hora, los cargamos
   useEffect(() => {
     let isMounted = true;
 
@@ -89,7 +86,6 @@ export default function CreateAppointmentModal({
       }
 
       setSlots(nextSlots);
-      // Solo forzamos el slot si hay, pero ya no es la única fuente de fecha
       if (nextSlots.length > 0 && !formData.slotId) {
         setFormData(prev => ({ ...prev, slotId: nextSlots[0].id }));
       }
@@ -121,7 +117,7 @@ export default function CreateAppointmentModal({
     setFormData((current) => {
       const nextData = { ...current, [name]: value };
       if (name === "workshopId") {
-        nextData.date = ""; // Resetea fecha si cambia el taller
+        nextData.date = "";
         nextData.slotId = "";
       }
       return nextData;
@@ -142,39 +138,51 @@ export default function CreateAppointmentModal({
     });
   }
 
+  function getAllergyLabel(value) {
+    const allergy = COMMON_ALLERGIES.find(item => item.backendValue === value);
+    return allergy ? t(`allergies.items.${allergy.id}`) : value;
+  }
+
+  function getSelectedAllergyLabels() {
+    return [
+      ...uiState.selectedAllergies.map(getAllergyLabel),
+      uiState.otherAllergies.trim()
+    ].filter(Boolean);
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
     if (!formData.client.trim()) {
-      setClientError(t('createAppointment.errors.client'));
+      setClientError(t('errors.client'));
       const el = document.getElementById("client");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (!formData.workshopId) {
-      setWorkshopError(t('createAppointment.errors.workshop'));
+      setWorkshopError(t('errors.workshop'));
       const el = document.getElementById("workshopId");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (!formData.date) {
-      setDateError(t('createAppointment.errors.date'));
+      setDateError(t('errors.date'));
       const el = document.getElementById("dateBtn");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (!formData.email && !formData.phone) {
-      setContactError(t('createAppointment.errors.contact'));
+      setContactError(t('errors.contact'));
       const el = document.getElementById("email");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
     }
 
     if (uiState.hasAllergies === "yes" && uiState.selectedAllergies.length === 0 && uiState.otherAllergies.trim() === "") {
-      setAllergyError(t('createAppointment.errors.allergies'));
+      setAllergyError(t('errors.allergies'));
       const el = document.getElementById("otherAllergies");
       if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
       return;
@@ -186,7 +194,7 @@ export default function CreateAppointmentModal({
     if (uiState.hasAllergies === "yes") {
       const allergiesList = [...uiState.selectedAllergies];
       if (uiState.otherAllergies.trim() !== "") allergiesList.push(uiState.otherAllergies);
-      finalAllergies = allergiesList.length > 0 ? allergiesList.join(", ") : t('createAppointment.summary.notSpecified');
+      finalAllergies = allergiesList.length > 0 ? allergiesList.join(", ") : "No especificadas";
     }
 
     try {
@@ -197,19 +205,17 @@ export default function CreateAppointmentModal({
   }
 
   const isSubmitDisabled = isSubmitting;
-
   const tallerSeleccionado = workshops.find(w => String(w.id || w.idTaller) === String(formData.workshopId));
-  
-  // Pasar los objetos completos de los slots al calendario para que lea capacidad y ocupación
   const fechasPermitidasDelTaller = slots.filter(slot => slot.fecha);
+  const selectedAllergyLabels = getSelectedAllergyLabels();
 
   return (
     <>
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      eyebrow={t('createAppointment.eyebrow')}
-      title={t('createAppointment.titleCreate')}
+      eyebrow={t('eyebrow')}
+      title={t('titleCreate')}
       showAction={false}
       modalClassName={styles.modal}
       contentClassName={styles.content}
@@ -218,7 +224,7 @@ export default function CreateAppointmentModal({
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="course">
-            {t('createAppointment.courseLabel')}
+            {t('courseLabel')}
           </label>
           <input
             id="course"
@@ -231,7 +237,7 @@ export default function CreateAppointmentModal({
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="client">
-            {t('createAppointment.clientLabel')}
+            {t('clientLabel')}
           </label>
           <input
             id="client"
@@ -240,7 +246,7 @@ export default function CreateAppointmentModal({
             className={styles.input}
             value={formData.client}
             onChange={handleChange}
-            placeholder={t('createAppointment.clientPlaceholder')}
+            placeholder={t('clientPlaceholder')}
             required
           />
         </div>
@@ -253,13 +259,13 @@ export default function CreateAppointmentModal({
 
         <div className={styles.fieldGroup}>
           <label className={styles.label}>
-            {t('createAppointment.workshopLabel')}
+            {t('workshopLabel')}
           </label>
           <select
             id="workshopId" name="workshopId" className={styles.select}
             value={String(formData.workshopId)} onChange={handleChange} required
           >
-            <option value="" disabled>{t('createAppointment.workshopPlaceholder')}</option>
+            <option value="" disabled>{t('workshopPlaceholder')}</option>
             {workshops.map((workshop) => {
               const wId = workshop.id || workshop.idTaller;
               const wTitle = workshop.title || workshop.nombreTaller;
@@ -278,10 +284,9 @@ export default function CreateAppointmentModal({
           </div>
         )}
 
-        {/* --- NUEVO SELECTOR DE FECHA (CALENDARIO) --- */}
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="dateBtn">
-            {t('createAppointment.dateLabel')}
+            {t('dateLabel')}
           </label>
           <button 
             id="dateBtn"
@@ -301,7 +306,7 @@ export default function CreateAppointmentModal({
             <span style={{ color: formData.date ? 'inherit' : 'var(--color-text-muted)' }}>
               {formData.date 
                 ? new Date(formData.date).toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long' }) 
-                : t('createAppointment.datePlaceholder')}
+                : t('datePlaceholder')}
             </span>
             <Calendar size={18} color="var(--color-text-muted)" />
           </button>
@@ -315,7 +320,7 @@ export default function CreateAppointmentModal({
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="email">
-            {t('createAppointment.emailLabel')}
+            {t('emailLabel')}
           </label>
           <input
             id="email"
@@ -324,13 +329,13 @@ export default function CreateAppointmentModal({
             className={styles.input}
             value={formData.email}
             onChange={handleChange}
-            placeholder={t('createAppointment.emailPlaceholder')}
+            placeholder={t('emailPlaceholder')}
           />
         </div>
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="phone">
-            {t('createAppointment.phoneLabel')}
+            {t('phoneLabel')}
           </label>
           <input
             id="phone"
@@ -339,7 +344,7 @@ export default function CreateAppointmentModal({
             className={styles.input}
             value={formData.phone}
             onChange={handleChange}
-            placeholder={t('createAppointment.phonePlaceholder')}
+            placeholder={t('phonePlaceholder')}
           />
         </div>
 
@@ -351,10 +356,10 @@ export default function CreateAppointmentModal({
 
         <div className={`${styles.fieldGroup} ${styles.fullWidth} ${styles.allergiesSection}`}>
           <label className={styles.label}>
-            {t('createAppointment.allergiesLabel')}
+            {t('allergies.label')}
           </label>
           <p className={styles.helperText}>
-            {t('createAppointment.allergiesHelper')}
+            {t('allergies.helper')}
           </p>
 
           <div className={styles.cardSelector}>
@@ -367,7 +372,7 @@ export default function CreateAppointmentModal({
                 setUiState({ ...uiState, hasAllergies: "no" });
               }}
             >
-              <span>{t('createAppointment.allergiesNo')}</span>
+              <span>{t('allergies.noAllergies')}</span>
             </button>
             <button
               type="button"
@@ -378,30 +383,30 @@ export default function CreateAppointmentModal({
                 setUiState({ ...uiState, hasAllergies: "yes" });
               }}
             >
-              <span>{t('createAppointment.allergiesYes')}</span>
+              <span>{t('allergies.hasAllergies')}</span>
             </button>
           </div>
 
           {uiState.hasAllergies === "yes" && (
             <div className={styles.allergiesGrid}>
               <div className={styles.cardSelector} style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>
-                {commonAllergies.map(({ id, label, icon: Icon }) => (
+                {COMMON_ALLERGIES.map(({ id, backendValue, icon: Icon }) => (
                   <button
                     key={id}
                     type="button"
-                    className={`${styles.cardButton} ${uiState.selectedAllergies.includes(id) ? styles.cardButtonActive : ""}`}
-                    onClick={() => handleAllergyToggle(id)}
+                    className={`${styles.cardButton} ${uiState.selectedAllergies.includes(backendValue) ? styles.cardButtonActive : ""}`}
+                    onClick={() => handleAllergyToggle(backendValue)}
                   >
                     <Icon size={18} strokeWidth={1.8} />
-                    <span>{t(`createAppointment.allergiesItems.${id}`, { defaultValue: label })}</span>
+                    <span>{t(`allergies.items.${id}`)}</span>
                   </button>
                 ))}
               </div>
               <div className={styles.otherAllergyGroup}>
-                <label htmlFor="otherAllergies" className={styles.labelSmall}>{t('createAppointment.allergiesOther')}</label>
+                <label htmlFor="otherAllergies" className={styles.labelSmall}>{t('allergies.otherLabel')}</label>
                 <textarea
                   id="otherAllergies" type="text" className={styles.input}
-                  placeholder={t('createAppointment.allergiesOtherPlaceholder')}
+                  placeholder={t('allergies.otherPlaceholder')}
                   value={uiState.otherAllergies}
                   onChange={(e) => {
                     setIsDirty(true);
@@ -421,36 +426,36 @@ export default function CreateAppointmentModal({
 
         <div className={`${styles.bottomSection} ${styles.fullWidth}`}>
           <div className={styles.summary}>
-            <p className={styles.summaryTitle}>{t('createAppointment.summary.title')}</p>
+            <p className={styles.summaryTitle}>{t('summary.title')}</p>
             <p className={styles.summaryText}>
-              {t('createAppointment.summary.workshop')} <strong>{tallerSeleccionado ? (tallerSeleccionado.title || tallerSeleccionado.nombreTaller) : t('createAppointment.summary.unselected')}</strong>
+              {t('summary.workshop')} <strong>{tallerSeleccionado ? (tallerSeleccionado.title || tallerSeleccionado.nombreTaller) : t('summary.unselected')}</strong>
             </p>
             <p className={styles.summaryText}>
-              {t('createAppointment.summary.email')} <strong>{formData.email || t('createAppointment.summary.unspecified')}</strong>
+              {t('summary.email')} <strong>{formData.email || t('summary.unspecified')}</strong>
             </p>
             <p className={styles.summaryText}>
-              {t('createAppointment.summary.phone')} <strong>{formData.phone || t('createAppointment.summary.unspecified')}</strong>
+              {t('summary.phone')} <strong>{formData.phone || t('summary.unspecified')}</strong>
             </p>
             <p className={styles.summaryText}>
-              {t('createAppointment.summary.date')} <strong>
+              {t('summary.date')} <strong>
                 {formData.date 
                   ? new Date(formData.date).toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long' })
-                  : t('createAppointment.summary.unselected')}
+                  : t('summary.unselected')}
               </strong>
             </p>
             <p className={styles.summaryText}>
-              {t('createAppointment.summary.allergies')} <strong>
-                {uiState.hasAllergies === "no" ? t('createAppointment.summary.none') : ([...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).length > 0 ? [...uiState.selectedAllergies, uiState.otherAllergies.trim()].filter(Boolean).join(", ") : t('createAppointment.summary.notSpecified'))}
+              {t('summary.allergies')} <strong>
+                {uiState.hasAllergies === "no" ? t('summary.none') : (selectedAllergyLabels.length > 0 ? selectedAllergyLabels.join(", ") : t('summary.notSpecified'))}
               </strong>
             </p>
           </div>
 
           <div className={styles.actions}>
             <button type="button" className={styles.secondaryButton} onClick={handleClose} disabled={isSubmitting}>
-              {t('createAppointment.actions.cancel')}
+              {t('actions.cancel')}
             </button>
             <button type="submit" className={styles.buttonPrimary} disabled={isSubmitDisabled}>
-              {isSubmitting ? t('createAppointment.actions.saving') : t('createAppointment.actions.save')}
+              {isSubmitting ? t('actions.saving') : t('actions.save')}
             </button>
           </div>
         </div>
@@ -460,7 +465,7 @@ export default function CreateAppointmentModal({
     <Modal
       isOpen={showConfirmClose}
       onClose={() => setShowConfirmClose(false)}
-      title={t('createAppointment.confirmClose.title')}
+      title={t('confirmClose.title')}
       showAction={false}
     >
       <div className={styles.confirmWrapper}>
@@ -469,22 +474,21 @@ export default function CreateAppointmentModal({
         </div>
 
         <div className={styles.confirmTextGroup}>
-          <p className={styles.confirmQuestion}>{t('createAppointment.confirmClose.question')}</p>
-          <h3 className={styles.confirmTargetName}>{t('createAppointment.confirmClose.target')}</h3>
+          <p className={styles.confirmQuestion}>{t('confirmClose.question')}</p>
+          <h3 className={styles.confirmTargetName}>{t('confirmClose.target')}</h3>
         </div>
 
         <div className={styles.modalActionsVertical}>
           <button type="button" className={styles.confirmButton} onClick={confirmClose}>
-            {t('createAppointment.confirmClose.confirm')}
+            {t('confirmClose.confirm')}
           </button>
           <button type="button" className={styles.secondaryButton} onClick={() => setShowConfirmClose(false)}>
-            {t('createAppointment.confirmClose.cancel')}
+            {t('confirmClose.cancel')}
           </button>
         </div>
       </div>
     </Modal>
 
-    {/* MODAL DEL CALENDARIO */}
     <CalendarModal 
       isOpen={isCalendarOpen} 
       onClose={() => setIsCalendarOpen(false)}

@@ -8,6 +8,7 @@ import faqES from '../locales/es/faq.json';
 import footerES from '../locales/es/footer.json';
 import aboutES from '../locales/es/about.json';
 import bookingES from '../locales/es/booking.json';
+import appointmentFormES from '../locales/es/appointmentForm.json';
 import adminES from '../locales/es/admin.json';
 import notFoundES from '../locales/es/notFound.json';
 import workshopsES from '../locales/es/workshops.json';
@@ -18,6 +19,7 @@ import faqGL from '../locales/gl/faq.json';
 import footerGL from '../locales/gl/footer.json';
 import aboutGL from '../locales/gl/about.json';
 import bookingGL from '../locales/gl/booking.json';
+import appointmentFormGL from '../locales/gl/appointmentForm.json';
 import adminGL from '../locales/gl/admin.json';
 import notFoundGL from '../locales/gl/notFound.json';
 import workshopsGL from '../locales/gl/workshops.json';
@@ -28,6 +30,7 @@ import faqEN from '../locales/en/faq.json';
 import footerEN from '../locales/en/footer.json';
 import aboutEN from '../locales/en/about.json';
 import bookingEN from '../locales/en/booking.json';
+import appointmentFormEN from '../locales/en/appointmentForm.json';
 import adminEN from '../locales/en/admin.json';
 import notFoundEN from '../locales/en/notFound.json';
 import workshopsEN from '../locales/en/workshops.json';
@@ -40,6 +43,7 @@ const resources = {
         footer: footerES,
         about: aboutES,
         booking: bookingES,
+        appointmentForm: appointmentFormES,
         admin: adminES,
         notFound: notFoundES,
         workshops: workshopsES
@@ -51,6 +55,7 @@ const resources = {
         footer: footerGL,
         about: aboutGL,
         booking: bookingGL,
+        appointmentForm: appointmentFormGL,
         admin: adminGL,
         notFound: notFoundGL,
         workshops: workshopsGL
@@ -62,6 +67,7 @@ const resources = {
         footer: footerEN,
         about: aboutEN,
         booking: bookingEN,
+        appointmentForm: appointmentFormEN,
         admin: adminEN,
         notFound: notFoundEN,
         workshops: workshopsEN
@@ -74,7 +80,7 @@ i18n
     .init({
         resources,
         fallbackLng: 'es', // idioma de respaldo si falta alguna traducción
-        ns: ['common', 'home', 'faq', 'footer', 'about', 'booking', 'admin', 'notFound', 'workshops'], // declaramos los módulos disponibles
+        ns: ['common', 'home', 'faq', 'footer', 'about', 'booking', 'appointmentForm', 'admin', 'notFound', 'workshops'], // declaramos los módulos disponibles
         defaultNS: 'common', // namespace por defecto para componentes genéricos
         interpolation: {
             escapeValue: false // React ya protege contra inyecciones XSS

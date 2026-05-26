@@ -1,0 +1,61 @@
+{
+    "eyebrow": "Panel administrativo",
+    "titleCreate": "Crear nueva cita",
+    "courseLabel": "Curso",
+    "clientLabel": "Nombre completo",
+    "clientPlaceholder": "Ej. María García",
+    "workshopLabel": "Taller",
+    "workshopPlaceholder": "Selecciona un taller",
+    "dateLabel": "Día disponible",
+    "datePlaceholder": "Seleccionar día en el calendario...",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "correo@ejemplo.com",
+    "phoneLabel": "Teléfono de contacto",
+    "phonePlaceholder": "Ej. 600 000 000",
+    "allergies": {
+        "label": "Alergias o contraindicaciones importantes",
+        "helper": "Selecciona si la persona tiene alguna sensibilidad que debamos conocer.",
+        "noAllergies": "No tiene alergias conocidas",
+        "hasAllergies": "Sí, tiene alguna alergia",
+        "otherLabel": "Otro (especificar):",
+        "otherPlaceholder": "Ej. Piel rosácea...",
+        "items": {
+            "latex": "Látex",
+            "cosmetics": "Cosméticos",
+            "nickel": "Níquel",
+            "acrylics": "Acrílicos",
+            "atopic": "Piel atópica"
+        }
+    },
+    "errors": {
+        "client": "Por favor, indica el nombre completo.",
+        "workshop": "Por favor, selecciona un taller.",
+        "date": "Por favor, selecciona una fecha en el calendario.",
+        "contact": "Por favor, facilita un correo electrónico o un teléfono de contacto.",
+        "allergies": "Selecciona al menos una alergia o especifica una en el campo Otro."
+    },
+    "summary": {
+        "title": "Resumen de la cita",
+        "workshop": "Taller:",
+        "email": "Correo electrónico:",
+        "phone": "Teléfono:",
+        "date": "Día agendado:",
+        "allergies": "Alergias:",
+        "unselected": "Sin seleccionar",
+        "unspecified": "No especificado",
+        "none": "Ninguna",
+        "notSpecified": "No especificadas"
+    },
+    "actions": {
+        "cancel": "Cancelar",
+        "save": "Crear cita",
+        "saving": "Creando..."
+    },
+    "confirmClose": {
+        "title": "Descartar cita",
+        "question": "Tienes datos sin guardar",
+        "target": "¿Seguro que quieres salir?",
+        "confirm": "Salir y perder datos",
+        "cancel": "Continuar editando"
+    }
+}

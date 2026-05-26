@@ -1,0 +1,61 @@
+{
+    "eyebrow": "Admin dashboard",
+    "titleCreate": "Create new appointment",
+    "courseLabel": "Course",
+    "clientLabel": "Full name",
+    "clientPlaceholder": "E.g. Maria Garcia",
+    "workshopLabel": "Workshop",
+    "workshopPlaceholder": "Select a workshop",
+    "dateLabel": "Available day",
+    "datePlaceholder": "Select a day in the calendar...",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "email@example.com",
+    "phoneLabel": "Contact phone",
+    "phonePlaceholder": "E.g. 600 000 000",
+    "allergies": {
+        "label": "Important allergies or contraindications",
+        "helper": "Select whether the person has any sensitivity we should know about.",
+        "noAllergies": "No known allergies",
+        "hasAllergies": "Yes, has an allergy",
+        "otherLabel": "Other (specify):",
+        "otherPlaceholder": "E.g. Rosacea-prone skin...",
+        "items": {
+            "latex": "Latex",
+            "cosmetics": "Cosmetics",
+            "nickel": "Nickel",
+            "acrylics": "Acrylics",
+            "atopic": "Atopic skin"
+        }
+    },
+    "errors": {
+        "client": "Please enter the full name.",
+        "workshop": "Please select a workshop.",
+        "date": "Please select a date in the calendar.",
+        "contact": "Please provide an email address or contact phone.",
+        "allergies": "Select at least one allergy or specify one in the Other field."
+    },
+    "summary": {
+        "title": "Appointment summary",
+        "workshop": "Workshop:",
+        "email": "Email address:",
+        "phone": "Phone:",
+        "date": "Scheduled day:",
+        "allergies": "Allergies:",
+        "unselected": "Not selected",
+        "unspecified": "Not specified",
+        "none": "None",
+        "notSpecified": "Not specified"
+    },
+    "actions": {
+        "cancel": "Cancel",
+        "save": "Create appointment",
+        "saving": "Creating..."
+    },
+    "confirmClose": {
+        "title": "Discard appointment",
+        "question": "You have unsaved data",
+        "target": "Are you sure you want to leave?",
+        "confirm": "Leave and discard data",
+        "cancel": "Keep editing"
+    }
+}
