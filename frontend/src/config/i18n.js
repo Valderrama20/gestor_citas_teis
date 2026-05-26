@@ -9,6 +9,8 @@ import footerES from '../locales/es/footer.json';
 import aboutES from '../locales/es/about.json';
 import bookingES from '../locales/es/booking.json';
 import appointmentFormES from '../locales/es/appointmentForm.json';
+import courseFormES from '../locales/es/courseForm.json';
+import workshopFormES from '../locales/es/workshopForm.json';
 import adminES from '../locales/es/admin.json';
 import notFoundES from '../locales/es/notFound.json';
 import workshopsES from '../locales/es/workshops.json';
@@ -20,6 +22,8 @@ import footerGL from '../locales/gl/footer.json';
 import aboutGL from '../locales/gl/about.json';
 import bookingGL from '../locales/gl/booking.json';
 import appointmentFormGL from '../locales/gl/appointmentForm.json';
+import courseFormGL from '../locales/gl/courseForm.json';
+import workshopFormGL from '../locales/gl/workshopForm.json';
 import adminGL from '../locales/gl/admin.json';
 import notFoundGL from '../locales/gl/notFound.json';
 import workshopsGL from '../locales/gl/workshops.json';
@@ -31,6 +35,8 @@ import footerEN from '../locales/en/footer.json';
 import aboutEN from '../locales/en/about.json';
 import bookingEN from '../locales/en/booking.json';
 import appointmentFormEN from '../locales/en/appointmentForm.json';
+import courseFormEN from '../locales/en/courseForm.json';
+import workshopFormEN from '../locales/en/workshopForm.json';
 import adminEN from '../locales/en/admin.json';
 import notFoundEN from '../locales/en/notFound.json';
 import workshopsEN from '../locales/en/workshops.json';
@@ -44,6 +50,8 @@ const resources = {
         about: aboutES,
         booking: bookingES,
         appointmentForm: appointmentFormES,
+        courseForm: courseFormES,
+        workshopForm: workshopFormES,
         admin: adminES,
         notFound: notFoundES,
         workshops: workshopsES
@@ -56,6 +64,8 @@ const resources = {
         about: aboutGL,
         booking: bookingGL,
         appointmentForm: appointmentFormGL,
+        courseForm: courseFormGL,
+        workshopForm: workshopFormGL,
         admin: adminGL,
         notFound: notFoundGL,
         workshops: workshopsGL
@@ -68,6 +78,8 @@ const resources = {
         about: aboutEN,
         booking: bookingEN,
         appointmentForm: appointmentFormEN,
+        courseForm: courseFormEN,
+        workshopForm: workshopFormEN,
         admin: adminEN,
         notFound: notFoundEN,
         workshops: workshopsEN
@@ -80,7 +92,7 @@ i18n
     .init({
         resources,
         fallbackLng: 'es', // idioma de respaldo si falta alguna traducción
-        ns: ['common', 'home', 'faq', 'footer', 'about', 'booking', 'appointmentForm', 'admin', 'notFound', 'workshops'], // declaramos los módulos disponibles
+        ns: ['common', 'home', 'faq', 'footer', 'about', 'booking', 'appointmentForm', 'courseForm', 'workshopForm', 'admin', 'notFound', 'workshops'], // declaramos los módulos disponibles
         defaultNS: 'common', // namespace por defecto para componentes genéricos
         interpolation: {
             escapeValue: false // React ya protege contra inyecciones XSS

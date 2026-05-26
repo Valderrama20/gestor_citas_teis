@@ -1,0 +1,72 @@
+{
+    "eyebrow": "Panel administrativo",
+    "titleCreate": "Crear novo curso",
+    "titleEdit": "Editar curso",
+    "nameLabel": "Nome do curso",
+    "namePlaceholder": "Ex. Perrucaría avanzada",
+    "levelLabel": "Nivel",
+    "levels": {
+        "medium": "Grao medio",
+        "higher": "Grao superior"
+    },
+    "periodLabel": "Período",
+    "periodPlaceholder": "2025/2026",
+    "studentsLabel": "Número de alumnos",
+    "descriptionLabel": "Descrición",
+    "descriptionPlaceholder": "Breve descrición do curso",
+    "iconLabel": "Icona representativa",
+    "ariaScrollLeft": "Desprazar á esquerda",
+    "ariaScrollRight": "Desprazar á dereita",
+    "ariaSelectIcon": "Seleccionar icona",
+    "errors": {
+        "name": "O nome é obrigatorio.",
+        "period": "O período é obrigatorio.",
+        "students": "Debe ser un número válido.",
+        "description": "A descrición é obrigatoria.",
+        "submit": "Produciuse un erro ao procesar o formulario."
+    },
+    "actions": {
+        "cancel": "Cancelar",
+        "saving": "Gardando...",
+        "save": "Gardar cambios",
+        "create": "Crear curso"
+    },
+    "confirmClose": {
+        "title": "Descartar cambios?",
+        "subtitle": "Tes cambios sen gardar",
+        "confirm": "Si, descartar",
+        "cancel": "Non, continuar editando"
+    },
+    "icons": {
+        "sparkles": "Estética",
+        "scissors": "Perrucaría",
+        "brush": "Maquillaxe",
+        "droplets": "Lavado",
+        "waves": "Tratamentos",
+        "hand": "Manicura",
+        "flower": "Benestar",
+        "leaf": "Natural",
+        "gem": "Premium",
+        "heart": "Favorito",
+        "star": "Estrela",
+        "award": "Especial",
+        "gift": "Agasallo",
+        "palette": "Colorimetría",
+        "paintbrush": "Deseño",
+        "shopping-bag": "Produtos",
+        "sun": "Día",
+        "moon": "Noite",
+        "wind": "Secado",
+        "smile": "Facial",
+        "feather": "Depilación",
+        "bath": "Spa",
+        "eye": "Pestanas/Cellas",
+        "crown": "VIP",
+        "zap": "Láser",
+        "heart-handshake": "Coidado",
+        "syringe": "Inxectables",
+        "scissors-line-dashed": "Corte",
+        "activity": "Masaxes",
+        "droplet": "Coidado da pel"
+    }
+}

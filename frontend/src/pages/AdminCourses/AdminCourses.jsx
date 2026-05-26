@@ -196,7 +196,6 @@ export default function AdminCourses() {
           <div className={styles.confirmTextGroup}>
             <p className={styles.confirmQuestion}>{t("courses.deleteModal.warning")}</p>
             <h3 className={styles.confirmTargetName}>{courseToDelete?.name}</h3>
-            <h3 className={styles.confirmTargetName}>{courseToDelete?.nombreCurso || courseToDelete?.name}</h3>
           </div>
 
           <div className={styles.modalActionsVertical}>

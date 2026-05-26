@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import Modal from "../Modal";
@@ -14,7 +14,7 @@ const INITIAL_FORM = {
 };
 
 const DEFAULT_HORARIO = { diaSemana: "Lunes", horaApertura: "09:00", horaCierre: "14:00" };
-const WEEKDAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+const WEEKDAYS = ["Lunes", "Martes", "Mi\u00e9rcoles", "Jueves", "Viernes"];
 const ICON_SCROLL_AMOUNT = 250;
 const ICON_SCROLL_DURATION = 420;
 
@@ -28,7 +28,7 @@ export default function CreateWorkshopModal({
   onSubmit,
   courseName,
 }) {
-  const { t } = useTranslation('admin');
+  const { t } = useTranslation('workshopForm');
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [horarios, setHorarios] = useState([{ ...DEFAULT_HORARIO }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -135,15 +135,15 @@ export default function CreateWorkshopModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      eyebrow={t('createWorkshop.eyebrow')}
-      title={t('createWorkshop.title')}
+      eyebrow={t('eyebrow')}
+      title={t('title')}
       showAction={false}
       modalClassName={styles.modal}
       contentClassName={styles.content}
     >
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="nombreTaller">{t('createWorkshop.nameLabel')}</label>
+          <label className={styles.label} htmlFor="nombreTaller">{t('nameLabel')}</label>
           <input
             id="nombreTaller" name="nombreTaller" type="text"
             className={styles.input} value={formData.nombreTaller}
@@ -152,19 +152,20 @@ export default function CreateWorkshopModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>{t('createWorkshop.iconLabel')}</label>
+          <label className={styles.label}>{t('iconLabel')}</label>
           <div className={styles.iconCarousel}>
             <button
               type="button"
               className={styles.carouselButton}
               onClick={() => scrollIcons('left')}
-              aria-label={t('createWorkshop.ariaScrollLeft')}
+              aria-label={t('ariaScrollLeft')}
             >
               <ChevronLeft size={20} strokeWidth={2} />
             </button>
             <div className={styles.iconSelector} ref={iconContainerRef}>
               {AVAILABLE_ICONS.map(({ id, label, icon }) => {
                 const Icon = icon;
+                const iconLabel = t(`icons.${id}`, { defaultValue: label });
 
                 return (
                   <button
@@ -172,10 +173,10 @@ export default function CreateWorkshopModal({
                     type="button"
                     className={`${styles.iconButton} ${formData.icono === id ? styles.iconButtonActive : ""}`}
                     onClick={() => setFormData((current) => ({ ...current, icono: id }))}
-                    aria-label={`${t('createWorkshop.ariaSelectIcon')} ${label}`}
+                    aria-label={`${t('ariaSelectIcon')} ${iconLabel}`}
                   >
                     <Icon size={18} strokeWidth={1.8} />
-                    <span>{label}</span>
+                    <span>{iconLabel}</span>
                   </button>
                 );
               })}
@@ -184,7 +185,7 @@ export default function CreateWorkshopModal({
               type="button"
               className={styles.carouselButton}
               onClick={() => scrollIcons('right')}
-              aria-label={t('createWorkshop.ariaScrollRight')}
+              aria-label={t('ariaScrollRight')}
             >
               <ChevronRight size={20} strokeWidth={2} />
             </button>
@@ -193,7 +194,7 @@ export default function CreateWorkshopModal({
 
         <div style={{ display: 'flex', gap: '1rem' }}>
           <div className={styles.field} style={{ flex: 1 }}>
-            <label className={styles.label} htmlFor="duracionMinutos">{t('createWorkshop.durationLabel')}</label>
+            <label className={styles.label} htmlFor="duracionMinutos">{t('durationLabel')}</label>
             <input
               id="duracionMinutos" name="duracionMinutos" type="number"
               className={styles.input} value={formData.duracionMinutos}
@@ -201,7 +202,7 @@ export default function CreateWorkshopModal({
             />
           </div>
           <div className={styles.field} style={{ flex: 1 }}>
-            <label className={styles.label} htmlFor="capacidadMaxima">{t('createWorkshop.capacityLabel')}</label>
+            <label className={styles.label} htmlFor="capacidadMaxima">{t('capacityLabel')}</label>
             <input
               id="capacidadMaxima" name="capacidadMaxima" type="number"
               className={styles.input} value={formData.capacidadMaxima}
@@ -211,7 +212,7 @@ export default function CreateWorkshopModal({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="descripcion">{t('createWorkshop.descriptionLabel')}</label>
+          <label className={styles.label} htmlFor="descripcion">{t('descriptionLabel')}</label>
           <textarea
             id="descripcion" name="descripcion" className={styles.textarea} rows="3"
             value={formData.descripcion} onChange={handleChange} required
@@ -221,7 +222,7 @@ export default function CreateWorkshopModal({
         <hr style={{ margin: '1rem 0', borderColor: 'var(--color-border-field)', opacity: 0.3 }} />
 
         <div className={styles.field}>
-          <label className={styles.label}>{t('createWorkshop.availabilityLabel')}</label>
+          <label className={styles.label}>{t('availabilityLabel')}</label>
 
           {horarios.map((horario, index) => (
             <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
@@ -232,7 +233,7 @@ export default function CreateWorkshopModal({
                 onChange={(e) => handleHorarioChange(index, "diaSemana", e.target.value)}
               >
                 {WEEKDAYS.map(dia => (
-                  <option key={dia} value={dia}>{t(`createWorkshop.weekdays.${dia}`)}</option>
+                  <option key={dia} value={dia}>{t(`weekdays.${dia}`)}</option>
                 ))}
               </select>
 
@@ -242,7 +243,7 @@ export default function CreateWorkshopModal({
                 onChange={(e) => handleHorarioChange(index, "horaApertura", e.target.value)} required
               />
 
-              <span style={{ color: 'var(--color-text-muted)' }}>{t('createWorkshop.timeSeparator')}</span>
+              <span style={{ color: 'var(--color-text-muted)' }}>{t('timeSeparator')}</span>
 
               <input
                 type="time" className={styles.input} style={{ flex: 1 }}
@@ -253,7 +254,7 @@ export default function CreateWorkshopModal({
               {horarios.length > 1 && (
                 <button
                   type="button" onClick={() => handleRemoveHorario(index)}
-                  aria-label={t('createWorkshop.removeSchedule')}
+                  aria-label={t('removeSchedule')}
                   style={{ background: 'transparent', border: 'none', color: '#e74c3c', cursor: 'pointer', padding: '0.5rem' }}
                 >
                   <Trash2 size={18} />
@@ -266,19 +267,20 @@ export default function CreateWorkshopModal({
             type="button" onClick={handleAddHorario}
             style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'transparent', border: 'none', color: 'var(--color-accent)', fontWeight: '600', cursor: 'pointer', marginTop: '0.5rem' }}
           >
-            <Plus size={16} /> {t('createWorkshop.addDay')}
+            <Plus size={16} /> {t('addDay')}
           </button>
         </div>
 
         <div className={styles.actions} style={{ marginTop: '2rem' }}>
           <button type="button" className={styles.secondaryButton} onClick={onClose} disabled={isSubmitting}>
-            {t('createWorkshop.actions.cancel')}
+            {t('actions.cancel')}
           </button>
           <button type="submit" className={styles.primaryButton} disabled={isSubmitting}>
-            {isSubmitting ? t('createWorkshop.actions.creating') : t('createWorkshop.actions.create')}
+            {isSubmitting ? t('actions.creating') : t('actions.create')}
           </button>
         </div>
       </form>
     </Modal>
   );
 }
+

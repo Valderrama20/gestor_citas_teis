@@ -1,0 +1,72 @@
+{
+    "eyebrow": "Panel administrativo",
+    "titleCreate": "Crear nuevo curso",
+    "titleEdit": "Editar curso",
+    "nameLabel": "Nombre del curso",
+    "namePlaceholder": "Ej. Peluquería avanzada",
+    "levelLabel": "Nivel",
+    "levels": {
+        "medium": "Grado Medio",
+        "higher": "Grado Superior"
+    },
+    "periodLabel": "Periodo",
+    "periodPlaceholder": "2025/2026",
+    "studentsLabel": "Número de alumnos",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Breve descripción del curso",
+    "iconLabel": "Icono representativo",
+    "ariaScrollLeft": "Desplazar a la izquierda",
+    "ariaScrollRight": "Desplazar a la derecha",
+    "ariaSelectIcon": "Seleccionar icono",
+    "errors": {
+        "name": "El nombre es obligatorio.",
+        "period": "El periodo es obligatorio.",
+        "students": "Debe ser un número válido.",
+        "description": "La descripción es obligatoria.",
+        "submit": "Ha ocurrido un error al procesar el formulario."
+    },
+    "actions": {
+        "cancel": "Cancelar",
+        "saving": "Guardando...",
+        "save": "Guardar cambios",
+        "create": "Crear curso"
+    },
+    "confirmClose": {
+        "title": "¿Descartar cambios?",
+        "subtitle": "Tienes cambios sin guardar",
+        "confirm": "Sí, descartar",
+        "cancel": "No, continuar editando"
+    },
+    "icons": {
+        "sparkles": "Estética",
+        "scissors": "Peluquería",
+        "brush": "Maquillaje",
+        "droplets": "Lavado",
+        "waves": "Tratamientos",
+        "hand": "Manicura",
+        "flower": "Bienestar",
+        "leaf": "Natural",
+        "gem": "Premium",
+        "heart": "Favorito",
+        "star": "Estrella",
+        "award": "Especial",
+        "gift": "Regalo",
+        "palette": "Colorimetría",
+        "paintbrush": "Diseño",
+        "shopping-bag": "Productos",
+        "sun": "Día",
+        "moon": "Noche",
+        "wind": "Secado",
+        "smile": "Facial",
+        "feather": "Depilación",
+        "bath": "Spa",
+        "eye": "Pestañas/Cejas",
+        "crown": "VIP",
+        "zap": "Láser",
+        "heart-handshake": "Cuidado",
+        "syringe": "Inyectables",
+        "scissors-line-dashed": "Corte",
+        "activity": "Masajes",
+        "droplet": "Cuidado piel"
+    }
+}
