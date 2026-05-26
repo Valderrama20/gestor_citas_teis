@@ -28,11 +28,10 @@ export default function AdminNavbar() {
         <nav className={styles.nav}>
             {/* Logo */}
             <Link to="/admin/cursos" className={styles.logoGroup}>
-                {/* <div className={styles.logoIconBox}>
-            <Sparkles className={styles.logoIcon} strokeWidth={1.8} />
-          </div> */}
                 <span className={styles.logoText}>
-                    IES TEIS | <span className={styles.logoHighlight}>Imagen Personal</span>
+                    <span className={styles.logoMain}>IES TEIS</span>
+                    <span className={styles.logoSeparator}> | </span>
+                    <span className={styles.logoHighlight}>Imagen Personal</span>
                 </span>
             </Link>
 
@@ -40,6 +39,7 @@ export default function AdminNavbar() {
                 {/* Language Selector */}
                 <div className={styles.langSelectorWrapper}>
                     <Globe className={styles.langIcon} strokeWidth={1.8} />
+                    {/* Ocultamos el texto del idioma en móviles, dejamos solo el icono */}
                     <span className={styles.langText}>{languageNames[i18n.language] || "Español"}</span>
                     <select
                         className={styles.langSelectHidden}
@@ -60,6 +60,7 @@ export default function AdminNavbar() {
                         aria-label={t("adminNav.userMenu")}
                     >
                         <User className={styles.userIcon} strokeWidth={1.8} />
+                        {/* El nombre de usuario se ocultará en móviles vía CSS */}
                         <span className={styles.userName}>{userName}</span>
                         <ChevronDown
                             className={`${styles.chevron} ${isUserMenuOpen ? styles.open : ""}`}
@@ -70,7 +71,6 @@ export default function AdminNavbar() {
                     {/* Dropdown Menu */}
                     {isUserMenuOpen && (
                         <>
-                            {/* Overlay para cerrar el menu */}
                             <div
                                 className={styles.dropdownOverlay}
                                 onClick={() => setIsUserMenuOpen(false)}

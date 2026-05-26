@@ -50,6 +50,18 @@
   letter-spacing: var(--tracking-title);
   color: var(--color-text);
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.logoMain {
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.logoSeparator {
+  color: var(--color-text-muted);
 }
 
 .logoHighlight {
@@ -294,5 +306,36 @@
     max-width: 150px;
     display: inline;
     /* Se muestra en pantallas grandes */
+  }
+}
+
+/* ADAPTACIÓN PARA MÓVILES */
+@media (max-width: 768px) {
+  .logoText {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    line-height: 1.1;
+  }
+
+  .logoSeparator {
+    display: none;
+  }
+
+  .logoMain {
+    font-size: 1rem;
+  }
+
+  .logoHighlight {
+    font-size: 0.85rem;
+  }
+
+  .userName,
+  .langText {
+    display: none;
+  }
+
+  .rightActions {
+    gap: 0.5rem;
   }
 }
