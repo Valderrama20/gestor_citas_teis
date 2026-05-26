@@ -1,0 +1,11 @@
+# Reemplaza "tu-dominio.com" con tu dominio real
+citas-teis.duckdns.org {
+    # Envía todo el tráfico web al puerto 80 interno del contenedor frontend
+    reverse_proxy frontend:80
+}
+
+# Te recomiendo usar un subdominio distinto para tu API en Spring Boot
+api-citas-teis.duckdns.org {
+    # Envía las peticiones a la API al puerto 9001 interno del contenedor backend
+    reverse_proxy backend:9001
+}
