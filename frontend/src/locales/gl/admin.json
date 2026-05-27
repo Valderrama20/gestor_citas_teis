@@ -66,6 +66,7 @@
             "createFirstWorkshop": "Crear primeiro obradoiro"
         },
         "workshopCard": {
+            "options": "Opcións",
             "duration": "Duración:",
             "min": "min",
             "capacity": "Aforo máximo:",
