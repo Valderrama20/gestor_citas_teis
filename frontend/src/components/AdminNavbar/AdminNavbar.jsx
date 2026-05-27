@@ -18,6 +18,14 @@ export default function AdminNavbar() {
 
     const userName = usuario?.nombre || usuario?.email || t("adminNav.defaultUser");
 
+    const handleLanguageToggle = () => {
+        const langs = ["es", "gl", "en"];
+        const currentLang = i18n.language?.split('-')[0] || "es";
+        const currentIndex = langs.indexOf(currentLang);
+        const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % langs.length;
+        i18n.changeLanguage(langs[nextIndex]);
+    };
+
     const languageNames = {
         es: "Español",
         gl: "Galego",
@@ -38,12 +46,18 @@ export default function AdminNavbar() {
 
             <div className={styles.rightActions}>
                 {/* Language Selector */}
-                <div className={styles.langSelectorWrapper}>
+                <div
+                    className={styles.langSelectorWrapper}
+                    onClick={(e) => {
+                        if (e.target.tagName.toLowerCase() === 'select') return;
+                        handleLanguageToggle();
+                    }}
+                >
                     <Globe className={styles.langIcon} strokeWidth={1.8} />
-                    <span className={styles.langText}>{languageNames[i18n.language] || "Español"}</span>
+                    <span className={styles.langText}>{languageNames[i18n.language?.split('-')[0]] || "Español"}</span>
                     <select
                         className={styles.langSelectHidden}
-                        value={i18n.language}
+                        value={i18n.language?.split('-')[0] || "es"}
                         onChange={(e) => i18n.changeLanguage(e.target.value)}
                     >
                         <option value="es">Español</option>

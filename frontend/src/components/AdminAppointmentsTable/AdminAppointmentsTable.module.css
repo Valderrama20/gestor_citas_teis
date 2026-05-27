@@ -301,6 +301,108 @@
   background: var(--color-accent-strong);
 }
 
+/* --- VISTA MOBILE (ACORDEÓN) --- */
+.mobileList {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktopTable {
+    display: none;
+  }
+  
+  .wrapper {
+    background: transparent;
+    box-shadow: none;
+    overflow-x: visible;
+  }
+
+  .mobileList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .mobileSelectAll {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+  }
+
+  .mobileCard {
+    border: 1px solid rgba(58, 46, 50, 0.08);
+    border-radius: var(--radius-md, 0.5rem);
+    background: var(--color-surface-strong, #ffffff);
+    box-shadow: var(--shadow-soft-sm, 0 1px 3px rgba(0, 0, 0, 0.05));
+    overflow: hidden;
+    transition: background-color 0.2s ease;
+  }
+  
+  .mobileHeader {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem;
+    cursor: pointer;
+  }
+
+  .expandBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--color-accent); /* Color corporativo */
+    color: var(--color-white, #ffffff);
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .mobileMainInfo {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    width: 100%;
+  }
+
+  .mobileLabel {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    min-width: 70px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .mobileValue {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobileDetails {
+    padding: 0 1rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .detailRow {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .detailRow .checkbox {
+    margin: 0;
+  }
+}
+
 @media (max-width: 900px) {
   .wrapper {
     overflow-x: auto;

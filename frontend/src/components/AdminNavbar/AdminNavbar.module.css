@@ -78,6 +78,8 @@
   padding: 0.6rem 1rem;
   border-radius: var(--radius-full);
   cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition: all var(--transition-fast);
 }
 
@@ -106,6 +108,8 @@
   opacity: 0;
   cursor: pointer;
   appearance: none;
+  display: none;
+  /* Oculto en móvil para permitir "tocar y cambiar" */
 }
 
 /* USER MENU */
@@ -282,6 +286,11 @@
 
 /* RESPONSIVE */
 @media (min-width: 768px) {
+  .langSelectHidden {
+    display: block;
+    /* Visible en Desktop para usar el select nativo */
+  }
+
   .nav {
     padding: var(--layout-nav-desktop);
   }
