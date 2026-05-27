@@ -1,9 +1,16 @@
 import api from '../config/api';
 import i18n from '../config/i18n';
 
+function normalizeWeekdayKey(day) {
+  return String(day)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
 function translateWeekday(day) {
   if (!day) return '';
-  return i18n.t(`calendar.weekdaysFull.${String(day).toLowerCase()}`, {
+  return i18n.t(`calendar.weekdaysFull.${normalizeWeekdayKey(day)}`, {
     defaultValue: day,
   });
 }
