@@ -15,6 +15,7 @@ export default function Talleres() {
   const [workshops, setWorkshops] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     let isMounted = true;
 
     async function loadContent() {
@@ -53,7 +54,7 @@ export default function Talleres() {
       <section className={styles.main}>
         <div className={styles.hero}>
           <h2 className={styles.title}>{t('notFoundTitle')}</h2>
-          <Link to="/" className={styles.backBtn}>
+          <Link to="/" className={styles.backBtn} onClick={() => window.scrollTo(0, 0)}>
             {t('backToSpecialties')}
           </Link>
         </div>
@@ -64,7 +65,7 @@ export default function Talleres() {
   return (
     <section className={styles.main}>
       <div className={styles.header}>
-        <Link to="/" className={styles.backBtn}>
+        <Link to="/" className={styles.backBtn} onClick={() => window.scrollTo(0, 0)}>
           {t('backToSpecialties')}
         </Link>
       </div>
@@ -92,7 +93,7 @@ export default function Talleres() {
             {t('emptyDescription')}
           </p>
 
-          <Link to="/" className={styles.emptyAction}>
+          <Link to="/" className={styles.emptyAction} onClick={() => window.scrollTo(0, 0)}>
             <Home className={styles.emptyActionIcon} strokeWidth={1.8} />
             {t('backToSpecialties')}
           </Link>
@@ -110,6 +111,7 @@ export default function Talleres() {
                 selectedWorkshopId: workshop.idTaller,
                 selectedCourseId: course.id,
               }}
+              onClick={() => window.scrollTo(0, 0)}
             />
           ))}
         </div>

@@ -40,7 +40,9 @@ export default function AdminNavbar() {
             <Sparkles className={styles.logoIcon} strokeWidth={1.8} />
           </div> */}
                 <span className={styles.logoText}>
-                    IES TEIS | <span className={styles.logoHighlight}>Imagen Personal</span>
+                    <span className={styles.logoMain}>IES TEIS</span>
+                    <span className={styles.logoSeparator}> | </span>
+                    <span className={styles.logoHighlight}>Imagen Personal</span>
                 </span>
             </Link>
 

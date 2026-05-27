@@ -18,7 +18,8 @@
   align-items: center;
   gap: var(--space-3);
   text-decoration: none;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .logoIconBox {
@@ -46,12 +47,35 @@
 .logoText {
   font-family: var(--font-display);
   font-size: var(--size-logo);
-  font-weight: 800;
   letter-spacing: var(--tracking-title);
   color: var(--color-text);
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
+.logoMain {
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.logoSeparator {
+  color: var(--color-text-muted);
+}
+
+/* RESPONSIVE MÓVIL */
+@media (max-width: 768px) {
+  .logoText {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    line-height: 1.1;
+  }
+  .logoSeparator { display: none; }
+  .logoMain { font-size: 1.1rem; }
+  .logoHighlight { font-size: 0.85rem; }
+}
 .logoHighlight {
   font-weight: 500;
   color: var(--color-accent);
@@ -78,8 +102,6 @@
   padding: 0.6rem 1rem;
   border-radius: var(--radius-full);
   cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
   transition: all var(--transition-fast);
 }
 
@@ -108,8 +130,6 @@
   opacity: 0;
   cursor: pointer;
   appearance: none;
-  display: none;
-  /* Oculto en móvil para permitir "tocar y cambiar" */
 }
 
 /* USER MENU */
@@ -286,11 +306,6 @@
 
 /* RESPONSIVE */
 @media (min-width: 768px) {
-  .langSelectHidden {
-    display: block;
-    /* Visible en Desktop para usar el select nativo */
-  }
-
   .nav {
     padding: var(--layout-nav-desktop);
   }

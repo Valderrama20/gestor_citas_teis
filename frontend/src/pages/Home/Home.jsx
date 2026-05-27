@@ -12,6 +12,7 @@ export default function Home() {
   const { t } = useTranslation('home');
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     let isMounted = true;
 
     async function loadCourses() {
@@ -52,6 +53,7 @@ export default function Home() {
             description={specialty.descripcion}
             Icon={courseIconMap[specialty.icono] ?? Sparkles}
             to={`/curso/${specialty.idCurso}/talleres`}
+            onClick={() => window.scrollTo(0, 0)}
           />
         ))}
       </div>
