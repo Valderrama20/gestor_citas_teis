@@ -6,10 +6,11 @@ import courseService from "../../services/courseService";
 import FAQSection from "../../components/FAQSection";
 import styles from "./Home.module.css";
 import { courseIconMap } from "../../constants/icons";
+import { translateCourseName } from "../../utils/translateCatalog";
 
 export default function Home() {
   const [specialties, setSpecialties] = useState([]);
-  const { t } = useTranslation('home');
+  const { t, i18n } = useTranslation('home');
 
   useEffect(() => {
     let isMounted = true;
@@ -29,7 +30,7 @@ export default function Home() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [i18n.language]);
 
   return (
     <section className={styles.main}>
@@ -48,7 +49,7 @@ export default function Home() {
         {specialties.map((specialty) => (
           <ServiceCard
             key={specialty.idCurso}
-            title={specialty.nombreCurso}
+            title={translateCourseName(specialty.nombreCurso)}
             description={specialty.descripcion}
             Icon={courseIconMap[specialty.icono] ?? Sparkles}
             to={`/curso/${specialty.idCurso}/talleres`}

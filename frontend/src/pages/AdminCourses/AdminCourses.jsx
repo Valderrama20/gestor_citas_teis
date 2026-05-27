@@ -20,7 +20,7 @@ export default function AdminCourses() {
   const [courseToEdit, setCourseToEdit] = useState(null);
   const [courseToDelete, setCourseToDelete] = useState(null);
   const { addToast } = useToast();
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
 
   useEffect(() => {
     let isMounted = true;
@@ -44,7 +44,7 @@ export default function AdminCourses() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [i18n.language]);
 
   async function handleCreateCourse(courseData) {
     try {

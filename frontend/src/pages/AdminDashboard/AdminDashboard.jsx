@@ -35,6 +35,7 @@ import availabilityService from "../../services/availabilityService";
 import { useToast } from "../../context/ToastContext";
 import styles from "./AdminDashboard.module.css";
 import { useTranslation } from "react-i18next";
+import { translateCourseName, translateWorkshopName } from "../../utils/translateCatalog";
 
 export default function AdminDashboard() {
   const { courseId } = useParams();
@@ -96,7 +97,7 @@ export default function AdminDashboard() {
         console.error("Error cargando datos:", error);
       }
     }
-  }, [courseId]);
+  }, [courseId, i18n.language]);
 
   // Cierra los menús desplegables si se hace clic fuera
   useEffect(() => {
@@ -427,7 +428,7 @@ export default function AdminDashboard() {
         }
         endContent={
           <div className={styles.brand}>
-            <Settings size={18} /> <span>{t("dashboard.brand")}{course.nombreCurso}</span>
+            <Settings size={18} /> <span>{t("dashboard.brand")}{translateCourseName(course.nombreCurso)}</span>
           </div>
         }
       />
@@ -435,7 +436,7 @@ export default function AdminDashboard() {
       <section className={styles.container}>
         <header className={styles.headerRow}>
           <div className={styles.titleSection}>
-            <h1 className={styles.title}>{t("dashboard.titlePrefix")}{course.nombreCurso}</h1>
+            <h1 className={styles.title}>{t("dashboard.titlePrefix")}{translateCourseName(course.nombreCurso)}</h1>
             <p className={styles.subtitle}>
               {t("dashboard.subtitle")}
             </p>
@@ -620,7 +621,7 @@ export default function AdminDashboard() {
                               size={20}
                             />
                           </div>
-                          <h3 className={styles.workshopTitle}>{workshop.nombreTaller}</h3>
+                          <h3 className={styles.workshopTitle}>{translateWorkshopName(workshop.nombreTaller)}</h3>
                         </div>
 
                         <div className={styles.menuContainer}>
@@ -715,13 +716,13 @@ export default function AdminDashboard() {
         isOpen={isCreateWorkshopModalOpen}
         onClose={() => setIsCreateWorkshopModalOpen(false)}
         onSubmit={handleCreateWorkshop}
-        courseName={course?.nombreCurso}
+        courseName={translateCourseName(course?.nombreCurso)}
       />
       <CreateAppointmentModal
         isOpen={isCreateAppointmentModalOpen}
         onClose={() => setIsCreateAppointmentModalOpen(false)}
         onSubmit={handleCreateAppointment}
-        courseName={course?.nombreCurso}
+        courseName={translateCourseName(course?.nombreCurso)}
         workshops={workshops}
       />
 
@@ -806,7 +807,7 @@ export default function AdminDashboard() {
               {t("dashboard.deleteWorkshopModal.warning")}
             </p>
             <h3 className={styles.confirmTargetName}>
-              {workshopToDelete?.nombreTaller}
+              {translateWorkshopName(workshopToDelete?.nombreTaller)}
             </h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>
               {t("dashboard.deleteWorkshopModal.hint")}

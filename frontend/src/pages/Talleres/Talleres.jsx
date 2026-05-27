@@ -7,10 +7,11 @@ import { Home, ScissorsLineDashed, Sparkles } from "lucide-react";
 import courseService from "../../services/courseService";
 import workshopService from "../../services/workshopService";
 import styles from "./Talleres.module.css";
+import { translateCourseName, translateWorkshopName } from "../../utils/translateCatalog";
 
 export default function Talleres() {
   const { courseId } = useParams();
-  const { t } = useTranslation('workshops');
+  const { t, i18n } = useTranslation('workshops');
   const [course, setCourse] = useState(undefined);
   const [workshops, setWorkshops] = useState([]);
 
@@ -36,7 +37,7 @@ export default function Talleres() {
     return () => {
       isMounted = false;
     };
-  }, [courseId]);
+  }, [courseId, i18n.language]);
 
   if (course === undefined) {
     return (
@@ -71,7 +72,7 @@ export default function Talleres() {
 
       <div className={styles.hero}>
         <span className={styles.eyebrow}>{t('eyebrow')}</span>
-        <h2 className={styles.title}>{t('title', { courseName: course.nombreCurso })}</h2>
+        <h2 className={styles.title}>{t('title', { courseName: translateCourseName(course.nombreCurso) })}</h2>
         <p className={styles.description}>{course.workshopPageDescription}</p>
       </div>
 
@@ -102,7 +103,7 @@ export default function Talleres() {
           {workshops.map((workshop) => (
             <ServiceCard
               key={workshop.idTaller}
-              title={workshop.nombreTaller}
+              title={translateWorkshopName(workshop.nombreTaller)}
               description={workshop.descripcion}
               Icon={workshopIconMap[workshop.icono] ?? Sparkles}
               to="/reservar"

@@ -18,6 +18,7 @@ import { useState } from "react";
 import Modal from "../Modal";
 import { useTranslation } from "react-i18next";
 import styles from "./AdminAppointmentsTable.module.css";
+import { translateWorkshopName } from "../../utils/translateCatalog";
 
 const STATUS_LABELS = {
   PENDIENTE: "PENDIENTE",
@@ -67,10 +68,10 @@ function getAppointmentDetails(appointment, t) {
       appointment?.phone ||
       t('appointmentsTable.defaults.notSpecified'),
     workshopTitle:
-      taller.nombreTaller ||
+      translateWorkshopName(taller.nombreTaller ||
       appointment?.workshopTitle ||
       appointment?.nombreTaller ||
-      t('appointmentsTable.defaults.workshopNotFound'),
+      t('appointmentsTable.defaults.workshopNotFound')),
     workshopId:
       taller.idTaller ||
       taller.id_taller ||
@@ -162,7 +163,7 @@ export default function AdminAppointmentsTable({
             const statusLabel = getStatusLabel(appointment.estado ?? appointment.status, t);
 
             const clientName = cliente.nombre || appointment.client || cliente.email || t('appointmentsTable.defaults.unknownClient');
-            const workshopTitle = taller.nombreTaller || appointment.workshopTitle || t('appointmentsTable.defaults.workshopNotFound');
+            const workshopTitle = translateWorkshopName(taller.nombreTaller || appointment.workshopTitle || t('appointmentsTable.defaults.workshopNotFound'));
             const date = appointment.fecha ?? appointment.date ?? "";
             const time = formatTime(appointment.hora ?? appointment.time);
 
