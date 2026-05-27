@@ -20,10 +20,45 @@
         "close": "Cerrar",
         "closeAria": "Cerrar modal"
     },
+    "catalog": {
+        "courses": {
+            "peluqueria": "Peluquería",
+            "cuidado_facial": "Cuidado Facial",
+            "tratamiento_corporal": "Tratamiento Corporal",
+            "manicura": "Manicura",
+            "maquillaje_artistico": "Maquillaje Artístico",
+            "spa_y_bienestar": "Spa y Bienestar"
+        },
+        "workshops": {
+            "corte_y_peinado": "Corte y Peinado",
+            "colorimetria": "Colorimetría",
+            "limpieza_facial": "Limpieza Facial",
+            "manicura_y_pedicura": "Manicura y Pedicura",
+            "maquillaje_social": "Maquillaje Social",
+            "maquillaje_de_fantasia": "Maquillaje de Fantasía",
+            "pestanas_y_cejas": "Pestañas y Cejas",
+            "masaje_relajante": "Masaje Relajante",
+            "aromaterapia": "Aromaterapia",
+            "hidroterapia": "Hidroterapia"
+        }
+    },
     "calendar": {
         "title": "Seleccionar fecha",
         "weekdays": ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+        "weekdaysFull": {
+            "lunes": "Lunes",
+            "martes": "Martes",
+            "miercoles": "Miércoles",
+            "jueves": "Jueves",
+            "viernes": "Viernes",
+            "sabado": "Sábado",
+            "domingo": "Domingo"
+        },
         "previousMonth": "Mes anterior",
         "nextMonth": "Mes siguiente"
+    },
+    "schedule": {
+        "from": "de",
+        "to": "a"
     }
 }

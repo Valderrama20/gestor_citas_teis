@@ -1,4 +1,5 @@
 import axios from 'axios';
+import i18n from './i18n';
 import { useAuthStore } from '../store/authStore';
 
 // Creamos la instancia base. Apuntamos al 9001 (el de tu contenedor Docker)
@@ -18,6 +19,8 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    const currentLanguage = i18n.language || 'es';
+    config.headers['Accept-Language'] = currentLanguage;
     return config;
   },
   (error) => Promise.reject(error)

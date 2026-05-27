@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./AdminCourseCard.module.css";
+import { translateCourseName } from "../../utils/translateCatalog";
 
 export default function AdminCourseCard({ course, icon: Icon, onDelete, onEdit, onDuplicate }) {
   const { t } = useTranslation('admin');
@@ -77,7 +78,7 @@ export default function AdminCourseCard({ course, icon: Icon, onDelete, onEdit, 
         </div>
       </div>
 
-      <h3 className={styles.title}>{course.nombreCurso || course.name}</h3>
+      <h3 className={styles.title}>{translateCourseName(course.nombreCurso || course.name)}</h3>
       <p className={styles.info}>
         {getLevelLabel(course.nivel || course.level)} | {course.cursoAcademico || course.period}
       </p>

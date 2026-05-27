@@ -5,6 +5,7 @@ import availabilityService from "../../services/availabilityService";
 import Modal from "../Modal";
 import CalendarModal from "../CalendarModal/CalendarModal";
 import styles from "./CreateAppointmentModal.module.css";
+import { translateWorkshopName } from "../../utils/translateCatalog";
 
 const INITIAL_FORM = {
   client: "",
@@ -95,7 +96,7 @@ export default function CreateAppointmentModal({
     return () => {
       isMounted = false;
     };
-  }, [formData.workshopId]);
+  }, [formData.workshopId, i18n.language]);
 
   const handleClose = () => {
     if (isDirty) {
@@ -271,7 +272,7 @@ export default function CreateAppointmentModal({
               const wTitle = workshop.title || workshop.nombreTaller;
               return (
                 <option key={wId} value={String(wId)}>
-                  {wTitle}
+                  {translateWorkshopName(wTitle)}
                 </option>
               );
             })}
@@ -428,7 +429,7 @@ export default function CreateAppointmentModal({
           <div className={styles.summary}>
             <p className={styles.summaryTitle}>{t('summary.title')}</p>
             <p className={styles.summaryText}>
-              {t('summary.workshop')} <strong>{tallerSeleccionado ? (tallerSeleccionado.title || tallerSeleccionado.nombreTaller) : t('summary.unselected')}</strong>
+              {t('summary.workshop')} <strong>{tallerSeleccionado ? translateWorkshopName(tallerSeleccionado.title || tallerSeleccionado.nombreTaller) : t('summary.unselected')}</strong>
             </p>
             <p className={styles.summaryText}>
               {t('summary.email')} <strong>{formData.email || t('summary.unspecified')}</strong>

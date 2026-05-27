@@ -1,4 +1,26 @@
 import api from '../config/api';
+import i18n from '../config/i18n';
+
+function normalizeWeekdayKey(day) {
+  return String(day)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function translateWeekday(day) {
+  if (!day) return '';
+  return i18n.t(`calendar.weekdaysFull.${normalizeWeekdayKey(day)}`, {
+    defaultValue: day,
+  });
+}
+
+function buildLocalizedSlotLabel(slot) {
+  const dayLabel = translateWeekday(slot.diaSemana);
+  const start = String(slot.horaApertura ?? '').substring(0, 5);
+  const end = String(slot.horaCierre ?? '').substring(0, 5);
+  return `${dayLabel} - ${i18n.t('schedule.from', { defaultValue: 'de' })} ${start} ${i18n.t('schedule.to', { defaultValue: 'a' })} ${end}`;
+}
 
 const availabilityService = {
   createSlot: async (slotData) => {
@@ -50,7 +72,7 @@ const availabilityService = {
         .map((slot) => ({
           id: String(slot.idHorario),
           workshopId: String(slot.idTaller.idTaller),
-          label: `${slot.diaSemana} - de ${slot.horaApertura.substring(0, 5)} a ${slot.horaCierre.substring(0, 5)}`,
+          label: buildLocalizedSlotLabel(slot),
           date: slot.diaSemana,
           time: slot.horaApertura.substring(0, 5),
         }));
@@ -67,7 +89,7 @@ const availabilityService = {
       return {
         id: String(slot.idHorario),
         workshopId: String(slot.idTaller.idTaller),
-        label: `${slot.diaSemana} - de ${slot.horaApertura.substring(0, 5)} a ${slot.horaCierre.substring(0, 5)}`,
+        label: buildLocalizedSlotLabel(slot),
         date: slot.diaSemana,
         time: slot.horaApertura.substring(0, 5),
       };

@@ -8,6 +8,7 @@ import availabilityService from "../../services/availabilityService";
 import workshopService from "../../services/workshopService";
 import styles from "./Booking.module.css";
 import { useTranslation } from "react-i18next";
+import { translateWorkshopName } from "../../utils/translateCatalog";
 
 export default function Booking() {
   const location = useLocation();
@@ -66,7 +67,7 @@ export default function Booking() {
     }
     loadTalleres();
     return () => { isMounted = false; };
-  }, []);
+  }, [i18n.language]);
 
   useEffect(() => {
     let isMounted = true;
@@ -88,7 +89,7 @@ export default function Booking() {
     }
     loadHorarios();
     return () => { isMounted = false; };
-  }, [formData.workshopId]);
+  }, [formData.workshopId, i18n.language]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -289,7 +290,7 @@ export default function Booking() {
               >
                 {talleres.map((taller) => (
                   <option key={taller.idTaller} value={String(taller.idTaller)}>
-                    {taller.nombreTaller}
+                    {translateWorkshopName(taller.nombreTaller)}
                   </option>
                 ))}
               </select>
@@ -425,7 +426,7 @@ export default function Booking() {
               <div className={styles.summary}>
                 <p className={styles.summaryTitle}>{t('summary.title')}</p>
                 <p className={styles.summaryText}>
-                  {t('summary.workshop')} <strong>{tallerSeleccionado?.nombreTaller || t('summary.unselected')}</strong>
+                  {t('summary.workshop')} <strong>{translateWorkshopName(tallerSeleccionado?.nombreTaller) || t('summary.unselected')}</strong>
                 </p>
                 <p className={styles.summaryText}>
                   {t('summary.email')} <strong>{formData.email || t('summary.unspecified')}</strong>
@@ -468,7 +469,7 @@ export default function Booking() {
         showAction={false}
       >
         <div className={styles.confirmWrapper} style={{ textAlign: "center" }}>
-          <p style={{ marginBottom: "1rem" }}>{t('successModal.text1')} <strong>{tallerSeleccionado?.nombreTaller}</strong>.</p>
+          <p style={{ marginBottom: "1rem" }}>{t('successModal.text1')} <strong>{translateWorkshopName(tallerSeleccionado?.nombreTaller)}</strong>.</p>
           <p style={{ marginBottom: "2rem" }}>{t('successModal.text2')}</p>
           
           <p className={styles.confirmQuestion} style={{ marginBottom: "1rem" }}>{t('successModal.question')}</p>

@@ -8,6 +8,7 @@ import es.iesdeteis.gestorcitas.model.Taller;
 import es.iesdeteis.gestorcitas.service.ICitaService;
 import es.iesdeteis.gestorcitas.service.IHorarioTallerService;
 import es.iesdeteis.gestorcitas.service.ITallerService;
+import es.iesdeteis.gestorcitas.service.TranslationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,9 @@ public class HorarioTallerController {
     @Autowired
     private ITallerService tallerService;
 
+    @Autowired
+    private TranslationService translationService;
+
     private static final int SEMANAS_POR_DEFECTO = 4;
     private static final DateTimeFormatter HORA_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -55,7 +59,8 @@ public class HorarioTallerController {
     @GetMapping("/taller/{idTaller}")
     public List<HorarioDisponibleDTO> getDisponibilidadByTaller(
             @PathVariable Long idTaller,
-            @RequestParam(name = "semanas", required = false, defaultValue = "4") int semanas
+            @RequestParam(name = "semanas", required = false, defaultValue = "4") int semanas,
+            Locale locale
     ) {
         if (idTaller == null || idTaller <= 0) {
             return List.of();
@@ -77,7 +82,7 @@ public class HorarioTallerController {
                 .collect(Collectors.groupingBy(Cita::getFecha, Collectors.counting()));
 
         return horarios.stream()
-            .flatMap(horario -> buildDisponibilidadSemanas(horario, idTaller, capacidadMaxima, ocupacionPorFecha, semanasFinal).stream())
+            .flatMap(horario -> buildDisponibilidadSemanas(horario, idTaller, capacidadMaxima, ocupacionPorFecha, semanasFinal, locale).stream())
             .filter(dto -> dto != null)
             .filter(dto -> dto.getCapacidadMaxima() == null
                 || dto.getOcupacionActual() < dto.getCapacidadMaxima())
@@ -105,7 +110,8 @@ public class HorarioTallerController {
             Long idTaller,
             Integer capacidadMaxima,
             Map<LocalDate, Long> ocupacionPorFecha,
-            int semanas
+                int semanas,
+                Locale locale
     ) {
         if (horario == null) {
             return List.of();
@@ -119,7 +125,7 @@ public class HorarioTallerController {
         List<HorarioDisponibleDTO> resultados = new ArrayList<>();
         for (int i = 0; i < semanas; i++) {
             LocalDate fecha = base.plusWeeks(i);
-            HorarioDisponibleDTO dto = toDisponibleDto(horario, idTaller, capacidadMaxima, ocupacionPorFecha, fecha);
+            HorarioDisponibleDTO dto = toDisponibleDto(horario, idTaller, capacidadMaxima, ocupacionPorFecha, fecha, locale);
             if (dto != null) {
                 resultados.add(dto);
             }
@@ -133,7 +139,8 @@ public class HorarioTallerController {
             Long idTaller,
             Integer capacidadMaxima,
             Map<LocalDate, Long> ocupacionPorFecha,
-            LocalDate fecha
+                LocalDate fecha,
+                Locale locale
     ) {
         if (horario == null) {
             return null;
@@ -152,7 +159,7 @@ public class HorarioTallerController {
         HorarioDisponibleDTO dto = new HorarioDisponibleDTO();
         dto.setId(horario.getIdHorario());
         dto.setWorkshopId(taller != null ? taller.getIdTaller() : idTaller);
-        dto.setLabel(buildLabel(diaSemana, horario.getHoraApertura(), horario.getHoraCierre()));
+        dto.setLabel(buildLabel(diaSemana, horario.getHoraApertura(), horario.getHoraCierre(), locale));
         dto.setDate(diaSemana);
         dto.setTime(formatHora(horario.getHoraApertura()));
         dto.setFecha(fecha);
@@ -161,11 +168,8 @@ public class HorarioTallerController {
         return dto;
     }
 
-    private String buildLabel(String diaSemana, Time horaInicio, Time horaFin) {
-        String dia = diaSemana != null ? diaSemana : "";
-        String inicio = formatHora(horaInicio);
-        String fin = formatHora(horaFin);
-        return dia + " - de " + inicio + " a " + fin;
+    private String buildLabel(String diaSemana, Time horaInicio, Time horaFin, Locale locale) {
+        return translationService.scheduleLabel(diaSemana, horaInicio, horaFin, locale);
     }
 
     private String formatHora(Time hora) {
