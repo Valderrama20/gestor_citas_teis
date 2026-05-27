@@ -12,7 +12,9 @@ import {
   XCircle,
   ArrowUp,
   ArrowDown,
-  ArrowUpDown
+  ArrowUpDown,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { useState } from "react";
 import Modal from "../Modal";
@@ -106,6 +108,14 @@ export default function AdminAppointmentsTable({
   const isAllSelected = appointments.length > 0 && selectedIds.length === appointments.length;
   const appointmentDetails = detailsAppointment ? getAppointmentDetails(detailsAppointment, t) : null;
 
+  // Lógica para el acordeón móvil
+  const [expandedRows, setExpandedRows] = useState([]);
+  const toggleRow = (id) => {
+    setExpandedRows((prev) =>
+      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
+    );
+  };
+
   // Función para renderizar el icono de ordenación según el estado
   const renderSortIcon = (key) => {
     if (sortConfig.key !== key) {
@@ -118,7 +128,7 @@ export default function AdminAppointmentsTable({
 
   return (
     <div className={styles.wrapper}>
-      <table className={styles.table}>
+      <table className={`${styles.table} ${styles.desktopTable}`}>
         <thead>
           <tr>
             <th className={styles.checkboxCell}>
@@ -260,6 +270,112 @@ export default function AdminAppointmentsTable({
           })}
         </tbody>
       </table>
+
+      {/* --- VISTA MOBILE: Acordeón --- */}
+      <div className={styles.mobileList}>
+        {appointments.length > 0 && (
+          <div className={styles.mobileSelectAll}>
+            <input
+              type="checkbox"
+              className={styles.checkbox}
+              checked={isAllSelected}
+              onChange={(e) => onToggleSelectAll(e.target.checked)}
+            />
+            <span className={styles.mobileLabel}>Seleccionar todos</span>
+          </div>
+        )}
+        
+        {appointments.map((appointment) => {
+          const cliente = appointment.cliente ?? {};
+          const taller = appointment.taller ?? {};
+
+          const statusKey = getStatusKey(appointment.estado ?? appointment.status);
+          const statusLabel = getStatusLabel(appointment.estado ?? appointment.status, t);
+
+          const clientName = cliente.nombre || appointment.client || cliente.email || t('appointmentsTable.defaults.unknownClient');
+          const workshopTitle = taller.nombreTaller || appointment.workshopTitle || t('appointmentsTable.defaults.workshopNotFound');
+          const date = appointment.fecha ?? appointment.date ?? "";
+          const time = formatTime(appointment.hora ?? appointment.time);
+
+          const rowId = appointment.idCita ?? appointment.id ?? `${clientName}-${date}-${time}`;
+          const isSelected = selectedIds.includes(rowId);
+          const isExpanded = expandedRows.includes(rowId);
+
+          const actionPayload = {
+            ...appointment,
+            id: appointment.id ?? appointment.idCita,
+            client: clientName,
+            workshopTitle: workshopTitle,
+            date,
+            time,
+            status: statusLabel,
+          };
+
+          return (
+            <div key={rowId} className={`${styles.mobileCard} ${isSelected ? styles.selectedRow : ""}`}>
+              <div className={styles.mobileHeader} onClick={() => toggleRow(rowId)}>
+                <button className={styles.expandBtn} aria-label={isExpanded ? "Contraer fila" : "Desplegar fila"}>
+                  {isExpanded ? <ChevronUp size={16} strokeWidth={2.5} /> : <ChevronDown size={16} strokeWidth={2.5} />}
+                </button>
+                <div className={styles.mobileMainInfo}>
+                  <span className={styles.mobileLabel}>{t('appointmentsTable.headers.client')}</span>
+                  <span className={styles.mobileValue}>{clientName}</span>
+                </div>
+              </div>
+
+              {isExpanded && (
+                <div className={styles.mobileDetails}>
+                  <div className={styles.detailRow}>
+                    <span className={styles.mobileLabel}>{t('appointmentsTable.headers.workshop')}</span>
+                    <span className={styles.mobileValue}>{workshopTitle}</span>
+                  </div>
+                  
+                  <div className={styles.detailRow}>
+                    <span className={styles.mobileLabel}>{t('appointmentsTable.headers.dateTime')}</span>
+                    <span className={styles.mobileValue}>
+                      <Calendar size={14} style={{ marginRight: 6 }} /> {date} 
+                      <Clock3 size={14} style={{ marginLeft: 12, marginRight: 6 }} /> {time}
+                    </span>
+                  </div>
+                  
+                  <div className={styles.detailRow}>
+                    <span className={styles.mobileLabel}>{t('appointmentsTable.headers.status')}</span>
+                    <span className={`${styles.badge} ${styles[statusKey.toLowerCase()]}`}>
+                      {statusLabel}
+                    </span>
+                  </div>
+                  
+                  <div className={styles.detailRow}>
+                    <span className={styles.mobileLabel}>{t('appointmentsTable.headers.action')}</span>
+                    <div className={styles.actionGroup}>
+                      {statusKey === "PENDIENTE" && (
+                        <button type="button" className={`${styles.actionButton} ${styles.confirmButton}`} onClick={() => onConfirm(actionPayload)}>
+                          <CheckCheck size={14} strokeWidth={1.8} /> {t('appointmentsTable.actions.confirm')}
+                        </button>
+                      )}
+                      {statusKey === "CONFIRMADA" && (
+                        <button type="button" className={`${styles.actionButton} ${styles.cancelButton}`} onClick={() => onCancel(actionPayload)}>
+                          <XCircle size={14} strokeWidth={1.8} /> {t('appointmentsTable.actions.cancel')}
+                        </button>
+                      )}
+                      <button type="button" className={`${styles.actionButton} ${styles.detailsButton}`} onClick={() => setDetailsAppointment(actionPayload)}>
+                        <Eye size={14} strokeWidth={1.8} /> {t('appointmentsTable.actions.view')}
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.detailRow}>
+                    <span className={styles.mobileLabel}>Selec.</span>
+                    <div className={styles.mobileValue}>
+                        <input type="checkbox" className={styles.checkbox} checked={isSelected} onChange={() => onToggleSelect(rowId)} />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
 
       <Modal
         isOpen={Boolean(appointmentDetails)}

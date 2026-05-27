@@ -613,21 +613,18 @@ export default function AdminDashboard() {
                       onClick={() => handleWorkshopClick(workshop)}
                     >
                       <div className={styles.header}>
-                        <div className={styles.headerLeft}>
-                          <div className={styles.workshopIconWrapper}>
-                            <WorkshopIcon
-                              iconName={workshop.icono}
-                              size={20}
-                            />
-                          </div>
-                          <h3 className={styles.workshopTitle}>{workshop.nombreTaller}</h3>
+                        <div className={styles.workshopIconWrapper}>
+                          <WorkshopIcon
+                            iconName={workshop.icono}
+                            size={20}
+                          />
                         </div>
 
                         <div className={styles.menuContainer}>
                           <button 
                             onClick={(e) => toggleWorkshopMenu(e, wsId)} 
                             className={styles.menuTrigger} 
-                            title="Opciones"
+                            title={t('dashboard.workshopCard.options')}
                           >
                             <MoreVertical strokeWidth={1.8} size={20} />
                           </button>
@@ -648,6 +645,8 @@ export default function AdminDashboard() {
                           )}
                         </div>
                       </div>
+
+                      <h3 className={styles.workshopTitle}>{workshop.nombreTaller}</h3>
 
                       <div className={styles.workshopInfo}>
                         <div className={styles.infoItem}>
