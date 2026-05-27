@@ -8,14 +8,12 @@
   z-index: 2;
 }
 
-/* --- ESTILOS DEL HEADER --- */
+/* --- ESTILOS DEL HEADER (Espacios del Navbar) --- */
 .header {
   text-align: center;
   max-width: var(--layout-max-hero);
-  
-  /* 1. ESPACIO PARA ORDENADOR (Desktop) */
-  /* 7rem asegura que empuje el texto hacia abajo librando el menú fijo */
-  margin: 7rem auto 4rem; 
+  padding-top: 8rem; /* Espacio para que no lo tape el navbar en Desktop */
+  margin: 0 auto 4rem; 
 }
 
 .tagline {
@@ -58,30 +56,47 @@
   line-height: 1.7;
 }
 
+/* =========================================
+   GRILLA DE LAS TARJETAS (ESTO LAS PONE DE LADO)
+   ========================================= */
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--grid-gap);
+  grid-template-columns: 1fr; /* Móvil: 1 columna (una debajo de otra) */
+  gap: var(--grid-gap, 1.5rem);
   width: 100%;
   max-width: var(--layout-max-content);
   margin: 0 auto;
 }
 
-/* --- ADAPTACIÓN RESPONSIVE (Móviles y Tablets) --- */
+@media (min-width: 640px) {
+  .grid {
+    /* Tablets: 2 columnas */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .grid {
+    /* Desktop: 4 columnas (una al lado de la otra) */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--grid-gap-lg, 2rem);
+  }
+}
+
+/* =========================================
+   AJUSTES RESPONSIVE DEL TEXTO SUPERIOR
+   ========================================= */
 @media (max-width: 768px) {
   .breakDesktop {
     display: inline;
   }
-  
   .header {
-    /* Reducimos el hueco para tablets. Antes estaba en 10rem */
     padding-top: 7rem; 
   }
 }
 
 @media (max-width: 480px) {
   .header {
-    /* Reducimos drásticamente el hueco para móviles. Antes estaba en 12rem */
     padding-top: 5.5rem; 
   }
 }
