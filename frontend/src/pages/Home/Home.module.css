@@ -13,9 +13,9 @@
   text-align: center;
   max-width: var(--layout-max-hero);
   
-  /* 1. ESPACIO PARA ORDENADOR (Desktop) */
-  /* 7rem asegura que empuje el texto hacia abajo librando el menú fijo */
-  margin: 7rem auto 4rem; 
+  /* Usamos padding en lugar de margin para evitar el colapso de CSS */
+  padding-top: 8rem; /* Espacio libre en Ordenador */
+  margin: 0 auto 4rem; 
 }
 
 .tagline {
@@ -74,16 +74,14 @@
   }
   
   .header {
-    /* 2. ESPACIO PARA TABLETS Y MÓVILES GRANDES */
-    /* Como aquí el menú se apila y es más alto, lo bajamos a 8rem */
-    margin-top: 8rem; 
+    /* Como el navbar es más alto al apilar el logo, bajamos más el texto */
+    padding-top: 10rem; 
   }
 }
 
 @media (max-width: 480px) {
   .header {
-    /* 3. ESPACIO PARA MÓVILES PEQUEÑOS (Ej. iPhone SE) */
-    /* Lo bajamos a 9rem para que respire bien */
-    margin-top: 9rem; 
+    /* En teléfonos pequeños (iPhone SE) damos el máximo espacio */
+    padding-top: 12rem; 
   }
 }
