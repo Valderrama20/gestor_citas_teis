@@ -29,7 +29,9 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className={styles.logoGroup} onClick={() => window.scrollTo(0, 0)}>
           <span className={styles.logoText}>
-            IES TEIS | <span className={styles.logoHighlight}>Imagen Personal</span>
+            <span className={styles.logoMain}>IES TEIS</span>
+            <span className={styles.logoSeparator}> | </span>
+            <span className={styles.logoHighlight}>Imagen Personal</span>
           </span>
         </Link>
 
@@ -86,10 +88,10 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Acciones Móvil/Desktop */}
+        {/* Acciones Móvil/Tablet */}
         <div className={styles.menuContainer}>
 
-          {/* Botón Reservar Desktop */}
+          {/* Botón Reservar Secundario (Móvil/Tablet) */}
           <Link
             to={isReservar ? "/" : "/reservar"}
             className={styles.btnReserveSecondary}
@@ -98,7 +100,7 @@ export default function Navbar() {
             {isReservar ? t("nav.back") : t("nav.reserve")}
           </Link>
 
-          {/* Menú Hamburguesa Móvil */}
+          {/* Menú Hamburguesa Móvil/Tablet */}
           <button
             type="button"
             className={styles.btnHamburger}

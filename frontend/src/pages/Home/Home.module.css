@@ -8,10 +8,14 @@
   z-index: 2;
 }
 
+/* --- ESTILOS DEL HEADER --- */
 .header {
   text-align: center;
   max-width: var(--layout-max-hero);
-  margin: var(--space-6) auto 4rem;
+  
+  /* 1. ESPACIO PARA ORDENADOR (Desktop) */
+  /* 7rem asegura que empuje el texto hacia abajo librando el menú fijo */
+  margin: 7rem auto 4rem; 
 }
 
 .tagline {
@@ -22,6 +26,8 @@
   letter-spacing: var(--tracking-eyebrow);
   font-size: var(--size-eyebrow);
   font-weight: 700;
+  position: relative;
+  z-index: 5; 
 }
 
 .title {
@@ -61,21 +67,21 @@
   margin: 0 auto;
 }
 
-@media (min-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1080px) {
-  .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--grid-gap-lg);
-  }
-}
-
-@media (max-width: 767px) {
+/* --- ADAPTACIÓN RESPONSIVE (Móviles y Tablets) --- */
+@media (max-width: 768px) {
   .breakDesktop {
     display: inline;
+  }
+  
+  .header {
+    /* Reducimos el hueco para tablets. Antes estaba en 10rem */
+    padding-top: 7rem; 
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    /* Reducimos drásticamente el hueco para móviles. Antes estaba en 12rem */
+    padding-top: 5.5rem; 
   }
 }
